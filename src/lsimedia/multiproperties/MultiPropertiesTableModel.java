@@ -42,6 +42,8 @@ public class MultiPropertiesTableModel implements TableModel {
         TableModelEvent e = new TableModelEvent(this, TableModelEvent.HEADER_ROW);
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
     }
+    
+    
     public void removeColumn(Column c) {
         columns.remove(c);
         
@@ -87,6 +89,13 @@ public class MultiPropertiesTableModel implements TableModel {
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
     }
 
+    public void insertRecord(int index, Record record) {
+        records.add(index, record);
+        
+        TableModelEvent e = new TableModelEvent(this);
+        for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
+    }
+    
     public void removeRecord(Record r) {
         records.remove(r);
 

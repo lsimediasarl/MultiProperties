@@ -22,6 +22,12 @@ public class CommentRecord extends Record {
 
     String value = "";
 
+    public CommentRecord(String comment) {
+        super();
+        
+        this.value = comment;
+    }
+    
     public CommentRecord(Element record) {
         super(record);
 

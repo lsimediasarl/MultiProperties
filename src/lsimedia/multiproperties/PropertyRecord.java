@@ -29,6 +29,11 @@ public class PropertyRecord extends Record {
      */
     ArrayList<Value> values = new ArrayList<>();
 
+    public PropertyRecord(String name) {
+        super();
+        this.name = name;
+    }
+    
     public PropertyRecord(Element record) {
         super(record);
 

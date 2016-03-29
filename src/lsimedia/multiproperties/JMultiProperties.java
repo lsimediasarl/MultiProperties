@@ -107,7 +107,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         
         BT_Add.addActionListener(this);
         BT_Remove.addActionListener(this);
-
+        BT_NewComment.addActionListener(this);
+        BT_NewProperty.addActionListener(this);
+        
         BT_ConfigureHandler.addActionListener(this);
         
         try {
@@ -211,7 +213,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             StreamResult result = new StreamResult(file.toString());
             transformer.transform(source, result);
 
-            System.out.println("SAVED TO :" + file.getPath());
+            // System.out.println("SAVED TO :" + file.getPath());
 
             //--- Pass the model to the properties handler to save the specific file
             handler.save(model, TF_Name.getText(), TA_Description.getText(), file);
@@ -310,6 +312,24 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 model.swapColumn(index+1, index+1+1);
                 
                 LI_Columns.setSelectedIndex(index+1);
+            }
+            
+        } else if (e.getActionCommand().equals("newComment")) {
+            String comment = JOptionPane.showInputDialog("Comment");
+            if (comment != null) {
+                int index = TB_Table.getSelectedRow();
+                model.insertRecord(index<0?0:index, new CommentRecord(comment));
+                
+            }
+            
+        } else if (e.getActionCommand().equals("newProperty")) {
+            String name = JOptionPane.showInputDialog("Name");
+            if (name != null) {
+                int index = TB_Table.getSelectedRow();
+                PropertyRecord rec = new PropertyRecord(name);
+                for (int i=0;i<columns.size();i++) rec.addColumn();
+                model.insertRecord(index<0?0:index, rec);
+                
             }
         }
     }
@@ -448,7 +468,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             }
         };
         jToolBar1 = new javax.swing.JToolBar();
-        BT_New = new javax.swing.JButton();
+        BT_NewComment = new javax.swing.JButton();
+        BT_NewProperty = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         BT_Up = new javax.swing.JButton();
         BT_Down = new javax.swing.JButton();
 
@@ -688,13 +710,22 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        BT_New.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_New, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_New.text")); // NOI18N
-        BT_New.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_New.actionCommand")); // NOI18N
-        BT_New.setFocusable(false);
-        BT_New.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_New.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(BT_New);
+        BT_NewComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(BT_NewComment, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewComment.text")); // NOI18N
+        BT_NewComment.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewComment.actionCommand")); // NOI18N
+        BT_NewComment.setFocusable(false);
+        BT_NewComment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_NewComment.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(BT_NewComment);
+
+        BT_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(BT_NewProperty, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewProperty.text")); // NOI18N
+        BT_NewProperty.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewProperty.actionCommand")); // NOI18N
+        BT_NewProperty.setFocusable(false);
+        BT_NewProperty.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_NewProperty.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(BT_NewProperty);
+        jToolBar1.add(jSeparator1);
 
         BT_Up.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(BT_Up, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Up.text")); // NOI18N
@@ -738,6 +769,18 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 }
                 
             }
+            
+        } else if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            int row = TB_Table.getSelectedRow();
+            if (row > 0) {
+                Record rec = model.getRecord(row);
+                int rep = JOptionPane.showConfirmDialog(this, "Do you really want to delete the property "+rec.getKey(), "Delete", JOptionPane.YES_NO_OPTION);
+                if (rep == JOptionPane.OK_OPTION) {
+                    model.removeRecord(rec);
+                }
+                
+            }
+            
         }
     }//GEN-LAST:event_TB_TableKeyPressed
 
@@ -748,7 +791,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JButton BT_ConfigureHandler;
     private javax.swing.JButton BT_Down;
     private javax.swing.JButton BT_Import;
-    private javax.swing.JButton BT_New;
+    private javax.swing.JButton BT_NewComment;
+    private javax.swing.JButton BT_NewProperty;
     private javax.swing.JButton BT_Remove;
     private javax.swing.JButton BT_Up;
     private javax.swing.JComboBox<PropertiesHandler> CMB_Handlers;
@@ -774,6 +818,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

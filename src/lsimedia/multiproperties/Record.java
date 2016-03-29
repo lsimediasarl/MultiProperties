@@ -17,6 +17,10 @@ import org.w3c.dom.Element;
  */
 public abstract class Record {
     
+    public Record() {
+        
+    }
+    
     public Record(Element record) {
         //---
     }

@@ -106,6 +106,7 @@
             </module-dependencies>
             <public-packages>
                 <package>lsimedia.multiproperties</package>
+                <package>lsimedia.multiproperties.handlers</package>
                 <package>lsimedia.netbeans.multiproperties</package>
             </public-packages>
         </data>

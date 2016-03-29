@@ -1,6 +1,7 @@
 # MultiProperties
-Netbeans implementation of the very useful Eclipse plugin "Multiproperties" by Krisztián Zsolt Sallai
-The original Eclipse pugin can be found here https://github.com/skazsi/multiproperties
+Netbeans implementation of the very useful Eclipse plugin "Multiproperties" by Krisztián Zsolt Sallai.
+
+The original Eclipse plugin can be found here https://github.com/skazsi/multiproperties
 
 The files written by the eclipse plugin (*.multiproperties) can be edited under
 netbeans using this plugin.

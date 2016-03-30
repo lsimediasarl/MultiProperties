@@ -49,6 +49,8 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
             dispose();
             
         } else if (e.getActionCommand().equals("cancel")) {
+            rgui.cancel();
+            
             setVisible(false);
             dispose(); 
         }
@@ -83,7 +85,7 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
-        setBounds(0, 0, 650, 510);
+        setBounds(0, 0, 710, 670);
     }// </editor-fold>//GEN-END:initComponents
 
 

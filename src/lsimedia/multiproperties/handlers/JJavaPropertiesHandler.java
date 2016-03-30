@@ -39,7 +39,8 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
         initComponents();
 
         CB_EnableOutput.addActionListener(this);
-
+        CB_SameFolder.addActionListener(this);
+        
         BT_FC.addActionListener(this);
         
         //-- Fill with the value
@@ -61,6 +62,12 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
             CB_WriteDisableComment.setSelected(tokens[3].equals("true"));
             CB_DisableDefault.setSelected(tokens[4].equals("true"));
             CB_SameFolder.setSelected(tokens[5].equals("true"));
+            
+            if (CB_SameFolder.isSelected()) {
+                TF_Location.setEditable(false);
+                TF_Location.setText("");
+                BT_FC.setEnabled(false);
+            }
             
         } catch (Exception ex) {
             //---
@@ -115,6 +122,18 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 f = fc.getSelectedFile();
                 TF_Location.setText(f.getParent());
                 TF_Filename.setText(f.getName());
+            }
+            
+        } else if (e.getActionCommand().equals("same")) {
+            if (CB_SameFolder.isSelected()) {
+                TF_Location.setEditable(false);
+                TF_Location.setText("");
+                BT_FC.setEnabled(false);
+                
+            } else {
+                TF_Location.setEditable(true);
+                BT_FC.setEnabled(false);
+                
             }
         }
     }

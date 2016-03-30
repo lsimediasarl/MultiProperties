@@ -27,8 +27,8 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         CB_Column.setSelected(!disabled);
         CB_Column.addActionListener(this);
         
-        TF_Value.setText(disabled?def:value);
-        TF_Value.setEditable(!disabled);
+        TA_Value.setText(disabled?def:value);
+        TA_Value.setEnabled(!disabled);
     }
 
     //**************************************************************************
@@ -38,16 +38,21 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         return !CB_Column.isSelected();
     }
     public String getValue() {
-        return TF_Value.getText();
+        return TA_Value.getText();
     }
+    
+    public void setValue(String value) {
+        TA_Value.setText(value);
+    }
+    
     //**************************************************************************
     //*** ActionListener
     //**************************************************************************
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("enable")) {
-            TF_Value.setEditable(CB_Column.isSelected());
-            TF_Value.setText(CB_Column.isSelected()?"":def);
+            TA_Value.setEnabled(CB_Column.isSelected());
+            TA_Value.setText(CB_Column.isSelected()?"":def);
         }
     }
     
@@ -61,17 +66,22 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
     private void initComponents() {
 
         CB_Column = new javax.swing.JCheckBox();
-        TF_Value = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TA_Value = new javax.swing.JTextArea();
 
         CB_Column.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(CB_Column, org.openide.util.NbBundle.getMessage(JColumnValue.class, "JColumnValue.CB_Column.text")); // NOI18N
         CB_Column.setActionCommand(org.openide.util.NbBundle.getMessage(JColumnValue.class, "JColumnValue.CB_Column.actionCommand")); // NOI18N
         CB_Column.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         CB_Column.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        CB_Column.setMaximumSize(new java.awt.Dimension(100, 22));
+        CB_Column.setMinimumSize(new java.awt.Dimension(100, 22));
+        CB_Column.setPreferredSize(new java.awt.Dimension(100, 22));
 
-        TF_Value.setEditable(false);
-        TF_Value.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        TF_Value.setText(org.openide.util.NbBundle.getMessage(JColumnValue.class, "JColumnValue.TF_Value.text")); // NOI18N
+        TA_Value.setColumns(20);
+        TA_Value.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        TA_Value.setRows(5);
+        jScrollPane1.setViewportView(TA_Value);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -79,18 +89,20 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(CB_Column, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TF_Value, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+                .addComponent(CB_Column, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(7, 7, 7)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CB_Column)
-                    .addComponent(TF_Value, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(CB_Column, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -98,7 +110,8 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox CB_Column;
-    private javax.swing.JTextField TF_Value;
+    private javax.swing.JTextArea TA_Value;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
     

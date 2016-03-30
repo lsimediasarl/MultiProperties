@@ -94,6 +94,10 @@ public class PropertyRecord extends Record {
         return disabled;
     }
 
+    public boolean isMultiLine() {
+        return multiLine;
+    }
+    
     //**************************************************************************
     //*** Record
     //***************************************************************************

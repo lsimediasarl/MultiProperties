@@ -94,17 +94,20 @@ public class JavaPropertiesHandler implements PropertiesHandler {
 
                     } else if (rec instanceof PropertyRecord) {
                         PropertyRecord pr = (PropertyRecord) rec;
-                        PropertyRecord.Value v = pr.getValueAt(i - 1);
                         String key = pr.getName();
+                        
+                        PropertyRecord.Value v = pr.getValueAt(i - 1);
+                        String val = v.isDisabled() ? pr.getDefaultValue() : v.getValue();
+                        if (pr.isMultiLine()) val = val.replaceAll("\n","\\\\n");
+                            
                         if (tokens[3].equals("true") && pr.isDisabled()) {
-                            String val = v.isDisabled() ? pr.getDefaultValue() : v.getValue();
                             fw.write("#" + key + "=" + unicodeEscape(val) + "\n");
 
                         } else if (v.isDisabled()) {
-                            if (!tokens[4].equals("true")) fw.write("" + key + "=" + unicodeEscape(pr.getDefaultValue()) + "\n");
+                            if (!tokens[4].equals("true")) fw.write("" + key + "=" + unicodeEscape(val) + "\n");
 
                         } else {
-                            fw.write("" + key + "=" + unicodeEscape(v.getValue()) + "\n");
+                            fw.write("" + key + "=" + unicodeEscape(val) + "\n");
                         }
 
                     }

@@ -64,8 +64,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public final class JMultiProperties extends JPanel implements ActionListener, MouseListener, ListSelectionListener {
+
     public static final String ACTION_COMMAND_MODIFIED = "dataModified";
-    
 
     File file = null;
 
@@ -80,12 +80,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     Column selected = null;
 
     /**
-     * Unique listener for data changes, the event fired is ACTION_PERFORMED with "dataModified" as action name
-     * 
+     * Unique listener for data changes, the event fired is ACTION_PERFORMED
+     * with "dataModified" as action name
+     *
      */
     ActionListener listener = null;
-    
-    
+
     public JMultiProperties(File file) {
         this.file = file;
 
@@ -97,21 +97,23 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         TB_Table.getTableHeader().setFont(new Font("Arial", 0, 11));
         TB_Table.addMouseListener(this);
         TB_Table.setDefaultRenderer(String.class, new JRecordCellRenderer());
-        
+
         LI_Columns.setModel(columns);
         LI_Columns.addListSelectionListener(this);
 
         BT_Import.addActionListener(this);
         BT_ColumnUp.addActionListener(this);
         BT_ColumnDown.addActionListener(this);
-        
+
         BT_Add.addActionListener(this);
         BT_Remove.addActionListener(this);
         BT_NewComment.addActionListener(this);
         BT_NewProperty.addActionListener(this);
+        BT_Up.addActionListener(this);
+        BT_Down.addActionListener(this);
         
         BT_ConfigureHandler.addActionListener(this);
-        
+
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
@@ -130,17 +132,17 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     //**************************************************************************
     /**
      * Unique listener for data changes
-     * 
-     * @param listener 
+     *
+     * @param listener
      */
     public void setActionListener(ActionListener listener) {
         this.listener = listener;
     }
-    
+
     /**
      * Save the files to filesystem, two steps, first dave the .multiproperties
      * xml file, than for each column, save the properties via the handler<p>
-     * 
+     *
      */
     public void save() {
         //--- Save the multiproperties files and each properties
@@ -214,10 +216,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             transformer.transform(source, result);
 
             // System.out.println("SAVED TO :" + file.getPath());
-
             //--- Pass the model to the properties handler to save the specific file
             handler.save(model, TF_Name.getText(), TA_Description.getText(), file);
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
 
@@ -240,7 +241,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 for (int i = 0;i < model.getRowCount();i++) model.getRecord(i).addColumn();
                 model.addColumn(c);
 
-                if (listener != null) listener.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+                if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
             }
 
         } else if (e.getActionCommand().equals("remove")) {
@@ -256,20 +257,20 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
                 CardLayout layout = (CardLayout) PN_ColumnConfig.getLayout();
                 layout.show(PN_ColumnConfig, "empty");
-                
-                if (listener != null) listener.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+
+                if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
             }
 
         } else if (e.getActionCommand().equals("handler")) {
             //--- Configure the handler for the selected column
             PropertiesHandler h = (PropertiesHandler) CMB_Handlers.getSelectedItem();
-            
+
             JHandlerDialog dlg = new JHandlerDialog(null, true, h, selected);
             dlg.pack();
             dlg.setLocationRelativeTo(this);
             dlg.setVisible(true);
-            
-            if (listener != null) listener.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+
+            if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
 
         } else if (e.getActionCommand().equals("import")) {
             //--- Configure the handler for the selected column
@@ -280,56 +281,70 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             int rep = jf.showOpenDialog(this);
             if (rep == JFileChooser.APPROVE_OPTION) {
                 File f[] = jf.getSelectedFiles();
-                for (int i=0;i<f.length;i++) {
+                for (int i = 0;i < f.length;i++) {
                     Column c = h.load(model, f[i]);
                     if (c != null) columns.addElement(c);
                 }
             }
-            
+
         } else if (e.getActionCommand().equals("columnUp")) {
             int index = LI_Columns.getSelectedIndex();
             if (index > 0) {
                 Column from = (Column) columns.get(index);
-                Column to  = (Column) columns.get(index-1);
-                columns.setElementAt(from, index-1);
+                Column to = (Column) columns.get(index - 1);
+                columns.setElementAt(from, index - 1);
                 columns.setElementAt(to, index);
-            
+
                 //--- Add +1 to avoid the key column
-                model.swapColumn(index+1-1, index+1);
-                
-                LI_Columns.setSelectedIndex(index-1);
+                model.swapColumn(index + 1 - 1, index + 1);
+
+                LI_Columns.setSelectedIndex(index - 1);
             }
-            
+
         } else if (e.getActionCommand().equals("columnDown")) {
             int index = LI_Columns.getSelectedIndex();
-            if (index < columns.getSize()-1) {
+            if (index < columns.getSize() - 1) {
                 Column from = (Column) columns.get(index);
-                Column to  = (Column) columns.get(index+1);
-                columns.setElementAt(from, index+1);
+                Column to = (Column) columns.get(index + 1);
+                columns.setElementAt(from, index + 1);
                 columns.setElementAt(to, index);
-            
+
                 //--- Add +1 to avoid the key column
-                model.swapColumn(index+1, index+1+1);
-                
-                LI_Columns.setSelectedIndex(index+1);
+                model.swapColumn(index + 1, index + 1 + 1);
+
+                LI_Columns.setSelectedIndex(index + 1);
             }
-            
+
         } else if (e.getActionCommand().equals("newComment")) {
             String comment = JOptionPane.showInputDialog("Comment");
             if (comment != null) {
                 int index = TB_Table.getSelectedRow();
-                model.insertRecord(index<0?0:index, new CommentRecord(comment));
-                
+                model.insertRecord(index < 0 ? 0 : index, new CommentRecord(comment));
+
             }
-            
+
         } else if (e.getActionCommand().equals("newProperty")) {
             String name = JOptionPane.showInputDialog("Name");
             if (name != null) {
                 int index = TB_Table.getSelectedRow();
                 PropertyRecord rec = new PropertyRecord(name);
-                for (int i=0;i<columns.size();i++) rec.addColumn();
-                model.insertRecord(index<0?0:index, rec);
-                
+                for (int i = 0;i < columns.size();i++) rec.addColumn();
+                model.insertRecord(index < 0 ? 0 : index, rec);
+
+            }
+
+        } else if (e.getActionCommand().equals("up")) {
+            int row = TB_Table.getSelectedRow();
+            if (row > 0) {
+                model.swapValue(row - 1, row);
+                TB_Table.getSelectionModel().setSelectionInterval(row - 1, row - 1);
+            }
+
+        } else if (e.getActionCommand().equals("down")) {
+            int row = TB_Table.getSelectedRow();
+            if (row < TB_Table.getRowCount() - 1) {
+                model.swapValue(row, row + 1);
+                TB_Table.getSelectionModel().setSelectionInterval(row + 1, row + 1);
             }
         }
     }
@@ -351,8 +366,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 dlg.setVisible(true);
 
                 TB_Table.repaint();
-                
-                if (listener != null) listener.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+
+                if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
             }
         }
     }
@@ -400,8 +415,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
                 selected = c;
 
-                if (listener != null) listener.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
-                
+                if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+
             } else {
                 layout.show(PN_ColumnConfig, "empty");
 
@@ -755,32 +770,32 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             if (evt.isAltDown()) {
                 int row = TB_Table.getSelectedRow();
                 if (row > 0) {
-                    model.swapValue(row-1, row);
-                    TB_Table.getSelectionModel().setSelectionInterval(row-1, row-1);
+                    model.swapValue(row - 1, row);
+                    TB_Table.getSelectionModel().setSelectionInterval(row - 1, row - 1);
                 }
             }
-            
+
         } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
             if (evt.isAltDown()) {
                 int row = TB_Table.getSelectedRow();
-                if (row < TB_Table.getRowCount()-1) {
-                    model.swapValue(row, row+1);
-                    TB_Table.getSelectionModel().setSelectionInterval(row+1, row+1);
+                if (row < TB_Table.getRowCount() - 1) {
+                    model.swapValue(row, row + 1);
+                    TB_Table.getSelectionModel().setSelectionInterval(row + 1, row + 1);
                 }
-                
+
             }
-            
+
         } else if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
             int row = TB_Table.getSelectedRow();
             if (row > 0) {
                 Record rec = model.getRecord(row);
-                int rep = JOptionPane.showConfirmDialog(this, "Do you really want to delete the property "+rec.getKey(), "Delete", JOptionPane.YES_NO_OPTION);
+                int rep = JOptionPane.showConfirmDialog(this, "Do you really want to delete the property " + rec.getKey(), "Delete", JOptionPane.YES_NO_OPTION);
                 if (rep == JOptionPane.OK_OPTION) {
                     model.removeRecord(rec);
                 }
-                
+
             }
-            
+
         }
     }//GEN-LAST:event_TB_TableKeyPressed
 

@@ -5,23 +5,19 @@
  */
 package lsimedia.multiproperties;
 
-import lsimedia.multiproperties.JColumnValue;
-import lsimedia.multiproperties.RecordGUI;
-import lsimedia.multiproperties.PropertyRecord;
-import lsimedia.multiproperties.Column;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JComponent;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *
  * @author sbodmer
  */
-public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI{
+public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, ActionListener {
 
     PropertyRecord pr = null;
+    javax.swing.Timer timer = null;
 
     public JPropertyRecord(PropertyRecord pr, ArrayList<Column> columns) {
         this.pr = pr;
@@ -29,9 +25,10 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI{
         initComponents();
 
         TF_Name.setText(pr.name);
-        TF_Default.setText(pr.defaultValue);
+        TA_Default.setText(pr.defaultValue);
         CB_Disabled.setSelected(pr.disabled);
-        
+        TA_Description.setText(pr.description);
+
         for (int i = 0;i < pr.values.size();i++) {
             PropertyRecord.Value v = pr.values.get(i);
 
@@ -39,28 +36,61 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI{
             PN_Columns.add(jc);
 
         }
+
+        timer = new javax.swing.Timer(1000, this);
+        timer.start();
     }
 
     //**************************************************************************
     //*** PropertyGUI
     //**************************************************************************
     public void apply() {
+        timer.stop();
+
         pr.name = TF_Name.getText();
-        pr.defaultValue = TF_Default.getText();
         pr.disabled = CB_Disabled.isSelected();
-        
+        pr.description = TA_Description.getText().trim();
+
+        pr.defaultValue = TA_Default.getText();
+        if (pr.defaultValue.contains("\n")) pr.multiLine = true;
+
         for (int i = 0;i < PN_Columns.getComponentCount();i++) {
             JColumnValue jc = (JColumnValue) PN_Columns.getComponent(i);
-            
+
             PropertyRecord.Value v = pr.values.get(i);
             v.disabled = jc.isDisabled();
             v.value = jc.getValue();
+            if (v.value.contains("\n")) pr.multiLine = true;
+
         }
+
     }
 
+    @Override
+    public void cancel() {
+        timer.stop();
+    }
+
+    @Override
     public JComponent getVisual() {
         return this;
     }
+
+    //**************************************************************************
+    //*** ActionListener
+    //**************************************************************************
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == timer) {
+            //--- Update the default values
+            for (int i = 0;i < PN_Columns.getComponentCount();i++) {
+                JColumnValue jc = (JColumnValue) PN_Columns.getComponent(i);
+                if (jc.isDisabled()) jc.setValue(TA_Default.getText());
+                
+            }
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,28 +101,30 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI{
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
+        PN_General = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         TF_Name = new javax.swing.JTextField();
-        TF_Default = new javax.swing.JTextField();
         CB_Disabled = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         PN_Columns = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        TA_Default = new javax.swing.JTextArea();
+        PN_Description = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TA_Description = new javax.swing.JTextArea();
 
         setLayout(new java.awt.BorderLayout());
 
         jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.jLabel1.text")); // NOI18N
 
         TF_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TF_Name.setText(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.TF_Name.text")); // NOI18N
-
-        TF_Default.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        TF_Default.setText(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.TF_Default.text")); // NOI18N
 
         CB_Disabled.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(CB_Disabled, org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.CB_Disabled.text")); // NOI18N
@@ -101,61 +133,84 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI{
         jScrollPane1.setViewportView(PN_Columns);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.jLabel2.text")); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        TA_Default.setColumns(20);
+        TA_Default.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        TA_Default.setRows(5);
+        jScrollPane3.setViewportView(TA_Default);
+
+        javax.swing.GroupLayout PN_GeneralLayout = new javax.swing.GroupLayout(PN_General);
+        PN_General.setLayout(PN_GeneralLayout);
+        PN_GeneralLayout.setHorizontalGroup(
+            PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PN_GeneralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PN_GeneralLayout.createSequentialGroup()
+                        .addGroup(PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TF_Name)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(CB_Disabled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(PN_GeneralLayout.createSequentialGroup()
+                                .addComponent(TF_Name)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TF_Default, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)))))
+                                .addComponent(CB_Disabled))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE))))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        PN_GeneralLayout.setVerticalGroup(
+            PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PN_GeneralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(TF_Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TF_Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CB_Disabled))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TF_Default, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                .addGroup(PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(CB_Disabled)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.PN_General.TabConstraints.tabTitle"), PN_General); // NOI18N
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 403, Short.MAX_VALUE)
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.jLabel3.text")); // NOI18N
+
+        TA_Description.setColumns(20);
+        TA_Description.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        TA_Description.setRows(5);
+        jScrollPane2.setViewportView(TA_Description);
+
+        javax.swing.GroupLayout PN_DescriptionLayout = new javax.swing.GroupLayout(PN_Description);
+        PN_Description.setLayout(PN_DescriptionLayout);
+        PN_DescriptionLayout.setHorizontalGroup(
+            PN_DescriptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PN_DescriptionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PN_DescriptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE))
+                .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 377, Short.MAX_VALUE)
+        PN_DescriptionLayout.setVerticalGroup(
+            PN_DescriptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PN_DescriptionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.PN_Description.TabConstraints.tabTitle"), PN_Description); // NOI18N
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -164,13 +219,17 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox CB_Disabled;
     private javax.swing.JPanel PN_Columns;
-    private javax.swing.JTextField TF_Default;
+    private javax.swing.JPanel PN_Description;
+    private javax.swing.JPanel PN_General;
+    private javax.swing.JTextArea TA_Default;
+    private javax.swing.JTextArea TA_Description;
     private javax.swing.JTextField TF_Name;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 

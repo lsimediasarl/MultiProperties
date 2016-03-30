@@ -50,7 +50,7 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         LB_Content.setOpaque(column==0);
-        LB_Content.setText(value.toString());
+        LB_Content.setText(value.toString().replaceAll("\n","\\\\n"));
         if (isSelected) {
             LB_Content.setOpaque(false);
             setBackground(table.getSelectionBackground());

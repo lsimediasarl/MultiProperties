@@ -18,6 +18,11 @@ public interface RecordGUI {
     public void apply();
     
     /**
+     * When the modification should be canceled
+     */
+    public void cancel();
+    
+    /**
      * Return the visual panel to display
      * 
      * @return 

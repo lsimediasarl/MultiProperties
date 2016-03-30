@@ -37,6 +37,10 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
         cr.value = TF_Value.getText();
     }
 
+    public void cancel() {
+        //---
+    }
+    
     @Override
     public JComponent getVisual() {
         return this;

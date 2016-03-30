@@ -5,7 +5,6 @@
  */
 package lsimedia.multiproperties.handlers;
 
-import com.sun.deploy.uitoolkit.impl.fx.ui.FXConsole;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -13,10 +12,12 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import lsimedia.multiproperties.Column;
 import lsimedia.multiproperties.HandlerGUI;
-import lsimedia.multiproperties.MultiPropertiesTableModel;
 
 /**
- * The column for the Java Properties handler
+ * The column for the Java Properties handler<p>
+ * 
+ * If the description of the column is "SAMEFOLDER" then check the same folder checkbox, this
+ * hack is needed for eclipse plugin compatibility
  *
  * @author sbodmer
  */
@@ -62,6 +63,9 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
             CB_WriteDisableComment.setSelected(tokens[3].equals("true"));
             CB_DisableDefault.setSelected(tokens[4].equals("true"));
             CB_SameFolder.setSelected(tokens[5].equals("true"));
+            
+            //--- Handle special case for compatibility with eclipse plugin
+            if (column.getDescription().equals("SAMEFOLDER")) CB_SameFolder.setSelected(true);
             
             if (CB_SameFolder.isSelected()) {
                 TF_Location.setEditable(false);

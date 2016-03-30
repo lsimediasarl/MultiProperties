@@ -249,7 +249,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 for (int i = 0;i < model.getRowCount();i++) model.getRecord(i).addColumn();
                 model.addColumn(c);
 
-                if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+                fireModifiedEvent();
             }
 
         } else if (e.getActionCommand().equals("remove")) {
@@ -266,7 +266,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 CardLayout layout = (CardLayout) PN_ColumnConfig.getLayout();
                 layout.show(PN_ColumnConfig, "empty");
 
-                if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+                fireModifiedEvent();
             }
 
         } else if (e.getActionCommand().equals("handler")) {
@@ -278,7 +278,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             dlg.setLocationRelativeTo(this);
             dlg.setVisible(true);
 
-            if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+            fireModifiedEvent();
 
         } else if (e.getActionCommand().equals("import")) {
             //--- Configure the handler for the selected column
@@ -293,6 +293,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     Column c = h.load(model, f[i]);
                     if (c != null) columns.addElement(c);
                 }
+                
+                fireModifiedEvent();
             }
 
         } else if (e.getActionCommand().equals("columnUp")) {
@@ -307,6 +309,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 model.swapColumn(index + 1 - 1, index + 1);
 
                 LI_Columns.setSelectedIndex(index - 1);
+                
+                fireModifiedEvent();
             }
 
         } else if (e.getActionCommand().equals("columnDown")) {
@@ -321,14 +325,17 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 model.swapColumn(index + 1, index + 1 + 1);
 
                 LI_Columns.setSelectedIndex(index + 1);
+                
+                fireModifiedEvent();
             }
-
+            
         } else if (e.getActionCommand().equals("newComment")) {
             String comment = JOptionPane.showInputDialog(this,"Comment");
             if (comment != null) {
                 int index = TB_Table.getSelectedRow();
                 model.insertRecord(index < 0 ? 0 : index, new CommentRecord(comment));
 
+                fireModifiedEvent();
             }
 
         } else if (e.getActionCommand().equals("newProperty")) {
@@ -339,6 +346,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 for (int i = 0;i < columns.size();i++) rec.addColumn();
                 model.insertRecord(index < 0 ? 0 : index, rec);
 
+                fireModifiedEvent();
             }
 
         } else if (e.getActionCommand().equals("newEmpty")) {
@@ -346,6 +354,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             EmptyRecord rec = new EmptyRecord();
             for (int i = 0;i < columns.size();i++) rec.addColumn();
             model.insertRecord(index < 0 ? 0 : index, rec);
+            
+            fireModifiedEvent();
 
         } else if (e.getActionCommand().equals("delete")) {
             int indices[] = TB_Table.getSelectedRows();
@@ -353,6 +363,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             for (int i = 0;i < indices.length;i++) list.add(model.getRecord(indices[i]));
             for (int i = 0;i < list.size();i++) model.removeRecord(list.get(i));
 
+            fireModifiedEvent();
+            
         } else if (e.getActionCommand().equals("copy")) {
             int index = TB_Table.getSelectedRow();
             if (index >= 0) {
@@ -360,6 +372,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     Record rec = model.getRecord(index);
                     model.insertRecord(index, (Record) rec.clone());
 
+                    fireModifiedEvent();
+                    
                 } catch (CloneNotSupportedException ex) {
                     ex.printStackTrace();
                 }
@@ -370,6 +384,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             if (row > 0) {
                 model.swapValue(row - 1, row);
                 TB_Table.getSelectionModel().setSelectionInterval(row - 1, row - 1);
+                
+                fireModifiedEvent();
             }
 
         } else if (e.getActionCommand().equals("down")) {
@@ -377,6 +393,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             if (row < TB_Table.getRowCount() - 1) {
                 model.swapValue(row, row + 1);
                 TB_Table.getSelectionModel().setSelectionInterval(row + 1, row + 1);
+                
+                fireModifiedEvent();
             }
         }
     }
@@ -399,7 +417,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
                 TB_Table.repaint();
 
-                if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+                fireModifiedEvent();
             }
         }
     }
@@ -458,7 +476,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
                 selected = c;
 
-                if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+                fireModifiedEvent();
 
             } else {
                 layout.show(PN_ColumnConfig, "empty");
@@ -858,6 +876,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 if (row > 0) {
                     model.swapValue(row - 1, row);
                     TB_Table.getSelectionModel().setSelectionInterval(row - 1, row - 1);
+                    
+                    fireModifiedEvent();
                 }
             }
 
@@ -867,6 +887,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 if (row < TB_Table.getRowCount() - 1) {
                     model.swapValue(row, row + 1);
                     TB_Table.getSelectionModel().setSelectionInterval(row + 1, row + 1);
+                    
+                    fireModifiedEvent();
                 }
 
             }
@@ -878,6 +900,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 int rep = JOptionPane.showConfirmDialog(this, "Do you really want to delete the property " + rec.getKey(), "Delete", JOptionPane.YES_NO_OPTION);
                 if (rep == JOptionPane.OK_OPTION) {
                     model.removeRecord(rec);
+                    
+                    fireModifiedEvent();
                 }
 
             }
@@ -1033,4 +1057,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         }
     }
 
+    /**
+     * Fire the listeners that the data has changed
+     */
+    private void fireModifiedEvent() {
+        if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
+
+    }
 }

@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
 import javax.swing.JComponent;
@@ -142,8 +143,11 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                     pr.addColumn();
                 }
             }
+            //--- Add column
+            model.addColumn(c);
             
             //--- Fill the the added column
+            ArrayList<Record> newRecords = new ArrayList<>();
             Enumeration<String> en = (Enumeration<String>) prop.propertyNames();
             while (en.hasMoreElements()) {
                 String property = en.nextElement();
@@ -152,6 +156,13 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 Record rec = model.find(property);
                 if (rec == null) {
                     //--- Not found, add the entry
+                    PropertyRecord pr = new PropertyRecord(property);
+                    for (int i=0;i<model.getColumnCount()-1;i++) pr.addColumn();
+                    //--- Last column contains the value
+                    PropertyRecord.Value v = pr.getValueAt(pr.getValueCount()-1);
+                    v.setValue(value);
+                    v.setDisable(false);
+                    newRecords.add(pr);
                     
                 } else if (rec instanceof PropertyRecord) {
                     PropertyRecord pr = (PropertyRecord) rec;
@@ -161,8 +172,8 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 }
             }
             
-            //--- Add column at the end
-            model.addColumn(c);
+            //--- Add the new records
+            for (int i=0;i<newRecords.size();i++) model.addRecord(newRecords.get(i));
             
             return c;
             

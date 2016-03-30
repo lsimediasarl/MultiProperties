@@ -69,6 +69,9 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         jScrollPane1 = new javax.swing.JScrollPane();
         TA_Value = new javax.swing.JTextArea();
 
+        setMaximumSize(new java.awt.Dimension(32767, 100));
+        setPreferredSize(new java.awt.Dimension(683, 100));
+
         CB_Column.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(CB_Column, org.openide.util.NbBundle.getMessage(JColumnValue.class, "JColumnValue.CB_Column.text")); // NOI18N
         CB_Column.setActionCommand(org.openide.util.NbBundle.getMessage(JColumnValue.class, "JColumnValue.CB_Column.actionCommand")); // NOI18N
@@ -99,7 +102,7 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
             .addGroup(layout.createSequentialGroup()
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(CB_Column, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))

@@ -73,8 +73,8 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         setPreferredSize(new java.awt.Dimension(683, 100));
 
         CB_Column.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(CB_Column, org.openide.util.NbBundle.getMessage(JColumnValue.class, "JColumnValue.CB_Column.text")); // NOI18N
-        CB_Column.setActionCommand(org.openide.util.NbBundle.getMessage(JColumnValue.class, "JColumnValue.CB_Column.actionCommand")); // NOI18N
+        CB_Column.setText("...");
+        CB_Column.setActionCommand("enable");
         CB_Column.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         CB_Column.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         CB_Column.setMaximumSize(new java.awt.Dimension(100, 22));

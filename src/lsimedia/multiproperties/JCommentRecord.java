@@ -63,7 +63,6 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
         jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         TF_Value.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        TF_Value.setText(org.openide.util.NbBundle.getMessage(JCommentRecord.class, "JCommentRecord.TF_Value.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -82,7 +81,7 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
                 .addContainerGap(244, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JCommentRecord.class, "JCommentRecord.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+        jTabbedPane1.addTab("tab1", jPanel1);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents

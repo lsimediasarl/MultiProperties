@@ -5,22 +5,16 @@
  */
 package lsimedia.multiproperties.handlers;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
-import javax.swing.JComponent;
 import lsimedia.multiproperties.Column;
 import lsimedia.multiproperties.CommentRecord;
 import lsimedia.multiproperties.HandlerGUI;
 import lsimedia.multiproperties.MultiPropertiesTableModel;
-import lsimedia.multiproperties.PropertiesHandler;
 import lsimedia.multiproperties.PropertiesHandler;
 import lsimedia.multiproperties.PropertyRecord;
 import lsimedia.multiproperties.Record;

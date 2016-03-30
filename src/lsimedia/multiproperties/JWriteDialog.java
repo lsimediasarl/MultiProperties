@@ -77,13 +77,13 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         BT_Cancel.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Cancel, org.openide.util.NbBundle.getMessage(JWriteDialog.class, "JWriteDialog.BT_Cancel.text")); // NOI18N
-        BT_Cancel.setActionCommand(org.openide.util.NbBundle.getMessage(JWriteDialog.class, "JWriteDialog.BT_Cancel.actionCommand")); // NOI18N
+        BT_Cancel.setText("Cancel");
+        BT_Cancel.setActionCommand("cancel");
         jPanel1.add(BT_Cancel);
 
         BT_Ok.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Ok, org.openide.util.NbBundle.getMessage(JWriteDialog.class, "JWriteDialog.BT_Ok.text")); // NOI18N
-        BT_Ok.setActionCommand(org.openide.util.NbBundle.getMessage(JWriteDialog.class, "JWriteDialog.BT_Ok.actionCommand")); // NOI18N
+        BT_Ok.setText("Ok");
+        BT_Ok.setActionCommand("ok");
         jPanel1.add(BT_Ok);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);

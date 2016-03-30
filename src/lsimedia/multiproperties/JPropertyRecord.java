@@ -121,20 +121,19 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.jLabel1.text")); // NOI18N
+        jLabel1.setText("Key");
 
         TF_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        TF_Name.setText(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.TF_Name.text")); // NOI18N
 
         CB_Disabled.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(CB_Disabled, org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.CB_Disabled.text")); // NOI18N
+        CB_Disabled.setText("Disabled");
 
         PN_Columns.setLayout(new javax.swing.BoxLayout(PN_Columns, javax.swing.BoxLayout.Y_AXIS));
         jScrollPane1.setViewportView(PN_Columns);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.jLabel2.text")); // NOI18N
+        jLabel2.setText("Default value");
 
         TA_Default.setColumns(20);
         TA_Default.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
@@ -179,10 +178,10 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.PN_General.TabConstraints.tabTitle"), PN_General); // NOI18N
+        jTabbedPane1.addTab("General", PN_General);
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.jLabel3.text")); // NOI18N
+        jLabel3.setText("Property description");
 
         TA_Description.setColumns(20);
         TA_Description.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
@@ -210,7 +209,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JPropertyRecord.class, "JPropertyRecord.PN_Description.TabConstraints.tabTitle"), PN_Description); // NOI18N
+        jTabbedPane1.addTab("Description", PN_Description);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents

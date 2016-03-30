@@ -174,16 +174,15 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
         jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         CB_EnableOutput.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(CB_EnableOutput, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.CB_EnableOutput.text")); // NOI18N
-        CB_EnableOutput.setActionCommand(org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.CB_EnableOutput.actionCommand")); // NOI18N
+        CB_EnableOutput.setText("Enable output writing");
+        CB_EnableOutput.setActionCommand("enable");
 
         TF_Location.setEditable(false);
         TF_Location.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        TF_Location.setText(org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.TF_Location.text")); // NOI18N
 
         BT_FC.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_FC, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.BT_FC.text")); // NOI18N
-        BT_FC.setActionCommand(org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.BT_FC.actionCommand")); // NOI18N
+        BT_FC.setText("...");
+        BT_FC.setActionCommand("fc");
         BT_FC.setEnabled(false);
         BT_FC.setMargin(new java.awt.Insets(2, 2, 2, 2));
         BT_FC.setMaximumSize(new java.awt.Dimension(16, 16));
@@ -191,30 +190,29 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
         BT_FC.setPreferredSize(new java.awt.Dimension(16, 16));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.jLabel1.text")); // NOI18N
+        jLabel1.setText("Location");
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.jLabel2.text")); // NOI18N
+        jLabel2.setText("File name");
 
         TF_Filename.setEditable(false);
         TF_Filename.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        TF_Filename.setText(org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.TF_Filename.text")); // NOI18N
 
         CB_InsertDescriptionComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(CB_InsertDescriptionComment, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.CB_InsertDescriptionComment.text")); // NOI18N
+        CB_InsertDescriptionComment.setText("Insert description of multiproperties in the begining as comment");
 
         CB_InsertColumnComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(CB_InsertColumnComment, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.CB_InsertColumnComment.text")); // NOI18N
+        CB_InsertColumnComment.setText("Insert description of column in the beginning as comment");
 
         CB_WriteDisableComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(CB_WriteDisableComment, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.CB_WriteDisableComment.text")); // NOI18N
+        CB_WriteDisableComment.setText("Write disabled properties as comment");
 
         CB_DisableDefault.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(CB_DisableDefault, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.CB_DisableDefault.text")); // NOI18N
+        CB_DisableDefault.setText("Disable default value");
 
         CB_SameFolder.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(CB_SameFolder, org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.CB_SameFolder.text")); // NOI18N
-        CB_SameFolder.setActionCommand(org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.CB_SameFolder.actionCommand")); // NOI18N
+        CB_SameFolder.setText("Use the same folder as the .multiproperties");
+        CB_SameFolder.setActionCommand("same");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -271,7 +269,7 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 .addContainerGap(120, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JJavaPropertiesHandler.class, "JJavaPropertiesHandler.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+        jTabbedPane1.addTab("Output properties", jPanel1);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents

@@ -5,4 +5,15 @@
 <project name="lsimedia.netbeans.multiproperties" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project lsimedia.netbeans.multiproperties.</description>
     <import file="nbproject/build-impl.xml"/>
+    
+    <target name="netbeans-extra">
+        <echo message="Extras"/>
+        <antcall target="create-standalone"/>
+    </target>
+    
+    <target name="create-standalone" depends="init" description="Create stand alone executable">
+        <jar destfile="${dist.dir}/JMultiProperties.jar" manifest="Manifests/JMultiProperties.mf">
+            <fileset dir="${build.dir}/classes" includes="lsimedia/multiproperties/**"/>
+        </jar>
+    </target>
 </project>

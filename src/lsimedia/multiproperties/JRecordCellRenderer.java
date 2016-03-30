@@ -42,7 +42,6 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
 
         LB_Content.setBackground(new java.awt.Color(230, 230, 230));
         LB_Content.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(LB_Content, org.openide.util.NbBundle.getMessage(JRecordCellRenderer.class, "JRecordCellRenderer.LB_Content.text")); // NOI18N
         add(LB_Content, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 

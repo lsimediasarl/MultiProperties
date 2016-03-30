@@ -74,7 +74,8 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
         //--- Parse the file
         FileObject fo = obj.getPrimaryFile();
         
-        jm = new JMultiProperties(new File(fo.getPath()));
+        jm = new JMultiProperties();
+        jm.setFile(new File(fo.getPath()));
         jm.setActionListener(this);
         add(jm, BorderLayout.CENTER);
         
@@ -164,7 +165,8 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(DataObject.PROP_MODIFIED)) {
-            //--- Register saveable
+            //--- Register saveable ?
+            //--- I'm a bit confused how the saveable works, please help here ;^)
             MultiSavable sav = new MultiSavable();
             
             
@@ -218,8 +220,7 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
         @Override
         protected void handleSave() throws IOException {
             //---
-            System.out.println(">>> HANDLE SAVE");
-            jm.save();
+            jm.save(true);
             obj.setModified(false);
             unregister();
             

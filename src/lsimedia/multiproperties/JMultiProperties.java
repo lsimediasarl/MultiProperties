@@ -9,53 +9,33 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import lsimedia.multiproperties.handlers.JavaPropertiesHandler;
-import lsimedia.netbeans.multiproperties.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.swing.Action;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.netbeans.core.spi.multiview.CloseOperationState;
-import org.netbeans.core.spi.multiview.MultiViewElement;
-import org.netbeans.core.spi.multiview.MultiViewElementCallback;
-import org.openide.awt.UndoRedo;
-import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataObject;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle.Messages;
-import org.openide.windows.TopComponent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -86,9 +66,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      */
     ActionListener listener = null;
 
-    public JMultiProperties(File file) {
-        this.file = file;
-
+    public JMultiProperties() {
         initComponents();
 
         CMB_Handlers.addItem(new JavaPropertiesHandler());
@@ -125,8 +103,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
 
-            parseMultiproperties(file);
-
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -137,6 +114,16 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     //**************************************************************************
     //*** API
     //**************************************************************************
+    public void setFile(File file) {
+        this.file = file;
+        parseMultiproperties(file);
+
+    }
+    
+    public File getFile() {
+        return file;
+    }
+    
     /**
      * Unique listener for data changes
      *
@@ -148,10 +135,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
     /**
      * Save the files to filesystem, two steps, first dave the .multiproperties
-     * xml file, than for each column, save the properties via the handler<p>
+     * xml file<p>
+     * 
+     * If the process argument is true, than for each column, save the properties via the handler<p>
      *
      */
-    public void save() {
+    public void save(boolean process) {
         //--- Save the multiproperties files and each properties
         try {
             PropertiesHandler handler = (PropertiesHandler) CMB_Handlers.getSelectedItem();
@@ -225,7 +214,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             System.out.println("SAVED TO :" + file.getPath());
 
             //--- Pass the model to the properties handler to save the specific file
-            handler.save(model, TF_Name.getText(), TA_Description.getText(), file);
+            if (process) handler.save(model, TF_Name.getText(), TA_Description.getText(), file);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -521,6 +510,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jScrollPane4 = new javax.swing.JScrollPane();
         TA_ColumnDescription = new javax.swing.JTextArea();
         BT_ConfigureHandler = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         BT_ColumnUp = new javax.swing.JButton();
         BT_ColumnDown = new javax.swing.JButton();
         BT_Import = new javax.swing.JButton();
@@ -561,28 +551,28 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         PU_Actions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         MN_Copy.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(MN_Copy, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.MN_Copy.text")); // NOI18N
-        MN_Copy.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.MN_Copy.actionCommand")); // NOI18N
+        MN_Copy.setText("Copy");
+        MN_Copy.setActionCommand("copy");
         PU_Actions.add(MN_Copy);
         PU_Actions.add(jSeparator3);
 
         MN_Delete.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(MN_Delete, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.MN_Delete.text")); // NOI18N
-        MN_Delete.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.MN_Delete.actionCommand")); // NOI18N
+        MN_Delete.setText("Delete");
+        MN_Delete.setActionCommand("delete");
         PU_Actions.add(MN_Delete);
 
         setLayout(new java.awt.BorderLayout());
 
+        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.jLabel1.text")); // NOI18N
+        jLabel1.setText("Name");
 
         TF_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        TF_Name.setText(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.TF_Name.text")); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.jLabel2.text")); // NOI18N
+        jLabel2.setText("Description");
 
         TA_Description.setColumns(20);
         TA_Description.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
@@ -592,10 +582,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         CMB_Handlers.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.jLabel4.text")); // NOI18N
+        jLabel4.setText("Handler");
 
         LB_Version.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(LB_Version, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.LB_Version.text")); // NOI18N
 
         javax.swing.GroupLayout PN_OverviewLayout = new javax.swing.GroupLayout(PN_Overview);
         PN_Overview.setLayout(PN_OverviewLayout);
@@ -611,7 +600,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(TF_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(LB_Version))
-                        .addContainerGap(493, Short.MAX_VALUE))
+                        .addContainerGap(451, Short.MAX_VALUE))
                     .addGroup(PN_OverviewLayout.createSequentialGroup()
                         .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -640,49 +629,50 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CMB_Handlers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 302, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 321, Short.MAX_VALUE)
                 .addComponent(LB_Version)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.PN_Overview.TabConstraints.tabTitle"), PN_Overview); // NOI18N
+        jTabbedPane1.addTab("Overview", PN_Overview);
 
         LI_Columns.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         LI_Columns.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(LI_Columns);
 
         BT_Add.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Add, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Add.text")); // NOI18N
-        BT_Add.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Add.actionCommand")); // NOI18N
+        BT_Add.setText("Add");
+        BT_Add.setActionCommand("add");
 
         BT_Remove.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Remove, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Remove.text")); // NOI18N
-        BT_Remove.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Remove.actionCommand")); // NOI18N
+        BT_Remove.setText("Remove");
+        BT_Remove.setActionCommand("remove");
 
         PN_ColumnConfig.setLayout(new java.awt.CardLayout());
-
-        org.openide.awt.Mnemonics.setLocalizedText(LB_Empty, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.LB_Empty.text")); // NOI18N
         PN_ColumnConfig.add(LB_Empty, "empty");
 
         LB_ColumnName.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(LB_ColumnName, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.LB_ColumnName.text")); // NOI18N
+        LB_ColumnName.setText("Name");
 
         TF_ColumnName.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        TF_ColumnName.setText(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.TF_ColumnName.text")); // NOI18N
 
         LB_ColumnDescription.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(LB_ColumnDescription, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.LB_ColumnDescription.text")); // NOI18N
+        LB_ColumnDescription.setText("Description");
 
         jScrollPane4.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
 
         TA_ColumnDescription.setColumns(20);
         TA_ColumnDescription.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TA_ColumnDescription.setRows(5);
+        TA_ColumnDescription.setToolTipText("<html>The eclipse plugin does not support saving in the same folder has the multiproperties.<br>\nSet \"SAMEFOLDER\" here to keep eclipse compatibility for the new setting\n</html>");
         jScrollPane4.setViewportView(TA_ColumnDescription);
 
         BT_ConfigureHandler.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_ConfigureHandler, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_ConfigureHandler.text")); // NOI18N
-        BT_ConfigureHandler.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_ConfigureHandler.actionCommand")); // NOI18N
+        BT_ConfigureHandler.setText("Configure handler");
+        BT_ConfigureHandler.setActionCommand("handler");
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel3.setText("For eclipse compatibility, set \"SAMEFOLDER\" in description if needed");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -699,10 +689,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                         .addComponent(LB_ColumnDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(BT_ConfigureHandler)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -717,23 +708,25 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     .addComponent(LB_ColumnDescription)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BT_ConfigureHandler)
-                .addContainerGap(289, Short.MAX_VALUE))
+                .addContainerGap(288, Short.MAX_VALUE))
         );
 
         PN_ColumnConfig.add(jPanel1, "column");
 
         BT_ColumnUp.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_ColumnUp, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_ColumnUp.text")); // NOI18N
-        BT_ColumnUp.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_ColumnUp.actionCommand")); // NOI18N
+        BT_ColumnUp.setText("Up");
+        BT_ColumnUp.setActionCommand("columnUp");
 
         BT_ColumnDown.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_ColumnDown, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_ColumnDown.text")); // NOI18N
-        BT_ColumnDown.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_ColumnDown.actionCommand")); // NOI18N
+        BT_ColumnDown.setText("Down");
+        BT_ColumnDown.setActionCommand("columnDown");
 
         BT_Import.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Import, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Import.text")); // NOI18N
-        BT_Import.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Import.actionCommand")); // NOI18N
+        BT_Import.setText("Import");
+        BT_Import.setActionCommand("import");
 
         javax.swing.GroupLayout PN_ColumnsLayout = new javax.swing.GroupLayout(PN_Columns);
         PN_Columns.setLayout(PN_ColumnsLayout);
@@ -777,7 +770,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.PN_Columns.TabConstraints.tabTitle"), PN_Columns); // NOI18N
+        jTabbedPane1.addTab("Columns", PN_Columns);
 
         PN_Table.setLayout(new java.awt.BorderLayout());
 
@@ -805,24 +798,24 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jToolBar1.setRollover(true);
 
         BT_NewComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_NewComment, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewComment.text")); // NOI18N
-        BT_NewComment.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewComment.actionCommand")); // NOI18N
+        BT_NewComment.setText("New comment");
+        BT_NewComment.setActionCommand("newComment");
         BT_NewComment.setFocusable(false);
         BT_NewComment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_NewComment.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_NewComment);
 
         BT_NewEmpty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_NewEmpty, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewEmpty.text")); // NOI18N
-        BT_NewEmpty.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewEmpty.actionCommand")); // NOI18N
+        BT_NewEmpty.setText("New empty line");
+        BT_NewEmpty.setActionCommand("newEmpty");
         BT_NewEmpty.setFocusable(false);
         BT_NewEmpty.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_NewEmpty.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_NewEmpty);
 
         BT_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_NewProperty, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewProperty.text")); // NOI18N
-        BT_NewProperty.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_NewProperty.actionCommand")); // NOI18N
+        BT_NewProperty.setText("New property");
+        BT_NewProperty.setActionCommand("newProperty");
         BT_NewProperty.setFocusable(false);
         BT_NewProperty.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_NewProperty.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -830,24 +823,24 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jToolBar1.add(jSeparator1);
 
         BT_Up.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Up, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Up.text")); // NOI18N
-        BT_Up.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Up.actionCommand")); // NOI18N
+        BT_Up.setText("Up");
+        BT_Up.setActionCommand("up");
         BT_Up.setFocusable(false);
         BT_Up.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_Up.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_Up);
 
         BT_Down.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Down, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Down.text")); // NOI18N
-        BT_Down.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Down.actionCommand")); // NOI18N
+        BT_Down.setText("Down");
+        BT_Down.setActionCommand("down");
         BT_Down.setFocusable(false);
         BT_Down.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_Down.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_Down);
 
         BT_Copy.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Copy, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Copy.text")); // NOI18N
-        BT_Copy.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Copy.actionCommand")); // NOI18N
+        BT_Copy.setText("Copy");
+        BT_Copy.setActionCommand("copy");
         BT_Copy.setFocusable(false);
         BT_Copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_Copy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -855,8 +848,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jToolBar1.add(jSeparator2);
 
         BT_Delete.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(BT_Delete, org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Delete.text")); // NOI18N
-        BT_Delete.setActionCommand(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.BT_Delete.actionCommand")); // NOI18N
+        BT_Delete.setText("Delete");
+        BT_Delete.setActionCommand("delete");
         BT_Delete.setFocusable(false);
         BT_Delete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_Delete.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -864,7 +857,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         PN_Table.add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(JMultiProperties.class, "JMultiProperties.PN_Table.TabConstraints.tabTitle"), PN_Table); // NOI18N
+        jTabbedPane1.addTab("Table", PN_Table);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -943,6 +936,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JTextField TF_Name;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

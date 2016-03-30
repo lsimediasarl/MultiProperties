@@ -150,9 +150,10 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 String value = prop.getProperty(property);
                 
                 Record rec = model.find(property);
-                if (rec == null) continue;
-                
-                if (rec instanceof PropertyRecord) {
+                if (rec == null) {
+                    //--- Not found, add the entry
+                    
+                } else if (rec instanceof PropertyRecord) {
                     PropertyRecord pr = (PropertyRecord) rec;
                     PropertyRecord.Value v = pr.getValueAt(pr.getValueCount()-1);
                     v.setValue(value);

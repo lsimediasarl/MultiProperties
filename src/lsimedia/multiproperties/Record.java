@@ -15,10 +15,10 @@ import org.w3c.dom.Element;
  *
  * @author sbodmer
  */
-public abstract class Record {
+public abstract class Record implements Cloneable {
     
     public Record() {
-        
+        //---
     }
     
     public Record(Element record) {
@@ -63,4 +63,8 @@ public abstract class Record {
      */
     public abstract void removeColumn(int index);
     
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

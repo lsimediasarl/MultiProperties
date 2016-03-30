@@ -9,20 +9,15 @@ import java.io.IOException;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.spi.actions.AbstractSavable;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
-import org.openide.NotifyDescriptor.Confirmation;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
-import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
-import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
@@ -125,37 +120,5 @@ public class MultiPropertiesDataObject extends MultiDataObject {
     //**************************************************************************
     //*** Private
     //**************************************************************************
-    private class MultiSavable extends AbstractSavable {
-        int hash = hashCode();
-        
-        private MultiSavable() {
-            register();
-        }
-
-        @Override
-        protected String findDisplayName() {
-            return getName();
-        }
-
-        @Override
-        protected void handleSave() throws IOException {
-            //---
-            System.out.println(">>> HANDLE SAVE");
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof MultiSavable) {
-                MultiSavable m = (MultiSavable) obj;
-                return m.hashCode() == hashCode();
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return hash;
-        }
-
-    }
+    
 }

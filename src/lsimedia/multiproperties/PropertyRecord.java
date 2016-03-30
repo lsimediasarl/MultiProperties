@@ -7,7 +7,6 @@ package lsimedia.multiproperties;
 
 import lsimedia.multiproperties.Column;
 import java.util.ArrayList;
-import javax.swing.JComponent;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,7 +19,7 @@ public class PropertyRecord extends Record {
 
     String name = "";
     String description = "";
-    boolean disabled = true;    //--- Write has comment
+    boolean disabled = false;    //--- Write has comment
     boolean multiLine = false;
     String defaultValue = "";
 
@@ -33,7 +32,7 @@ public class PropertyRecord extends Record {
         super();
         this.name = name;
     }
-    
+
     public PropertyRecord(Element record) {
         super(record);
 
@@ -78,6 +77,10 @@ public class PropertyRecord extends Record {
         return values.get(index);
     }
 
+    public void setValueAt(int index, Value element) {
+        values.set(index, element);
+    }
+    
     public int getValueCount() {
         return values.size();
     }
@@ -97,7 +100,7 @@ public class PropertyRecord extends Record {
     public boolean isMultiLine() {
         return multiLine;
     }
-    
+
     //**************************************************************************
     //*** Record
     //***************************************************************************
@@ -167,10 +170,18 @@ public class PropertyRecord extends Record {
         values.remove(index);
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        PropertyRecord c = (PropertyRecord) super.clone();
+        //--- Clone the values
+        for (int i=0;i<values.size();i++) c.setValueAt(i, (PropertyRecord.Value) values.get(i).clone());
+        return c;
+    }
+
     //**************************************************************************
     //*** Helpful class
     //**************************************************************************
-    public class Value {
+    public class Value implements Cloneable {
 
         String value = "";
         boolean disabled = true;    //--- Use default value
@@ -199,6 +210,11 @@ public class PropertyRecord extends Record {
         public void setDisable(boolean disabled) {
             this.disabled = disabled;
 
+        }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
         }
     }
 }

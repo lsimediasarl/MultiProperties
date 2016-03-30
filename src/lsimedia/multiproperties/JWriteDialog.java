@@ -20,12 +20,15 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
     
     RecordGUI rgui = null;
     
+    MultiPropertiesTableModel model = null;
+    
     /**
      * Creates new form JWriteDialog
      */
-    public JWriteDialog(java.awt.Frame parent, boolean modal, Record record, ArrayList<Column> columns) {
+    public JWriteDialog(java.awt.Frame parent, boolean modal, Record record, ArrayList<Column> columns, MultiPropertiesTableModel model) {
         super(parent, modal);
         this.record = record;
+        this.model = model;
         rgui = record.getGUI(columns);
         
         initComponents();

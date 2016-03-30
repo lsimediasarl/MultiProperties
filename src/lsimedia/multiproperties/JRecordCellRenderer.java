@@ -16,6 +16,10 @@ import javax.swing.table.TableCellRenderer;
  */
 public class JRecordCellRenderer extends javax.swing.JPanel implements TableCellRenderer {
 
+    static final String COLOR_DISABLED = "#888888";
+    static final String COLOR_COMMENT = "#0000ff";
+    static final String COLOR_ERROR = "#ff0000";
+    
     /**
      * Creates new form JRecordCellRenderer
      */
@@ -49,15 +53,66 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        LB_Content.setOpaque(column==0);
-        LB_Content.setText(value.toString().replaceAll("\n","\\\\n"));
+        LB_Content.setOpaque(column == 0);
+        if (value instanceof String) {
+            LB_Content.setText(value.toString().replaceAll("\n", "\\\\n"));
+
+        } else if (value instanceof CommentRecord) {
+            CommentRecord cr = (CommentRecord) value;
+            String txt = "<html><font color=\"" + COLOR_COMMENT + "\"><b>" + cr.value + "</b></font></html>";
+            LB_Content.setText(txt);
+
+        } else if (value instanceof PropertyRecord) {
+            PropertyRecord pr = (PropertyRecord) value;
+            String txt = "";
+            if (column == 0) {
+                boolean same = false;
+                //--- Check if multiple same keys
+                for (int i=0;i<table.getRowCount();i++) {
+                    Record rec = (Record) table.getValueAt(i, 0);
+                    if (rec.getKey() != null) {
+                        if ((i != row) && rec.getKey().equals(pr.getKey())) same = true;
+                    }
+                    
+                }
+                
+                if (same) {
+                    txt = "<html><pre><b><font color=\"" + COLOR_ERROR + "\">" + pr.name + "</font></b></pre></html>";
+                    
+                } else if (pr.disabled) {
+                    txt = "<html><pre><b><font color=\"" + COLOR_DISABLED + "\">" + pr.name + "</font></b></pre></html>";
+                    
+                } else {
+                    txt = "<html><pre><b>" + pr.name + "</b></pre></html>";
+                    
+                }
+                
+            } else {
+                PropertyRecord.Value v = pr.getValueAt(column - 1);
+                txt = v.getValue().replaceAll("\n", "<br>");
+                if (v.disabled) {
+                    txt = pr.defaultValue.replaceAll("\n", "<br>");
+                    txt = "<html><font color=\"" + COLOR_DISABLED + "\">" + txt + "</font></html>";
+                    
+                } else {
+                    txt = "<html>"+txt+"</html>";
+                    
+                }
+
+            }
+            LB_Content.setText(txt);
+
+        } else if (value instanceof EmptyRecord) {
+            LB_Content.setText("");
+
+        }
         if (isSelected) {
             LB_Content.setOpaque(false);
             setBackground(table.getSelectionBackground());
-            
+
         } else {
             setBackground(table.getBackground());
-            
+
         }
         return this;
     }

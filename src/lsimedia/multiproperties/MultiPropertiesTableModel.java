@@ -5,7 +5,6 @@
  */
 package lsimedia.multiproperties;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -16,9 +15,6 @@ import javax.swing.table.TableModel;
  * @author sbodmer
  */
 public class MultiPropertiesTableModel implements TableModel {
-    static final String COLOR_DISABLED = "#888888";
-    static final String COLOR_COMMENT = "#8888ff";
-    
     ArrayList<TableModelListener> listeners = new ArrayList<>();
 
     ArrayList<Column> columns = new ArrayList<Column>();
@@ -103,9 +99,17 @@ public class MultiPropertiesTableModel implements TableModel {
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
     }
 
+    public Record removeRecord(int index) {
+        Record rec = records.remove(index);
+        TableModelEvent e = new TableModelEvent(this);
+        for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
+        return rec;
+    }
+    
     public void removeAllElements() {
         records.clear();
         columns.clear();
+        columns.add(new Column("Key"));
         
         TableModelEvent e = new TableModelEvent(this);
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
@@ -162,7 +166,7 @@ public class MultiPropertiesTableModel implements TableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return String.class;
+        return Record.class;
     }
 
     @Override
@@ -172,23 +176,8 @@ public class MultiPropertiesTableModel implements TableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Record r = records.get(rowIndex);
-        if (r instanceof CommentRecord) {
-            CommentRecord cr = (CommentRecord) r;
-            return "<html><font color=\""+COLOR_COMMENT+"\"><b>" + cr.value + "</b></font></html>";
-
-        } else if (r instanceof PropertyRecord) {
-            PropertyRecord pr = (PropertyRecord) r;
-            if (columnIndex == 0) {
-                return "<html><pre><b>"+pr.name+"</b></pre></html>";
-                
-            } else {
-                PropertyRecord.Value v = pr.values.get(columnIndex-1);
-                if (v.disabled) return "<html><font color=\""+COLOR_DISABLED+"\">" + pr.defaultValue + "</font></html>";
-                return v.toString();
-            }
-        }
-        return null;
+        return records.get(rowIndex);
+        
     }
 
     @Override

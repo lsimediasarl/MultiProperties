@@ -4,4 +4,10 @@
     <Name>ML</Name>
     <Description></Description>
     <Handler>Java Properties Handler</Handler>
+    <Columns>
+        <Key>
+            <Width>120</Width>
+        </Key>
+    </Columns>
+    <Records/>
 </MultiProperties>

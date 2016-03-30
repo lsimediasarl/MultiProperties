@@ -58,7 +58,6 @@ import org.xml.sax.SAXException;
 @Messages("LBL_MultiProperties_VISUAL=Visual")
 public final class MultiPropertiesVisualElement extends JPanel implements MultiViewElement, PropertyChangeListener, ActionListener {
 
-    MultiSavable sav = null;
     
     private MultiPropertiesDataObject obj;
     private JToolBar toolbar = new JToolBar();
@@ -80,10 +79,10 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
         add(jm, BorderLayout.CENTER);
         
         //--- Add the save action
-        // obj.addPropertyChangeListener(this);
+        obj.addPropertyChangeListener(this);
 
         //--- Register save button
-        if (sav == null) sav = new MultiSavable();
+        
     }
 
     @Override
@@ -165,7 +164,9 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(DataObject.PROP_MODIFIED)) {
-            // jm.save();
+            //--- Register saveable
+            MultiSavable sav = new MultiSavable();
+            
             
         }
     }
@@ -203,7 +204,7 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
     //*** Private
     //**************************************************************************
     private class MultiSavable extends AbstractSavable {
-        int hash = hashCode();
+        int hash = obj.hashCode();
         
         private MultiSavable() {
             register();
@@ -211,7 +212,7 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
 
         @Override
         protected String findDisplayName() {
-            return getName();
+            return obj.getName();
         }
 
         @Override
@@ -220,6 +221,7 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
             System.out.println(">>> HANDLE SAVE");
             jm.save();
             obj.setModified(false);
+            unregister();
             
         }
 

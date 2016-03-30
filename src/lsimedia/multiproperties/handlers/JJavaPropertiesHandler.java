@@ -67,6 +67,7 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 TF_Location.setEditable(false);
                 TF_Location.setText("");
                 BT_FC.setEnabled(false);
+                   
             }
             
         } catch (Exception ex) {
@@ -83,8 +84,11 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
     @Override
     public void apply() {
         //--- Store the value in Column instance
-        File f = new File(TF_Location.getText(), TF_Filename.getText());
-        String txt = f.getPath();
+        String txt = "";
+        if (CB_EnableOutput.isSelected()) {
+            File f = new File(TF_Location.getText(), TF_Filename.getText());
+            txt = f.getPath();
+        }
         txt += "|" + CB_InsertDescriptionComment.isSelected();
         txt += "|" + CB_InsertColumnComment.isSelected();
         txt += "|" + CB_WriteDisableComment.isSelected();
@@ -132,7 +136,7 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 
             } else {
                 TF_Location.setEditable(true);
-                BT_FC.setEnabled(false);
+                BT_FC.setEnabled(true);
                 
             }
         }

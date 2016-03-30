@@ -8,4 +8,6 @@ netbeans using this plugin.
 
 !!! ALPHA VERSION, USE IT AT YOUR OWN RISK !!!
 
+This plugin is written from scratch, no code sharing with the original plugin.
+
 Not every features of the orginal plugin is implemented

@@ -9,8 +9,8 @@ netbeans using this plugin.
 ## Release
 !!! ALPHA VERSION, USE IT AT YOUR OWN RISK !!!
 
-The implementation of the current codebase is not yet finished, so you should not
-use this plugin in a production environment at the moment...
+The implementation is not yet finished, so you should not use this plugin in a
+production environment at the moment...
 
 This plugin is written from scratch, no code sharing with the original plugin.
 

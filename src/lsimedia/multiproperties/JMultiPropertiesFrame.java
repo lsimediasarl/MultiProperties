@@ -15,10 +15,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
@@ -28,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -158,6 +156,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             JFileChooser jf = new JFileChooser(last);
             jf.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             jf.setMultiSelectionEnabled(true);
+            jf.setFileFilter(new FileNameExtensionFilter("Multiproperties", "multiproperties"));
             int rep = jf.showOpenDialog(this);
             if (rep == JFileChooser.APPROVE_OPTION) {
                 File f[] = jf.getSelectedFiles();

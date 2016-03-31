@@ -20,7 +20,7 @@ public interface PropertiesHandler {
      * @param model
      * @return 
      */
-    public boolean save(MultiPropertiesTableModel model, String name, String description, File source);
+    public boolean save(final MultiPropertiesTableModel model, final String name, final String description, final File source, final Logit logit);
     
     /**
      * Load the file and import into table model, return the added column, or
@@ -30,7 +30,7 @@ public interface PropertiesHandler {
      * @param f
      * @return 
      */
-    public Column load(MultiPropertiesTableModel model, File f);
+    public Column load(final MultiPropertiesTableModel model, final File source);
     
     /**
      * Return the handlers name (used to identify the class)
@@ -39,9 +39,11 @@ public interface PropertiesHandler {
     public String getName();
     
     /**
-     * Return the handler gui panel already filled
+     * Return the handler gui panel already filled<p>
+     * 
+     * The passed source is for information only
      * 
      * @return 
      */
-    public HandlerGUI getGUI(Column column);
+    public HandlerGUI getGUI(final Column column, final File source);
 }

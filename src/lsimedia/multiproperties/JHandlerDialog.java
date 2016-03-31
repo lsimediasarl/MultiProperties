@@ -8,6 +8,7 @@ package lsimedia.multiproperties;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -24,10 +25,10 @@ public class JHandlerDialog extends javax.swing.JDialog implements ActionListene
     /**
      * Creates new form JWriteDialog
      */
-    public JHandlerDialog(java.awt.Frame parent, boolean modal, PropertiesHandler handler, Column column) {
+    public JHandlerDialog(final java.awt.Frame parent, final boolean modal, final PropertiesHandler handler, final Column column, final File source) {
         super(parent, modal);
         this.column = column;
-        hgui = handler.getGUI(column);
+        hgui = handler.getGUI(column, source);
         
         initComponents();
     
@@ -50,6 +51,8 @@ public class JHandlerDialog extends javax.swing.JDialog implements ActionListene
             dispose();
             
         } else if (e.getActionCommand().equals("cancel")) {
+            hgui.cancel();
+            
             setVisible(false);
             dispose(); 
         }
@@ -68,7 +71,12 @@ public class JHandlerDialog extends javax.swing.JDialog implements ActionListene
         BT_Cancel = new javax.swing.JButton();
         BT_Ok = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
@@ -86,6 +94,14 @@ public class JHandlerDialog extends javax.swing.JDialog implements ActionListene
 
         setBounds(0, 0, 650, 510);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        hgui.cancel();
+        
+        setVisible(false);
+        dispose(); 
+    }//GEN-LAST:event_formWindowClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

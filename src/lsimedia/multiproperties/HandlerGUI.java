@@ -24,4 +24,9 @@ public interface HandlerGUI {
      */
     public void apply();
     
+    /**
+     * Cancel the changes
+     */
+    public void cancel();
+    
 }

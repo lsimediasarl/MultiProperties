@@ -30,6 +30,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import lsimedia.multiproperties.JMultiProperties;
+import lsimedia.multiproperties.Logit;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -64,7 +65,8 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
     private transient MultiViewElementCallback callback;
         
     JMultiProperties jm = null;
-            
+    Logit logit = new Logit();
+    
     public MultiPropertiesVisualElement(Lookup lkp) {
         obj = lkp.lookup(MultiPropertiesDataObject.class);
         assert obj != null;
@@ -74,7 +76,7 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
         //--- Parse the file
         FileObject fo = obj.getPrimaryFile();
         
-        jm = new JMultiProperties();
+        jm = new JMultiProperties(logit);
         jm.setFile(new File(fo.getPath()));
         jm.setActionListener(this);
         add(jm, BorderLayout.CENTER);

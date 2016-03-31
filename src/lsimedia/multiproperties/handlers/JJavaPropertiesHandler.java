@@ -8,6 +8,7 @@ package lsimedia.multiproperties.handlers;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import lsimedia.multiproperties.Column;
@@ -15,15 +16,16 @@ import lsimedia.multiproperties.HandlerGUI;
 
 /**
  * The column for the Java Properties handler<p>
- * 
- * If the description of the column is "SAMEFOLDER" then check the same folder checkbox, this
- * hack is needed for eclipse plugin compatibility
+ *
  *
  * @author sbodmer
  */
 public class JJavaPropertiesHandler extends javax.swing.JPanel implements HandlerGUI, ActionListener {
 
     Column column = null;
+    File source = null;
+
+    javax.swing.Timer timer = null;
 
     /**
      * Creates new form JJavaPropertiesHandler
@@ -34,50 +36,58 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
      * </PRE>
      *
      */
-    public JJavaPropertiesHandler(Column column) {
+    public JJavaPropertiesHandler(Column column, File source) {
         this.column = column;
+        this.source = source;
 
         initComponents();
 
         CB_EnableOutput.addActionListener(this);
-        CB_SameFolder.addActionListener(this);
-        
         BT_FC.addActionListener(this);
-        
+
+        TF_Source.setText(source.getPath());
+
         //-- Fill with the value
         String tokens[] = column.getHandlerConfiguration().split("\\|");
         try {
             String fn = tokens[0];
             if (!fn.equals("")) {
                 File f = new File(fn);
-                TF_Location.setText(f.getParent());
+                if (fn.startsWith("/")) {
+                    //--- Absolute
+                    TF_Location.setText(f.getParent());
+                    
+                } else if (fn.startsWith("./")) {
+                    //--- Same folder
+                    TF_Location.setText("./");
+                    
+                } else if (fn.startsWith("../")) {
+                    TF_Location.setText(fn.substring(0,fn.length()-f.getName().length()));
+                    
+                }
                 TF_Filename.setText(f.getName());
+                    
+
+            } else {
+                //--- Not output
             }
             CB_EnableOutput.setSelected(!fn.equals(""));
             TF_Location.setEditable(!fn.equals(""));
             TF_Filename.setEditable(!fn.equals(""));
             BT_FC.setEnabled(!fn.equals(""));
-            
+
             CB_InsertDescriptionComment.setSelected(tokens[1].equals("true"));
             CB_InsertColumnComment.setSelected(tokens[2].equals("true"));
             CB_WriteDisableComment.setSelected(tokens[3].equals("true"));
             CB_DisableDefault.setSelected(tokens[4].equals("true"));
-            CB_SameFolder.setSelected(tokens[5].equals("true"));
-            
-            //--- Handle special case for compatibility with eclipse plugin
-            if (column.getDescription().equals("SAMEFOLDER")) CB_SameFolder.setSelected(true);
-            
-            if (CB_SameFolder.isSelected()) {
-                TF_Location.setEditable(false);
-                TF_Location.setText("");
-                BT_FC.setEnabled(false);
-                   
-            }
-            
+
         } catch (Exception ex) {
             //---
         }
 
+        //--- Destination preview timer
+        timer = new javax.swing.Timer(1000, this);
+        timer.start();
     }
 
     @Override
@@ -87,6 +97,8 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
 
     @Override
     public void apply() {
+        timer.stop();
+
         //--- Store the value in Column instance
         String txt = "";
         if (CB_EnableOutput.isSelected()) {
@@ -97,9 +109,14 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
         txt += "|" + CB_InsertColumnComment.isSelected();
         txt += "|" + CB_WriteDisableComment.isSelected();
         txt += "|" + CB_DisableDefault.isSelected();
-        txt += "|" + CB_SameFolder.isSelected();
-        
+
         column.setHandlerConfiguration(txt);
+    }
+
+    @Override
+    public void cancel() {
+        timer.stop();
+
     }
 
     //**************************************************************************
@@ -107,12 +124,35 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
     //**************************************************************************
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("enable")) {
+        if (e.getSource() == timer) {
+            String loc = TF_Location.getText().trim();
+            String n = TF_Filename.getText().trim();
+            try {
+                if (loc.startsWith("/")) {
+                    File f = new File(loc, n);
+                    TF_Destination.setText(f.getCanonicalPath());
+
+                } else if (loc.startsWith("./")) {
+                    File f = new File(source.getParent(), n);
+                    TF_Destination.setText(f.getCanonicalPath());
+
+                } else if (loc.startsWith("../")) {
+                    File f = new File(source.getParent(), loc + "/" + n);
+                    TF_Destination.setText(f.getCanonicalPath());
+
+                }
+
+            } catch (IOException ex) {
+                TF_Destination.setText("ERROR");
+
+            }
+
+        } else if (e.getActionCommand().equals("enable")) {
             if (CB_EnableOutput.isSelected()) {
                 TF_Location.setEditable(true);
                 TF_Filename.setEditable(true);
                 BT_FC.setEnabled(true);
-                
+
             } else {
                 TF_Location.setText("");
                 TF_Location.setEditable(false);
@@ -120,8 +160,9 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 TF_Filename.setEditable(false);
                 BT_FC.setEnabled(false);
             }
-            
+
         } else if (e.getActionCommand().equals("fc")) {
+            //--- Absolute path
             File f = new File(TF_Location.getText(), TF_Filename.getText());
             JFileChooser fc = new JFileChooser(f);
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -130,19 +171,9 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 f = fc.getSelectedFile();
                 TF_Location.setText(f.getParent());
                 TF_Filename.setText(f.getName());
+                TF_Destination.setText(f.getPath());
             }
-            
-        } else if (e.getActionCommand().equals("same")) {
-            if (CB_SameFolder.isSelected()) {
-                TF_Location.setEditable(false);
-                TF_Location.setText("");
-                BT_FC.setEnabled(false);
-                
-            } else {
-                TF_Location.setEditable(true);
-                BT_FC.setEnabled(true);
-                
-            }
+
         }
     }
 
@@ -167,7 +198,10 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
         CB_InsertColumnComment = new javax.swing.JCheckBox();
         CB_WriteDisableComment = new javax.swing.JCheckBox();
         CB_DisableDefault = new javax.swing.JCheckBox();
-        CB_SameFolder = new javax.swing.JCheckBox();
+        TF_Source = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        TF_Destination = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -179,6 +213,7 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
 
         TF_Location.setEditable(false);
         TF_Location.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        TF_Location.setToolTipText("<html>Relative path to the multiproperties file or absolute path<br>\nTo save at the same level than the source file, use <pre>./</pre>\nFor relative start the location string with <pre>../</pre>\n</html>");
 
         BT_FC.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_FC.setText("...");
@@ -210,9 +245,17 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
         CB_DisableDefault.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_DisableDefault.setText("Disable default value");
 
-        CB_SameFolder.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        CB_SameFolder.setText("Use the same folder as the .multiproperties");
-        CB_SameFolder.setActionCommand("same");
+        TF_Source.setEditable(false);
+        TF_Source.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel3.setText("Source");
+
+        TF_Destination.setEditable(false);
+        TF_Destination.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel4.setText("Destination");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -221,25 +264,30 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TF_Filename)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(TF_Location)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(BT_FC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(CB_InsertDescriptionComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(CB_InsertColumnComment, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+                    .addComponent(CB_WriteDisableComment, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+                    .addComponent(CB_DisableDefault, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(CB_EnableOutput)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(CB_InsertDescriptionComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(CB_InsertColumnComment, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
-                    .addComponent(CB_WriteDisableComment, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
-                    .addComponent(CB_DisableDefault, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
-                    .addComponent(CB_SameFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TF_Source)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(TF_Location)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(BT_FC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(TF_Destination)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(TF_Filename, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -248,7 +296,9 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 .addContainerGap()
                 .addComponent(CB_EnableOutput)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(CB_SameFolder)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TF_Source, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TF_Location, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -258,7 +308,11 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(TF_Filename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TF_Destination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CB_InsertDescriptionComment)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CB_InsertColumnComment)
@@ -266,7 +320,7 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 .addComponent(CB_WriteDisableComment)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CB_DisableDefault)
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Output properties", jPanel1);
@@ -281,12 +335,15 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
     private javax.swing.JCheckBox CB_EnableOutput;
     private javax.swing.JCheckBox CB_InsertColumnComment;
     private javax.swing.JCheckBox CB_InsertDescriptionComment;
-    private javax.swing.JCheckBox CB_SameFolder;
     private javax.swing.JCheckBox CB_WriteDisableComment;
+    private javax.swing.JTextField TF_Destination;
     private javax.swing.JTextField TF_Filename;
     private javax.swing.JTextField TF_Location;
+    private javax.swing.JTextField TF_Source;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables

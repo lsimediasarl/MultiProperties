@@ -66,7 +66,14 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      */
     ActionListener listener = null;
 
-    public JMultiProperties() {
+    /**
+     * Logging instance
+     */
+    Logit logit = null;
+    
+    public JMultiProperties(Logit logit) {
+        this.logit = logit;
+        
         initComponents();
 
         CMB_Handlers.addItem(new JavaPropertiesHandler());
@@ -98,7 +105,10 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         MN_Copy.addActionListener(this);
         MN_Delete.addActionListener(this);
-
+        MN_NewComment.addActionListener(this);
+        MN_NewProperty.addActionListener(this);
+        MN_NewEmpty.addActionListener(this);
+        
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
@@ -211,14 +221,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             StreamResult result = new StreamResult(file.toString());
             transformer.transform(source, result);
 
-            System.out.println("SAVED TO :" + file.getPath());
+            logit.log("M","Multiproperties file stored at "+file.getPath(), null);
+            // System.out.println("SAVED TO :" + file.getPath());
 
             //--- Pass the model to the properties handler to save the specific file
-            if (process) handler.save(model, TF_Name.getText(), TA_Description.getText(), file);
+            if (process) handler.save(model, TF_Name.getText(), TA_Description.getText(), file, logit);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
-
+            // ex.printStackTrace();
+            logit.log("E","Multiproperties save error "+ex.getMessage(), null);
         }
 
     }
@@ -262,7 +273,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             //--- Configure the handler for the selected column
             PropertiesHandler h = (PropertiesHandler) CMB_Handlers.getSelectedItem();
 
-            JHandlerDialog dlg = new JHandlerDialog(null, true, h, selected);
+            JHandlerDialog dlg = new JHandlerDialog(null, true, h, selected, file);
             dlg.pack();
             dlg.setLocationRelativeTo(this);
             dlg.setVisible(true);
@@ -322,8 +333,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             String comment = JOptionPane.showInputDialog(this,"Comment");
             if (comment != null) {
                 int index = TB_Table.getSelectedRow();
-                model.insertRecord(index < 0 ? 0 : index, new CommentRecord(comment));
-
+                model.insertRecord(index+1, new CommentRecord(comment));
+                TB_Table.getSelectionModel().setSelectionInterval(index + 1, index+1);
                 fireModifiedEvent();
             }
 
@@ -333,8 +344,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 int index = TB_Table.getSelectedRow();
                 PropertyRecord rec = new PropertyRecord(name);
                 for (int i = 0;i < columns.size();i++) rec.addColumn();
-                model.insertRecord(index < 0 ? 0 : index, rec);
-
+                model.insertRecord(index+1, rec);
+                TB_Table.getSelectionModel().setSelectionInterval(index + 1, index+1);
                 fireModifiedEvent();
             }
 
@@ -342,8 +353,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             int index = TB_Table.getSelectedRow();
             EmptyRecord rec = new EmptyRecord();
             for (int i = 0;i < columns.size();i++) rec.addColumn();
-            model.insertRecord(index < 0 ? 0 : index, rec);
-            
+            model.insertRecord(index+1, rec);
+            TB_Table.getSelectionModel().setSelectionInterval(index + 1, index+1); 
             fireModifiedEvent();
 
         } else if (e.getActionCommand().equals("delete")) {
@@ -483,6 +494,10 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private void initComponents() {
 
         PU_Actions = new javax.swing.JPopupMenu();
+        MN_NewProperty = new javax.swing.JMenuItem();
+        MN_NewComment = new javax.swing.JMenuItem();
+        MN_NewEmpty = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         MN_Copy = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         MN_Delete = new javax.swing.JMenuItem();
@@ -510,7 +525,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jScrollPane4 = new javax.swing.JScrollPane();
         TA_ColumnDescription = new javax.swing.JTextArea();
         BT_ConfigureHandler = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         BT_ColumnUp = new javax.swing.JButton();
         BT_ColumnDown = new javax.swing.JButton();
         BT_Import = new javax.swing.JButton();
@@ -550,12 +564,29 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         PU_Actions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
+        MN_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        MN_NewProperty.setText("New property");
+        MN_NewProperty.setActionCommand("newProperty");
+        PU_Actions.add(MN_NewProperty);
+
+        MN_NewComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        MN_NewComment.setText("New comment");
+        MN_NewComment.setActionCommand("newComment");
+        PU_Actions.add(MN_NewComment);
+
+        MN_NewEmpty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        MN_NewEmpty.setText("New empty");
+        MN_NewEmpty.setActionCommand("newEmpty");
+        PU_Actions.add(MN_NewEmpty);
+        PU_Actions.add(jSeparator4);
+
         MN_Copy.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_Copy.setText("Copy");
         MN_Copy.setActionCommand("copy");
         PU_Actions.add(MN_Copy);
         PU_Actions.add(jSeparator3);
 
+        MN_Delete.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         MN_Delete.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_Delete.setText("Delete");
         MN_Delete.setActionCommand("delete");
@@ -563,7 +594,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
@@ -600,7 +630,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(TF_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(LB_Version))
-                        .addContainerGap(451, Short.MAX_VALUE))
+                        .addContainerGap(522, Short.MAX_VALUE))
                     .addGroup(PN_OverviewLayout.createSequentialGroup()
                         .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -629,7 +659,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CMB_Handlers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 321, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
                 .addComponent(LB_Version)
                 .addContainerGap())
         );
@@ -671,9 +701,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_ConfigureHandler.setText("Configure handler");
         BT_ConfigureHandler.setActionCommand("handler");
 
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        jLabel3.setText("For eclipse compatibility, set \"SAMEFOLDER\" in description if needed");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -689,11 +716,10 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                         .addComponent(LB_ColumnDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(BT_ConfigureHandler)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -705,13 +731,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     .addComponent(TF_ColumnName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(LB_ColumnDescription)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(LB_ColumnDescription)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BT_ConfigureHandler)
-                .addContainerGap(288, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         PN_ColumnConfig.add(jPanel1, "column");
@@ -735,38 +761,38 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             .addGroup(PN_ColumnsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BT_Import, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(BT_Remove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(BT_Add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(BT_ColumnUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(BT_ColumnDown, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(PN_ColumnsLayout.createSequentialGroup()
+                        .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(BT_Import, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(BT_Remove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BT_Add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BT_ColumnUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BT_ColumnDown, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         PN_ColumnsLayout.setVerticalGroup(
             PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PN_ColumnsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(PN_ColumnsLayout.createSequentialGroup()
-                        .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(PN_ColumnsLayout.createSequentialGroup()
-                                .addComponent(BT_Add)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(BT_Remove)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(BT_ColumnUp)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(BT_ColumnDown))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(BT_Add)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BT_Import)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(BT_Remove)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(BT_ColumnUp)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(BT_ColumnDown))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BT_Import)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -924,6 +950,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JList<Column> LI_Columns;
     private javax.swing.JMenuItem MN_Copy;
     private javax.swing.JMenuItem MN_Delete;
+    private javax.swing.JMenuItem MN_NewComment;
+    private javax.swing.JMenuItem MN_NewEmpty;
+    private javax.swing.JMenuItem MN_NewProperty;
     private javax.swing.JPanel PN_ColumnConfig;
     private javax.swing.JPanel PN_Columns;
     private javax.swing.JPanel PN_Overview;
@@ -936,7 +965,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JTextField TF_Name;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -946,6 +974,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

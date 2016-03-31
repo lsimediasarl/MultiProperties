@@ -14,6 +14,7 @@ import java.util.Properties;
 import lsimedia.multiproperties.Column;
 import lsimedia.multiproperties.CommentRecord;
 import lsimedia.multiproperties.HandlerGUI;
+import lsimedia.multiproperties.Logit;
 import lsimedia.multiproperties.MultiPropertiesTableModel;
 import lsimedia.multiproperties.PropertiesHandler;
 import lsimedia.multiproperties.PropertyRecord;
@@ -48,7 +49,7 @@ public class JavaPropertiesHandler implements PropertiesHandler {
     //*** PropertiesHandler
     //**************************************************************************
     @Override
-    public boolean save(MultiPropertiesTableModel model, String name, String description, File source) {
+    public boolean save(final MultiPropertiesTableModel model, final String name, final String description, final File source, final Logit logit) {
         //--- For each column, store the Java properties file
         //--- The column at index 0 is the key, do not handle it
         for (int i = 1;i < model.getColumnCount();i++) {
@@ -60,13 +61,20 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 if (fn.equals("")) continue;
                         
                 File file = new File(fn);
-                if (tokens.length >= 6) {
-                    if (tokens[5].equals("true")) {
-                        file = new File(source.getParent(), file.getName());
-                    }
+                if (fn.startsWith("/")) {
+                    //--- Absolute path, do nothing
+                    
+                } else if (fn.startsWith("./")) {
+                    //--- Use same directory has source
+                    file = new File(source.getParent(), file.getName());
+                    
+                } else if (fn.startsWith("../")) {
+                    //--- Use same directory has source
+                    file = new File(source.getParent(), file.getPath());
+                    
                 }
 
-                // System.out.println("JAVA PROPERTIES FILE IS:" + file.getPath());
+                // System.out.println("JAVA PROPERTIES FILE IS:" + file.getCanonicalPath());
 
                 //--- Headers
                 // FileWriter fw = new FileWriter(file);
@@ -110,8 +118,11 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 }
                 fw.close();
 
+                logit.log("I", "Store java properties at "+file.getCanonicalPath(), null);
+                
             } catch (Exception ex) {
                 ex.printStackTrace();
+                logit.log("E", "Error storing java properties :"+ex.getMessage(), null);
             }
         }
 
@@ -180,9 +191,9 @@ public class JavaPropertiesHandler implements PropertiesHandler {
     }
     
     @Override
-    public HandlerGUI getGUI(Column column) {
+    public HandlerGUI getGUI(Column column, File source) {
         //---
-        return new JJavaPropertiesHandler(column);
+        return new JJavaPropertiesHandler(column, source);
     }
     
     //**************************************************************************

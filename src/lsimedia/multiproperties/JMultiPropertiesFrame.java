@@ -81,6 +81,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         LI_Files.addMouseListener(this);
         LI_Files.addListSelectionListener(this);
 
+        PN_Title.setVisible(false);
+        
         //--- Load properties
         try {
             File f = new File(System.getProperty("user.home"), ".jmultiproperties.properties");
@@ -220,6 +222,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                         selected = null;
                         CardLayout layout = (CardLayout) PN_Content.getLayout();
                         layout.show(PN_Content, "empty");
+                        PN_Title.setVisible(false);
                     }
                 }
                 model.removeElement(file);
@@ -238,6 +241,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 File f = model.elementAt(LI_Files.getSelectedIndex());
                 LB_File.setText(f.getName());
                 LB_Path.setText(f.getParent());
+                PN_Title.setVisible(true);
 
                 selected = jms.get(f.getPath());
                 if (selected == null) {
@@ -321,7 +325,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jPanel3 = new javax.swing.JPanel();
         PN_Content = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        PN_Title = new javax.swing.JPanel();
         jToolBar2 = new javax.swing.JToolBar();
         BT_SaveProcess = new javax.swing.JButton();
         BT_Save = new javax.swing.JButton();
@@ -387,7 +391,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         jPanel3.add(PN_Content, java.awt.BorderLayout.CENTER);
 
-        jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        PN_Title.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
@@ -408,17 +412,17 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_Save.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar2.add(BT_Save);
 
-        jPanel4.add(jToolBar2);
+        PN_Title.add(jToolBar2);
 
         LB_File.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         LB_File.setText("...");
-        jPanel4.add(LB_File);
+        PN_Title.add(LB_File);
 
         LB_Path.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         LB_Path.setText("...");
-        jPanel4.add(LB_Path);
+        PN_Title.add(LB_Path);
 
-        jPanel3.add(jPanel4, java.awt.BorderLayout.NORTH);
+        jPanel3.add(PN_Title, java.awt.BorderLayout.NORTH);
 
         SP_Main.setRightComponent(jPanel3);
 
@@ -503,6 +507,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JMenuItem MN_Quit;
     private javax.swing.JMenuItem MN_SaveAll;
     private javax.swing.JPanel PN_Content;
+    private javax.swing.JPanel PN_Title;
     private javax.swing.JSplitPane SP_Main;
     private javax.swing.JTextArea TA_Logit;
     private javax.swing.JLabel jLabel1;
@@ -511,7 +516,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

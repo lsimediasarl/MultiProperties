@@ -12,15 +12,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Properties;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -29,7 +33,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author sbodmer
  */
-public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionListener, MouseListener {
+public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionListener, MouseListener, ListSelectionListener, FileFilter {
 
     /**
      * The key is the file full path
@@ -51,7 +55,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
      * Last loaded file
      */
     File last = null;
-    
+
     /**
      * Creates new form JMultiPropertiesFrame
      */
@@ -64,7 +68,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         BT_Load.addActionListener(this);
         BT_Close.addActionListener(this);
-        
+        BT_SaveAll.addActionListener(this);
+
         BT_Save.addActionListener(this);
         if (allowProcess) {
             BT_SaveProcess.addActionListener(this);
@@ -76,6 +81,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         LI_Files.setModel((ListModel) model);
         LI_Files.addMouseListener(this);
+        LI_Files.addListSelectionListener(this);
 
         //--- Load properties
         try {
@@ -84,38 +90,39 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             Properties prop = new Properties();
             prop.load(fin);
             fin.close();
-            
+
             int width = Integer.parseInt(prop.getProperty("width", "1024"));
             int height = Integer.parseInt(prop.getProperty("height", "768"));
             int divider = Integer.parseInt(prop.getProperty("divider", "200"));
-            
+
             setSize(new Dimension(width, height));
             setLocationByPlatform(true);
             SP_Main.setDividerLocation(divider);
-            
+
             last = new File(prop.getProperty("lastFile", ""));
-            
+
             //--- Load stored filed
             int i = 0;
             while (true) {
-                String path = prop.getProperty("File"+i);
+                String path = prop.getProperty("File" + i);
                 if (path == null) break;
                 File file = new File(path);
                 if (file.exists()) {
                     model.addElement(new File(path));
-                    logit.log("M",""+file.getName()+" added", null);
-                    
+                    logit.log("M", "" + file.getName() + " added", null);
+
                 } else {
-                    logit.log("E",""+file.getName()+" does not exist anymore", null);
-                    
+                    logit.log("E", "" + file.getName() + " does not exist anymore", null);
+
                 }
-                
+
                 i++;
             }
+
         } catch (Exception ex) {
             //---
         }
-        
+
         timer = new javax.swing.Timer(1000, this);
         timer.start();
     }
@@ -131,8 +138,18 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 String s[] = logit.fetchLog();
                 if (s == null) break;
 
-                TA_Logit.append(""+s[0]+" (" + s[1] + ") " + s[2] + "\n");
+                TA_Logit.append("" + s[0] + " (" + s[1] + ") " + s[2] + "\n");
             }
+            
+            //--- Also check if the save all button should be enabled
+            Iterator<JMultiProperties> it = jms.values().iterator();
+            boolean enabled = false;
+            while (it.hasNext()) {
+                JMultiProperties jm = it.next();
+                if (jm.isModified()) enabled = true;
+            }
+            MN_SaveAll.setEnabled(enabled);
+            BT_SaveAll.setEnabled(enabled);
 
         } else if (e.getActionCommand().equals("quit")) {
             close();
@@ -150,6 +167,17 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                         model.addElement(file);
                         LB_Status.setText("" + file.getPath() + " loaded");
                         logit.log("I", file.getName() + " loaded", null);
+
+                    } else if (file.isDirectory()) {
+                        ArrayList<File> stack = new ArrayList<>();
+                        stackFiles(file, stack, this);
+                        for (int j = 0;j < stack.size();j++) {
+                            model.addElement(stack.get(j));
+                            LB_Status.setText("" + file.getPath() + " loaded");
+                            logit.log("I", file.getName() + " loaded", null);
+
+                        }
+
                     }
                     last = file;
                 }
@@ -166,14 +194,25 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 selected.save(true);
                 LB_Status.setText("" + selected.getFile().getPath() + " saved and processed");
             }
-            
+
         } else if (e.getActionCommand().equals("saveAll")) {
             //---
-            
+            Iterator<JMultiProperties> it = jms.values().iterator();
+            while (it.hasNext()) {
+                JMultiProperties jm = it.next();
+                jm.save(false);
+            }
+
+            MN_SaveAll.setEnabled(false);
+            BT_SaveAll.setEnabled(false);
+
         } else if (e.getActionCommand().equals("close")) {
-            int index = LI_Files.getSelectedIndex();
-            if (index >= 0) {
-                File file = model.get(index);
+            int indices[] = LI_Files.getSelectedIndices();
+            ArrayList<File> toClose = new ArrayList<>();
+            for (int i=0;i<indices.length;i++) toClose.add(model.get(indices[i]));
+            
+            for (int i=0;i<toClose.size();i++) {
+                File file = toClose.get(i);
                 JMultiProperties jm = jms.get(file.getPath());
                 if (jm != null) {
                     PN_Content.remove(jm);
@@ -184,9 +223,9 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                         layout.show(PN_Content, "empty");
                     }
                 }
-                model.remove(index);
+                model.removeElement(file);
             }
-            
+
         }
     }
 
@@ -204,9 +243,9 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 selected = jms.get(f.getPath());
                 if (selected == null) {
                     selected = new JMultiProperties(logit);
-                    jms.put(f.getPath(), selected);
                     selected.setFile(f);
                     PN_Content.add(selected, f.getPath());
+                    jms.put(f.getPath(), selected);
 
                 }
 
@@ -234,6 +273,32 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     @Override
     public void mouseExited(MouseEvent e) {
         //---
+    }
+
+    //**************************************************************************
+    //*** ListSelectionListener
+    //**************************************************************************
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getSource() == LI_Files) {
+            if (e.getValueIsAdjusting() == false) {
+                BT_Close.setEnabled(LI_Files.getSelectedIndex() >= 0);
+            }
+        }
+    }
+
+    //**************************************************************************
+    //*** FileFilter
+    //**************************************************************************
+    @Override
+    public boolean accept(File pathname) {
+        if (pathname.isFile()) {
+            if (pathname.getName().toLowerCase().endsWith(".multiproperties")) return true;
+            
+        } else if (pathname.isDirectory()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -265,6 +330,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         LB_Path = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
         BT_Load = new javax.swing.JButton();
+        BT_SaveAll = new javax.swing.JButton();
         BT_Close = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -293,7 +359,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         LI_Files.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        LI_Files.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        LI_Files.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        LI_Files.setFixedCellHeight(22);
         jScrollPane2.setViewportView(LI_Files);
 
         jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
@@ -369,9 +436,19 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_Load.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_Load);
 
+        BT_SaveAll.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_SaveAll.setText("Save All");
+        BT_SaveAll.setActionCommand("saveAll");
+        BT_SaveAll.setEnabled(false);
+        BT_SaveAll.setFocusable(false);
+        BT_SaveAll.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_SaveAll.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(BT_SaveAll);
+
         BT_Close.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Close.setText("Close");
         BT_Close.setActionCommand("close");
+        BT_Close.setEnabled(false);
         BT_Close.setFocusable(false);
         BT_Close.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_Close.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -392,6 +469,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         MN_SaveAll.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_SaveAll.setText("Save all");
         MN_SaveAll.setActionCommand("saveAll");
+        MN_SaveAll.setEnabled(false);
         jMenu1.add(MN_SaveAll);
         jMenu1.add(jSeparator1);
 
@@ -416,6 +494,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JButton BT_Close;
     private javax.swing.JButton BT_Load;
     private javax.swing.JButton BT_Save;
+    private javax.swing.JButton BT_SaveAll;
     private javax.swing.JButton BT_SaveProcess;
     private javax.swing.JLabel LB_File;
     private javax.swing.JLabel LB_Path;
@@ -443,6 +522,12 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     // End of variables declaration//GEN-END:variables
 
     private void close() {
+        if (BT_SaveAll.isEnabled()) {
+            int rep = JOptionPane.showConfirmDialog(this, "Not all files are saved\n\nDo you really want to quit applications ?", "Quit", JOptionPane.YES_NO_OPTION);
+            if (rep == JOptionPane.NO_OPTION) return;
+            
+        }
+        
         timer.stop();
 
         //--- Save properties
@@ -450,31 +535,43 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             File f = new File(System.getProperty("user.home"), ".jmultiproperties.properties");
             Properties prop = new Properties();
             FileOutputStream fout = new FileOutputStream(f);
-            prop.put("width", ""+getWidth());
-            prop.put("height", ""+getHeight());
-            prop.put("divider", ""+SP_Main.getDividerLocation());
-            
+            prop.put("width", "" + getWidth());
+            prop.put("height", "" + getHeight());
+            prop.put("divider", "" + SP_Main.getDividerLocation());
+
             //--- Store list of opened file
-            for (int i=0;i<model.size();i++) {
+            for (int i = 0;i < model.size();i++) {
                 File file = model.get(i);
-                prop.put("File"+i, file.getPath());
+                prop.put("File" + i, file.getPath());
             }
             if (last != null) prop.put("lastFile", last.getPath());
-            
+
             prop.store(fout, "JMultiPropertiesFrame");
             fout.flush();
             fout.close();
-            
+
         } catch (Exception ex) {
             //---
         }
-        
+
         setVisible(false);
         dispose();
 
     }
 
-    private void stackFiles() {
+    /**
+     * Stack the file recursively in a vector
+     */
+    private void stackFiles(File file, ArrayList<File> stack, FileFilter filter) {
+        if (file.isDirectory()) {
+            File list[] = file.listFiles(filter);
+            for (int i = 0;i < list.length;i++) stackFiles(list[i], stack, filter);
+            list = null;
+
+        } else {
+            stack.add(file);
+
+        }
 
     }
 

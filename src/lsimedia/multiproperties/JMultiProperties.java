@@ -71,6 +71,16 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      */
     Logit logit = null;
     
+    /**
+     * Last imported/opened file
+     */
+    File last = null;
+
+    /**
+     * If the panel was modified and not yet saved, the flag would be true
+     */
+    boolean modified = false;
+    
     public JMultiProperties(Logit logit) {
         this.logit = logit;
         
@@ -227,6 +237,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             //--- Pass the model to the properties handler to save the specific file
             if (process) handler.save(model, TF_Name.getText(), TA_Description.getText(), file, logit);
 
+            modified = false;
+            
         } catch (Exception ex) {
             // ex.printStackTrace();
             logit.log("E","Multiproperties save error "+ex.getMessage(), null);
@@ -234,6 +246,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
     }
 
+    public boolean isModified() {
+        return modified;
+    }
     //**************************************************************************
     //*** ActionListener
     //**************************************************************************
@@ -283,7 +298,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         } else if (e.getActionCommand().equals("import")) {
             //--- Configure the handler for the selected column
             PropertiesHandler h = (PropertiesHandler) CMB_Handlers.getSelectedItem();
-            JFileChooser jf = new JFileChooser();
+            JFileChooser jf = new JFileChooser(last);
             jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
             jf.setMultiSelectionEnabled(true);
             int rep = jf.showOpenDialog(this);
@@ -292,9 +307,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 for (int i = 0;i < f.length;i++) {
                     Column c = h.load(model, f[i]);
                     if (c != null) columns.addElement(c);
+                    
+                    last = f[i];
                 }
                 
                 fireModifiedEvent();
+                
+                
             }
 
         } else if (e.getActionCommand().equals("columnUp")) {
@@ -463,6 +482,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 //--- Save the current state
                 selected.setName(TF_ColumnName.getText().trim());
                 selected.setDescription(TA_ColumnDescription.getText().trim());
+                model.fireTableChanged();
+                TB_Table.repaint();
             }
 
             CardLayout layout = (CardLayout) PN_ColumnConfig.getLayout();
@@ -473,7 +494,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             if (c != null) {
                 TF_ColumnName.setText(c.getName());
                 TA_ColumnDescription.setText(c.getDescription());
-
                 selected = c;
 
                 fireModifiedEvent();
@@ -1084,6 +1104,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      * Fire the listeners that the data has changed
      */
     private void fireModifiedEvent() {
+        modified = true;
         if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
 
     }

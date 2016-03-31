@@ -17,11 +17,11 @@ import java.util.ArrayList;
 public class JWriteDialog extends javax.swing.JDialog implements ActionListener {
 
     Record record = null;
-    
+
     RecordGUI rgui = null;
-    
+
     MultiPropertiesTableModel model = null;
-    
+
     /**
      * Creates new form JWriteDialog
      */
@@ -30,14 +30,14 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
         this.record = record;
         this.model = model;
         rgui = record.getGUI(columns);
-        
+
         initComponents();
-    
+
         getContentPane().add(rgui.getVisual(), BorderLayout.CENTER);
-        
+
         BT_Ok.addActionListener(this);
         BT_Cancel.addActionListener(this);
-        
+
     }
 
     //**************************************************************************
@@ -47,18 +47,18 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ok")) {
             rgui.apply();
-            
+
             setVisible(false);
             dispose();
-            
+
         } else if (e.getActionCommand().equals("cancel")) {
             rgui.cancel();
-            
+
             setVisible(false);
-            dispose(); 
+            dispose();
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,7 +72,12 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
         BT_Cancel = new javax.swing.JButton();
         BT_Ok = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
@@ -91,6 +96,13 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
         setBounds(0, 0, 710, 670);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        rgui.cancel();
+
+        setVisible(false);
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BT_Cancel;
@@ -98,5 +110,4 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
-    
 }

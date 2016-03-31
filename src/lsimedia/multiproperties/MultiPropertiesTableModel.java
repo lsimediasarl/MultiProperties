@@ -47,6 +47,14 @@ public class MultiPropertiesTableModel implements TableModel {
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
     }
     
+    /**
+     * Fire event to nonitfy all elements have changed (columns too)
+     */
+    public void fireTableChanged() {
+        TableModelEvent e = new TableModelEvent(this, TableModelEvent.HEADER_ROW);
+        for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
+    }
+    
     public void swapColumn(int from, int to) {
         if (from == 0) return;
         if (to == 0) return;

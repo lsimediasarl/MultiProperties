@@ -160,8 +160,10 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 
                 Record rec = model.find(property);
                 if (rec == null) {
-                    //--- Not found, add the entry
+                    //--- Not found, add the entry with the default value
                     PropertyRecord pr = new PropertyRecord(property);
+                    pr.setDefaultValue(value);
+                    
                     for (int i=0;i<model.getColumnCount()-1;i++) pr.addColumn();
                     //--- Last column contains the value
                     PropertyRecord.Value v = pr.getValueAt(pr.getValueCount()-1);

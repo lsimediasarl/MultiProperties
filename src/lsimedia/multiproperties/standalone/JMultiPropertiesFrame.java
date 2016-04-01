@@ -57,11 +57,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     Logit logit = new Logit();
 
     /**
-     * Last loaded file
-     */
-    File last = null;
-
-    /**
      * If gui is i lockdown mode
      */
     boolean lockdown = false;
@@ -115,8 +110,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             setSize(new Dimension(width, height));
             setLocationByPlatform(true);
             SP_Main.setDividerLocation(divider);
-
-            last = new File(prop.getProperty("lastFile", ""));
 
             //--- Load all the sessions
             File s[] = d.listFiles();
@@ -205,7 +198,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             close();
 
         } else if (e.getActionCommand().equals("load")) {
-            JFileChooser jf = new JFileChooser(last);
+            JFileChooser jf = new JFileChooser(session.getLastFile());
             jf.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             jf.setMultiSelectionEnabled(true);
             jf.setFileFilter(new FileNameExtensionFilter("Multiproperties", "multiproperties"));
@@ -218,7 +211,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                     if (file.isFile()) {
                         MultiProperties cont = new MultiProperties(file);
                         model.addElement(cont);
-                        logit.log("I", file.getName() + " loaded", null);
+                        logit.log("I", file.getPath() + " loaded", null);
 
                     } else if (file.isDirectory()) {
                         ArrayList<File> stack = new ArrayList<>();
@@ -226,12 +219,12 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                         for (int j = 0;j < stack.size();j++) {
                             MultiProperties cont = new MultiProperties(stack.get(j));
                             model.addElement(cont);
-                            logit.log("I", file.getName() + " loaded", null);
+                            logit.log("I", file.getPath() + " loaded", null);
 
                         }
 
                     }
-                    last = file;
+                    session.setLastFile(file);
                 }
             }
 
@@ -779,7 +772,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 MultiProperties cont = model.get(i);
                 prop.put("File" + i, cont.getFile().getPath());
             }
-            if (last != null) prop.put("lastFile", last.getPath());
+            prop.put("lastFile", session.getLastFile().getPath());
 
             prop.store(fout, "JMultiPropertiesFrame Session");
             fout.flush();
@@ -832,8 +825,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 i++;
             }
 
-            last = new File(prop.getProperty("lastFile", ""));
-
+            session.setLastFile(new File(prop.getProperty("lastFile", "")));
+            
             logit.log("M", "Session " + session.getTitle() + " loaded", null);
 
         } catch (Exception ex) {

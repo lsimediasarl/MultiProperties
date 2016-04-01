@@ -5,6 +5,7 @@
  */
 package lsimedia.multiproperties.standalone;
 
+import java.io.File;
 import javax.swing.DefaultListModel;
 
 /**
@@ -15,7 +16,8 @@ import javax.swing.DefaultListModel;
 public class MultiPropertiesSession {
     String identifier = null;
     String title = "";
-
+    File last = new File(System.getProperty("user.home"));   //--- Last opened file
+    
     DefaultListModel<MultiProperties> model = new DefaultListModel<>();
     
     /**
@@ -50,6 +52,13 @@ public class MultiPropertiesSession {
         this.title = title;
     }
     
+    public void setLastFile(final File last) {
+        this.last = last;
+    }
+    
+    public File getLastFile() {
+        return last;
+    }
     /**
      * Return the list of the files for this session
      * @return 

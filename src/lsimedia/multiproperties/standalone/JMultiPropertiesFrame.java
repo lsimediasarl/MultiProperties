@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lsimedia.multiproperties;
+package lsimedia.multiproperties.standalone;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -26,6 +26,8 @@ import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import lsimedia.multiproperties.JMultiProperties;
+import lsimedia.multiproperties.Logit;
 
 /**
  *
@@ -34,20 +36,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionListener, MouseListener, ListSelectionListener, FileFilter {
 
     /**
-     * The key is the file full path
-     */
-    HashMap<String, JMultiProperties> jms = new HashMap<>();
-
-    /**
      * The current selected file
      */
-    JMultiProperties selected = null;
+    MultiProperties selected = null;
 
-    DefaultListModel<File> model = new DefaultListModel<>();
+    /**
+     * The loaded file list
+     */
+    DefaultListModel<MultiProperties> model = new DefaultListModel<>();
 
     Logit logit = new Logit();
-
-    javax.swing.Timer timer = null;
 
     /**
      * Last loaded file
@@ -55,9 +53,22 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     File last = null;
 
     /**
+     * If gui is i lockdown mode
+     */
+    boolean lockdown = false;
+    
+    
+    /**
+     * Gui refresh timer
+     */
+    javax.swing.Timer timer = null;
+    
+    /**
      * Creates new form JMultiPropertiesFrame
      */
-    public JMultiPropertiesFrame(boolean allowProcess) {
+    public JMultiPropertiesFrame(boolean lockdown) {
+        this.lockdown = lockdown;
+        
         initComponents();
 
         MN_Quit.addActionListener(this);
@@ -69,15 +80,11 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_SaveAll.addActionListener(this);
 
         BT_Save.addActionListener(this);
-        if (allowProcess) {
-            BT_SaveProcess.addActionListener(this);
-
-        } else {
-            BT_SaveProcess.setVisible(false);
-
-        }
+        BT_SaveProcess.setVisible(!lockdown);
+        BT_SaveProcess.addActionListener(this);
 
         LI_Files.setModel((ListModel) model);
+        LI_Files.setCellRenderer(new JMultiPropertiesCellRenderer());
         LI_Files.addMouseListener(this);
         LI_Files.addListSelectionListener(this);
 
@@ -106,9 +113,11 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             while (true) {
                 String path = prop.getProperty("File" + i);
                 if (path == null) break;
+                
                 File file = new File(path);
                 if (file.exists()) {
-                    model.addElement(new File(path));
+                    MultiProperties cont = new MultiProperties(file);
+                    model.addElement(cont);
                     logit.log("M", "" + file.getName() + " added", null);
 
                 } else {
@@ -138,18 +147,22 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 String s[] = logit.fetchLog();
                 if (s == null) break;
 
-                TA_Logit.append("" + s[0] + " (" + s[1] + ") " + s[2] + "\n");
+                String txt = s[0]+" ("+s[1]+") "+s[2];
+                TA_Logit.append(txt + "\n");
+                LB_Status.setText(txt);                    
             }
             
-            //--- Also check if the save all button should be enabled
-            Iterator<JMultiProperties> it = jms.values().iterator();
             boolean enabled = false;
-            while (it.hasNext()) {
-                JMultiProperties jm = it.next();
-                if (jm.isModified()) enabled = true;
+            for (int i=0;i<model.size();i++) {
+                MultiProperties cont = model.get(i);
+                JMultiProperties jm = cont.getVisual();
+                if (jm != null) {
+                    if (jm.isModified()) enabled = true;
+                }
             }
             MN_SaveAll.setEnabled(enabled);
             BT_SaveAll.setEnabled(enabled);
+            LI_Files.repaint();
 
         } else if (e.getActionCommand().equals("quit")) {
             close();
@@ -165,16 +178,16 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 for (int i = 0;i < f.length;i++) {
                     File file = f[i];
                     if (file.isFile()) {
-                        model.addElement(file);
-                        LB_Status.setText("" + file.getPath() + " loaded");
+                        MultiProperties cont = new MultiProperties(file);
+                        model.addElement(cont);
                         logit.log("I", file.getName() + " loaded", null);
 
                     } else if (file.isDirectory()) {
                         ArrayList<File> stack = new ArrayList<>();
                         stackFiles(file, stack, this);
                         for (int j = 0;j < stack.size();j++) {
-                            model.addElement(stack.get(j));
-                            LB_Status.setText("" + file.getPath() + " loaded");
+                            MultiProperties cont = new MultiProperties(stack.get(j));
+                            model.addElement(cont);
                             logit.log("I", file.getName() + " loaded", null);
 
                         }
@@ -186,46 +199,54 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         } else if (e.getActionCommand().equals("save")) {
             if (selected != null) {
-                selected.save(false);
-                LB_Status.setText("" + selected.getFile().getPath() + " saved");
+                JMultiProperties jm = selected.getVisual();
+                if (jm != null) {
+                    jm.save(false);
+                    logit.log("M", ""+selected.getFile().getPath() + " saved", null);
+                }
+                
             }
 
         } else if (e.getActionCommand().equals("saveProcess")) {
             if (selected != null) {
-                selected.save(true);
-                LB_Status.setText("" + selected.getFile().getPath() + " saved and processed");
+                JMultiProperties jm = selected.getVisual();
+                if (jm != null) {
+                    jm.save(true);
+                    logit.log("M", ""+selected.getFile().getPath() + " saved and processed", null);
+                }
+                
             }
 
         } else if (e.getActionCommand().equals("saveAll")) {
             //---
-            Iterator<JMultiProperties> it = jms.values().iterator();
-            while (it.hasNext()) {
-                JMultiProperties jm = it.next();
-                jm.save(false);
+            for (int i=0;i<model.size();i++) {
+                MultiProperties cont = model.get(i);
+                JMultiProperties jm = cont.getVisual();
+                if (jm != null) jm.save(false);
+                
             }
-
+            LI_Files.repaint();
             MN_SaveAll.setEnabled(false);
             BT_SaveAll.setEnabled(false);
 
         } else if (e.getActionCommand().equals("close")) {
             int indices[] = LI_Files.getSelectedIndices();
-            ArrayList<File> toClose = new ArrayList<>();
+            ArrayList<MultiProperties> toClose = new ArrayList<>();
             for (int i=0;i<indices.length;i++) toClose.add(model.get(indices[i]));
-            
             for (int i=0;i<toClose.size();i++) {
-                File file = toClose.get(i);
-                JMultiProperties jm = jms.get(file.getPath());
+                MultiProperties cont = toClose.get(i);
+                JMultiProperties jm = cont.getVisual();
                 if (jm != null) {
                     PN_Content.remove(jm);
                     PN_Content.revalidate();
-                    if (jm == selected) {
+                    if (cont == selected) {
                         selected = null;
                         CardLayout layout = (CardLayout) PN_Content.getLayout();
                         layout.show(PN_Content, "empty");
                         PN_Title.setVisible(false);
                     }
                 }
-                model.removeElement(file);
+                model.removeElement(cont);
             }
 
         }
@@ -238,22 +259,22 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == LI_Files) {
             if (e.getClickCount() >= 2) {
-                File f = model.elementAt(LI_Files.getSelectedIndex());
-                LB_File.setText(f.getName());
-                LB_Path.setText(f.getParent());
+                MultiProperties cont = model.elementAt(LI_Files.getSelectedIndex());
+                LB_File.setText(cont.getFile().getName());
+                LB_Path.setText(cont.getFile().getParent());
                 PN_Title.setVisible(true);
 
-                selected = jms.get(f.getPath());
-                if (selected == null) {
-                    selected = new JMultiProperties(logit);
-                    selected.setFile(f);
-                    PN_Content.add(selected, f.getPath());
-                    jms.put(f.getPath(), selected);
-
+                selected = cont;
+                if (selected.getVisual() == null) {
+                    JMultiProperties jm = new JMultiProperties(logit, lockdown);
+                    jm.setFile(cont.getFile());
+                    selected.setVisual(jm);
+                    PN_Content.add(jm, cont.getFile().getPath());
+                    
                 }
 
                 CardLayout layout = (CardLayout) PN_Content.getLayout();
-                layout.show(PN_Content, f.getPath());
+                layout.show(PN_Content, cont.getFile().getPath());
             }
         }
     }
@@ -327,8 +348,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jLabel1 = new javax.swing.JLabel();
         PN_Title = new javax.swing.JPanel();
         jToolBar2 = new javax.swing.JToolBar();
-        BT_SaveProcess = new javax.swing.JButton();
         BT_Save = new javax.swing.JButton();
+        BT_SaveProcess = new javax.swing.JButton();
         LB_File = new javax.swing.JLabel();
         LB_Path = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
@@ -361,9 +382,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        LI_Files.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        LI_Files.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         LI_Files.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        LI_Files.setFixedCellHeight(22);
         jScrollPane2.setViewportView(LI_Files);
 
         jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
@@ -396,14 +416,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
 
-        BT_SaveProcess.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_SaveProcess.setText("Save and process");
-        BT_SaveProcess.setActionCommand("saveProcess");
-        BT_SaveProcess.setFocusable(false);
-        BT_SaveProcess.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_SaveProcess.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(BT_SaveProcess);
-
         BT_Save.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Save.setText("Save");
         BT_Save.setActionCommand("save");
@@ -411,6 +423,14 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_Save.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BT_Save.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar2.add(BT_Save);
+
+        BT_SaveProcess.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_SaveProcess.setText("Save and process");
+        BT_SaveProcess.setActionCommand("saveProcess");
+        BT_SaveProcess.setFocusable(false);
+        BT_SaveProcess.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_SaveProcess.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar2.add(BT_SaveProcess);
 
         PN_Title.add(jToolBar2);
 
@@ -544,8 +564,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
             //--- Store list of opened file
             for (int i = 0;i < model.size();i++) {
-                File file = model.get(i);
-                prop.put("File" + i, file.getPath());
+                MultiProperties cont = model.get(i);
+                prop.put("File" + i, cont.getFile().getPath());
             }
             if (last != null) prop.put("lastFile", last.getPath());
 
@@ -611,13 +631,13 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 
-                boolean allowProcess = false;
+                boolean lockdown = false;
 
                 for (int i = 0;i < args.length;i++) {
-                    if (args[i].equals("-allowProcess")) allowProcess = true;
+                    if (args[i].equals("-lockdown")) lockdown = true;
                 }
 
-                new JMultiPropertiesFrame(allowProcess).setVisible(true);
+                new JMultiPropertiesFrame(lockdown).setVisible(true);
             }
         });
     }

@@ -48,7 +48,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     public static final String ACTION_COMMAND_MODIFIED = "dataModified";
 
     File file = null;
-
+    boolean lockdown = false;
+    
     DefaultListModel columns = new DefaultListModel();
     MultiPropertiesTableModel model = new MultiPropertiesTableModel();
 
@@ -81,8 +82,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      */
     boolean modified = false;
     
-    public JMultiProperties(Logit logit) {
+    public JMultiProperties(Logit logit, boolean lockdown) {
         this.logit = logit;
+        this.lockdown = lockdown;
         
         initComponents();
 
@@ -99,7 +101,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Import.addActionListener(this);
         BT_ColumnUp.addActionListener(this);
         BT_ColumnDown.addActionListener(this);
-
+        
         BT_Add.addActionListener(this);
         BT_Remove.addActionListener(this);
 
@@ -118,6 +120,22 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_NewComment.addActionListener(this);
         MN_NewProperty.addActionListener(this);
         MN_NewEmpty.addActionListener(this);
+        
+        //--- If lockdown disable the two first tabs
+        if (lockdown) {
+            TAB_Main.setEnabledAt(0, false);
+            TAB_Main.setEnabledAt(1, false);
+            TAB_Main.setSelectedIndex(2);
+            
+            BT_Up.setVisible(false);
+            BT_Down.setVisible(false);
+            BT_NewComment.setVisible(false);
+            BT_NewEmpty.setVisible(false);
+            BT_NewProperty.setVisible(false);
+            
+            BT_Copy.setVisible(false);
+            BT_Delete.setVisible(false);
+        }
         
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -445,7 +463,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == TB_Table) {
             //--- Popup menu
-            if (e.isPopupTrigger()) {
+            if (e.isPopupTrigger() && !lockdown) {
                 PU_Actions.show(TB_Table, e.getX(), e.getY());
             }
         }
@@ -454,7 +472,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     @Override
     public void mouseReleased(MouseEvent e) {
         if (e.getSource() == TB_Table) {
-            if (e.isPopupTrigger()) {
+            if (e.isPopupTrigger() && !lockdown) {
                 //--- PopupMenu
                 PU_Actions.show(TB_Table, e.getX(), e.getY());
 
@@ -521,7 +539,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_Copy = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         MN_Delete = new javax.swing.JMenuItem();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        TAB_Main = new javax.swing.JTabbedPane();
         PN_Overview = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         TF_Name = new javax.swing.JTextField();
@@ -614,7 +632,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        TAB_Main.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel1.setText("Name");
@@ -684,7 +702,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Overview", PN_Overview);
+        TAB_Main.addTab("Overview", PN_Overview);
 
         LI_Columns.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         LI_Columns.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -812,11 +830,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BT_Import)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Columns", PN_Columns);
+        TAB_Main.addTab("Columns", PN_Columns);
 
         PN_Table.setLayout(new java.awt.BorderLayout());
 
@@ -903,9 +921,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         PN_Table.add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
-        jTabbedPane1.addTab("Table", PN_Table);
+        TAB_Main.addTab("Table", PN_Table);
 
-        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        add(TAB_Main, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TB_TableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TB_TableKeyPressed
@@ -978,6 +996,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JPanel PN_Overview;
     private javax.swing.JPanel PN_Table;
     private javax.swing.JPopupMenu PU_Actions;
+    private javax.swing.JTabbedPane TAB_Main;
     private javax.swing.JTextArea TA_ColumnDescription;
     private javax.swing.JTextArea TA_Description;
     private javax.swing.JTable TB_Table;
@@ -995,7 +1014,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 

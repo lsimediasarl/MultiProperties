@@ -9,6 +9,8 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -33,7 +37,7 @@ import lsimedia.multiproperties.Logit;
  *
  * @author sbodmer
  */
-public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionListener, MouseListener, ListSelectionListener, FileFilter {
+public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionListener, MouseListener, ListSelectionListener, ItemListener, FileFilter {
 
     /**
      * The current selected file
@@ -41,9 +45,14 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     MultiProperties selected = null;
 
     /**
-     * The loaded file list
+     * Current selected session
      */
-    DefaultListModel<MultiProperties> model = new DefaultListModel<>();
+    MultiPropertiesSession session = null;
+
+    /**
+     * The session (the first is the default one) and is always present
+     */
+    DefaultComboBoxModel<MultiPropertiesSession> sessions = new DefaultComboBoxModel<>();
 
     Logit logit = new Logit();
 
@@ -56,19 +65,18 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
      * If gui is i lockdown mode
      */
     boolean lockdown = false;
-    
-    
+
     /**
      * Gui refresh timer
      */
     javax.swing.Timer timer = null;
-    
+
     /**
      * Creates new form JMultiPropertiesFrame
      */
     public JMultiPropertiesFrame(boolean lockdown) {
         this.lockdown = lockdown;
-        
+
         initComponents();
 
         MN_Quit.addActionListener(this);
@@ -83,16 +91,18 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_SaveProcess.setVisible(!lockdown);
         BT_SaveProcess.addActionListener(this);
 
-        LI_Files.setModel((ListModel) model);
-        LI_Files.setCellRenderer(new JMultiPropertiesCellRenderer());
-        LI_Files.addMouseListener(this);
-        LI_Files.addListSelectionListener(this);
-
         PN_Title.setVisible(false);
-        
-        //--- Load properties
+
+        BT_NewSession.addActionListener(this);
+        BT_EditSession.addActionListener(this);
+        BT_DeleteSession.addActionListener(this);
+
+        //--- Load properties and default session
         try {
-            File f = new File(System.getProperty("user.home"), ".jmultiproperties.properties");
+            File d = new File(System.getProperty("user.home"), ".multiproperties");
+            d.mkdirs();
+
+            File f = new File(d, "jmultiproperties.properties");
             FileInputStream fin = new FileInputStream(f);
             Properties prop = new Properties();
             prop.load(fin);
@@ -108,29 +118,46 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
             last = new File(prop.getProperty("lastFile", ""));
 
-            //--- Load stored filed
-            int i = 0;
-            while (true) {
-                String path = prop.getProperty("File" + i);
-                if (path == null) break;
-                
-                File file = new File(path);
-                if (file.exists()) {
-                    MultiProperties cont = new MultiProperties(file);
-                    model.addElement(cont);
-                    logit.log("M", "" + file.getName() + " added", null);
+            //--- Load all the sessions
+            File s[] = d.listFiles();
+            for (int i = 0;i < s.length;i++) {
+                File tmp = s[i];
+                String name = tmp.getName();
+                if (tmp.isFile() && name.startsWith("session_") && name.endsWith(".properties")) {
+                    //--- Find the identifier
+                    name = name.substring(8);
+                    name = name.substring(0, name.length() - 11);
+                    // System.out.println(">>NAME:" + name);
+                    MultiPropertiesSession se = loadSession(name);
+                    sessions.addElement(se);
 
-                } else {
-                    logit.log("E", "" + file.getName() + " does not exist anymore", null);
+                    //--- If default, set it
+                    if (se.getIdentifier().equals("default")) session = se;
 
                 }
-
-                i++;
             }
 
         } catch (Exception ex) {
             //---
         }
+
+        //--- Check if default session exists
+        if (session == null) {
+            session = loadSession("default");
+            sessions.addElement(session);
+            logit.log("M", "Default session created", null);
+        }
+
+        //---
+        CMB_Sessions.setModel((ComboBoxModel) sessions);
+        CMB_Sessions.setSelectedItem(session);
+        CMB_Sessions.addItemListener(this);
+
+        //--- Set default session
+        LI_Files.setModel((ListModel) session.getModel());
+        LI_Files.setCellRenderer(new JMultiPropertiesCellRenderer());
+        LI_Files.addMouseListener(this);
+        LI_Files.addListSelectionListener(this);
 
         timer = new javax.swing.Timer(1000, this);
         timer.start();
@@ -147,13 +174,14 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 String s[] = logit.fetchLog();
                 if (s == null) break;
 
-                String txt = s[0]+" ("+s[1]+") "+s[2];
+                String txt = s[0] + " (" + s[1] + ") " + s[2];
                 TA_Logit.append(txt + "\n");
-                LB_Status.setText(txt);                    
+                LB_Status.setText(txt);
             }
-            
+
             boolean enabled = false;
-            for (int i=0;i<model.size();i++) {
+            DefaultListModel<MultiProperties> model = session.getModel();
+            for (int i = 0;i < model.size();i++) {
                 MultiProperties cont = model.get(i);
                 JMultiProperties jm = cont.getVisual();
                 if (jm != null) {
@@ -162,8 +190,17 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             }
             MN_SaveAll.setEnabled(enabled);
             BT_SaveAll.setEnabled(enabled);
+            CMB_Sessions.setEnabled(!enabled);
             LI_Files.repaint();
 
+            if (session.getIdentifier().equals("default")) {
+                BT_EditSession.setEnabled(false);
+                BT_DeleteSession.setEnabled(false);
+
+            } else {
+                BT_EditSession.setEnabled(true);
+                BT_DeleteSession.setEnabled(true);
+            }
         } else if (e.getActionCommand().equals("quit")) {
             close();
 
@@ -174,6 +211,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             jf.setFileFilter(new FileNameExtensionFilter("Multiproperties", "multiproperties"));
             int rep = jf.showOpenDialog(this);
             if (rep == JFileChooser.APPROVE_OPTION) {
+                DefaultListModel<MultiProperties> model = session.getModel();
                 File f[] = jf.getSelectedFiles();
                 for (int i = 0;i < f.length;i++) {
                     File file = f[i];
@@ -202,9 +240,9 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 JMultiProperties jm = selected.getVisual();
                 if (jm != null) {
                     jm.save(false);
-                    logit.log("M", ""+selected.getFile().getPath() + " saved", null);
+                    logit.log("M", "" + selected.getFile().getPath() + " saved", null);
                 }
-                
+
             }
 
         } else if (e.getActionCommand().equals("saveProcess")) {
@@ -212,18 +250,19 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 JMultiProperties jm = selected.getVisual();
                 if (jm != null) {
                     jm.save(true);
-                    logit.log("M", ""+selected.getFile().getPath() + " saved and processed", null);
+                    logit.log("M", "" + selected.getFile().getPath() + " saved and processed", null);
                 }
-                
+
             }
 
         } else if (e.getActionCommand().equals("saveAll")) {
             //---
-            for (int i=0;i<model.size();i++) {
+            DefaultListModel<MultiProperties> model = session.getModel();
+            for (int i = 0;i < model.size();i++) {
                 MultiProperties cont = model.get(i);
                 JMultiProperties jm = cont.getVisual();
                 if (jm != null) jm.save(false);
-                
+
             }
             LI_Files.repaint();
             MN_SaveAll.setEnabled(false);
@@ -231,9 +270,10 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         } else if (e.getActionCommand().equals("close")) {
             int indices[] = LI_Files.getSelectedIndices();
+            DefaultListModel<MultiProperties> model = session.getModel();
             ArrayList<MultiProperties> toClose = new ArrayList<>();
-            for (int i=0;i<indices.length;i++) toClose.add(model.get(indices[i]));
-            for (int i=0;i<toClose.size();i++) {
+            for (int i = 0;i < indices.length;i++) toClose.add(model.get(indices[i]));
+            for (int i = 0;i < toClose.size();i++) {
                 MultiProperties cont = toClose.get(i);
                 JMultiProperties jm = cont.getVisual();
                 if (jm != null) {
@@ -249,6 +289,59 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 model.removeElement(cont);
             }
 
+        } else if (e.getActionCommand().equals("newSession")) {
+            String title = JOptionPane.showInputDialog(this, "Title");
+            if (title != null) {
+                session = new MultiPropertiesSession(title, null);
+                sessions.addElement(session);
+                CMB_Sessions.setSelectedItem(session);
+                // LI_Files.setModel((ListModel) session.getModel());
+            }
+
+        } else if (e.getActionCommand().equals("editSession")) {
+            if (session.getIdentifier().equals("default")) return;
+
+            String title = JOptionPane.showInputDialog(this, "Title", session.getTitle());
+            if (title != null) session.setTitle(title);
+
+        } else if (e.getActionCommand().equals("removeSession")) {
+            if (session.getIdentifier().equals("default")) return;
+
+            int rep = JOptionPane.showConfirmDialog(this, "Do you really want to remove the session ?", "Remove", JOptionPane.YES_NO_OPTION);
+            if (rep == JOptionPane.YES_OPTION) {
+                DefaultListModel<MultiProperties> model = session.getModel();
+                for (int i = 0;i < model.getSize();i++) {
+                    MultiProperties cont = model.getElementAt(i);
+                    JMultiProperties jm = cont.getVisual();
+                    if (jm != null) {
+                        PN_Content.remove(jm);
+                        PN_Content.revalidate();
+                        if (cont == selected) {
+                            selected = null;
+                            CardLayout layout = (CardLayout) PN_Content.getLayout();
+                            layout.show(PN_Content, "empty");
+                            PN_Title.setVisible(false);
+                        }
+                        cont.setVisual(null);
+                    }
+                }
+                
+                //--- Delete session file
+                try {
+                    File d = new File(System.getProperty("user.home"), ".multiproperties");
+                    String identifier = session.getIdentifier();
+                    File f = new File(d, "session_" + identifier + ".properties");
+                    f.delete();
+                    
+                } catch (Exception ex) {
+                    //---
+               
+                }
+
+                //--- The itemListener will select the new one
+                sessions.removeElement(session);
+
+            }
         }
     }
 
@@ -259,6 +352,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == LI_Files) {
             if (e.getClickCount() >= 2) {
+                DefaultListModel<MultiProperties> model = session.getModel();
                 MultiProperties cont = model.elementAt(LI_Files.getSelectedIndex());
                 LB_File.setText(cont.getFile().getName());
                 LB_Path.setText(cont.getFile().getParent());
@@ -270,7 +364,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                     jm.setFile(cont.getFile());
                     selected.setVisual(jm);
                     PN_Content.add(jm, cont.getFile().getPath());
-                    
+
                 }
 
                 CardLayout layout = (CardLayout) PN_Content.getLayout();
@@ -318,11 +412,43 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     public boolean accept(File pathname) {
         if (pathname.isFile()) {
             if (pathname.getName().toLowerCase().endsWith(".multiproperties")) return true;
-            
+
         } else if (pathname.isDirectory()) {
             return true;
         }
         return false;
+    }
+
+    //**************************************************************************
+    //*** ItemListener
+    //**************************************************************************
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            session = (MultiPropertiesSession) e.getItem();
+            LI_Files.setModel((ListModel) session.getModel());
+
+        } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+            MultiPropertiesSession se = (MultiPropertiesSession) e.getItem();
+            DefaultListModel<MultiProperties> model = se.getModel();
+            for (int i = 0;i < model.getSize();i++) {
+                MultiProperties cont = model.getElementAt(i);
+                JMultiProperties jm = cont.getVisual();
+                if (jm != null) {
+                    PN_Content.remove(jm);
+                    PN_Content.revalidate();
+                    if (cont == selected) {
+                        selected = null;
+                        CardLayout layout = (CardLayout) PN_Content.getLayout();
+                        layout.show(PN_Content, "empty");
+                        PN_Title.setVisible(false);
+                    }
+                    cont.setVisual(null);
+                }
+            }
+
+        }
+
     }
 
     /**
@@ -343,6 +469,12 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TA_Logit = new javax.swing.JTextArea();
+        jPanel4 = new javax.swing.JPanel();
+        jToolBar3 = new javax.swing.JToolBar();
+        CMB_Sessions = new javax.swing.JComboBox<>();
+        BT_NewSession = new javax.swing.JButton();
+        BT_EditSession = new javax.swing.JButton();
+        BT_DeleteSession = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         PN_Content = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -401,6 +533,42 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jPanel5.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jPanel2.add(jPanel5, java.awt.BorderLayout.SOUTH);
+
+        jPanel4.setLayout(new java.awt.BorderLayout());
+
+        jToolBar3.setFloatable(false);
+        jToolBar3.setRollover(true);
+
+        CMB_Sessions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jToolBar3.add(CMB_Sessions);
+
+        BT_NewSession.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_NewSession.setText("New");
+        BT_NewSession.setActionCommand("newSession");
+        BT_NewSession.setFocusable(false);
+        BT_NewSession.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_NewSession.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar3.add(BT_NewSession);
+
+        BT_EditSession.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_EditSession.setText("Edit");
+        BT_EditSession.setActionCommand("editSession");
+        BT_EditSession.setFocusable(false);
+        BT_EditSession.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_EditSession.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar3.add(BT_EditSession);
+
+        BT_DeleteSession.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_DeleteSession.setText("Delete");
+        BT_DeleteSession.setActionCommand("removeSession");
+        BT_DeleteSession.setFocusable(false);
+        BT_DeleteSession.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_DeleteSession.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar3.add(BT_DeleteSession);
+
+        jPanel4.add(jToolBar3, java.awt.BorderLayout.CENTER);
+
+        jPanel2.add(jPanel4, java.awt.BorderLayout.PAGE_START);
 
         SP_Main.setLeftComponent(jPanel2);
 
@@ -515,10 +683,14 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BT_Close;
+    private javax.swing.JButton BT_DeleteSession;
+    private javax.swing.JButton BT_EditSession;
     private javax.swing.JButton BT_Load;
+    private javax.swing.JButton BT_NewSession;
     private javax.swing.JButton BT_Save;
     private javax.swing.JButton BT_SaveAll;
     private javax.swing.JButton BT_SaveProcess;
+    private javax.swing.JComboBox<String> CMB_Sessions;
     private javax.swing.JLabel LB_File;
     private javax.swing.JLabel LB_Path;
     private javax.swing.JLabel LB_Status;
@@ -536,38 +708,34 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
+    private javax.swing.JToolBar jToolBar3;
     // End of variables declaration//GEN-END:variables
 
     private void close() {
         if (BT_SaveAll.isEnabled()) {
             int rep = JOptionPane.showConfirmDialog(this, "Not all files are saved\n\nDo you really want to quit applications ?", "Quit", JOptionPane.YES_NO_OPTION);
             if (rep == JOptionPane.NO_OPTION) return;
-            
+
         }
-        
+
         timer.stop();
 
         //--- Save properties
         try {
-            File f = new File(System.getProperty("user.home"), ".jmultiproperties.properties");
+            File d = new File(System.getProperty("user.home"), ".multiproperties");
+            File f = new File(d, "jmultiproperties.properties");
             Properties prop = new Properties();
             FileOutputStream fout = new FileOutputStream(f);
             prop.put("width", "" + getWidth());
             prop.put("height", "" + getHeight());
             prop.put("divider", "" + SP_Main.getDividerLocation());
-
-            //--- Store list of opened file
-            for (int i = 0;i < model.size();i++) {
-                MultiProperties cont = model.get(i);
-                prop.put("File" + i, cont.getFile().getPath());
-            }
-            if (last != null) prop.put("lastFile", last.getPath());
 
             prop.store(fout, "JMultiPropertiesFrame");
             fout.flush();
@@ -577,9 +745,102 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             //---
         }
 
+        //--- Save last session
+        saveSession(session);
+
         setVisible(false);
         dispose();
 
+    }
+
+    /**
+     * Return true on sucess, the session are save in the user home under
+     * .multiproperties and the file name is "session_{identifier}.properties"
+     * <p>
+     *
+     *
+     * @param session
+     * @return
+     */
+    private boolean saveSession(MultiPropertiesSession session) {
+        //--- Save properties
+        try {
+            File d = new File(System.getProperty("user.home"), ".multiproperties");
+            String identifier = session.getIdentifier();
+            File f = new File(d, "session_" + identifier + ".properties");
+            FileOutputStream fout = new FileOutputStream(f);
+
+            Properties prop = new Properties();
+            prop.put("Title", session.getTitle());
+
+            //--- Store list of opened file
+            DefaultListModel<MultiProperties> model = session.getModel();
+            for (int i = 0;i < model.size();i++) {
+                MultiProperties cont = model.get(i);
+                prop.put("File" + i, cont.getFile().getPath());
+            }
+            if (last != null) prop.put("lastFile", last.getPath());
+
+            prop.store(fout, "JMultiPropertiesFrame Session");
+            fout.flush();
+            fout.close();
+
+            return true;
+
+        } catch (Exception ex) {
+            //---
+        }
+        return false;
+    }
+
+    /**
+     * Load the session, always return an object
+     *
+     * @param identifier
+     * @return
+     */
+    private MultiPropertiesSession loadSession(final String identifier) {
+        MultiPropertiesSession session = new MultiPropertiesSession(identifier, identifier);
+        DefaultListModel model = session.getModel();
+        try {
+            //--- Load stored default session file for default session
+            File d = new File(System.getProperty("user.home"), ".multiproperties");
+            File f = new File(d, "session_" + identifier + ".properties");
+            FileInputStream fin = new FileInputStream(f);
+            Properties prop = new Properties();
+            prop.load(fin);
+            fin.close();
+
+            session.setTitle(prop.getProperty("Title", identifier));
+
+            int i = 0;
+            while (true) {
+                String path = prop.getProperty("File" + i);
+                if (path == null) break;
+
+                File file = new File(path);
+                if (file.exists()) {
+                    MultiProperties cont = new MultiProperties(file);
+                    model.addElement(cont);
+                    logit.log("M", "" + file.getName() + " added", null);
+
+                } else {
+                    logit.log("E", "" + file.getName() + " does not exist anymore", null);
+
+                }
+
+                i++;
+            }
+
+            last = new File(prop.getProperty("lastFile", ""));
+
+            logit.log("M", "Session " + session.getTitle() + " loaded", null);
+
+        } catch (Exception ex) {
+            //---
+
+        }
+        return session;
     }
 
     /**

@@ -1,3 +1,5 @@
 Manifest-Version: 1.0
 Main-Class: lsimedia.multiproperties.standalone.JMultiPropertiesFrame
-
+Permissions: all-permissions
+Application-Name: MultiProperties
+Codebase: *

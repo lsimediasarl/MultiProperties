@@ -8,6 +8,7 @@ package lsimedia.multiproperties.standalone;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -25,6 +26,7 @@ import java.util.Properties;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -80,6 +82,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         initComponents();
 
+        setIconImage(((ImageIcon) LB_Icon.getIcon()).getImage());
+        
         MN_Quit.addActionListener(this);
         MN_Load.addActionListener(this);
         MN_SaveAll.addActionListener(this);
@@ -463,6 +467,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        LB_Icon = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         LB_Status = new javax.swing.JLabel();
         SP_Main = new javax.swing.JSplitPane();
@@ -503,7 +508,11 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jMenu2 = new javax.swing.JMenu();
         MN_About = new javax.swing.JMenuItem();
 
+        LB_Icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/multi.png"))); // NOI18N
+        LB_Icon.setText("jLabel2");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("MultiProperties");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -718,6 +727,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JButton BT_SaveProcess;
     private javax.swing.JComboBox<String> CMB_Sessions;
     private javax.swing.JLabel LB_File;
+    private javax.swing.JLabel LB_Icon;
     private javax.swing.JLabel LB_Path;
     private javax.swing.JLabel LB_Status;
     private javax.swing.JList<String> LI_Files;

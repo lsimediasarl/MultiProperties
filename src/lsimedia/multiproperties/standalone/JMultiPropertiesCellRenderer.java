@@ -44,6 +44,7 @@ public class JMultiPropertiesCellRenderer extends javax.swing.JPanel implements 
         setLayout(new java.awt.BorderLayout());
 
         LB_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        LB_Name.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         LB_Name.setText("...");
         add(LB_Name, java.awt.BorderLayout.SOUTH);
 

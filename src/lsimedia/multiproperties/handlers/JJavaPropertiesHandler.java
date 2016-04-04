@@ -59,7 +59,8 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                     
                 } else if (fn.startsWith("./")) {
                     //--- Same folder
-                    TF_Location.setText("./");
+                    // TF_Location.setText("./");
+                    TF_Location.setText(fn.substring(0,fn.length()-f.getName().length()));
                     
                 } else if (fn.startsWith("../")) {
                     TF_Location.setText(fn.substring(0,fn.length()-f.getName().length()));
@@ -133,7 +134,7 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                     TF_Destination.setText(f.getCanonicalPath());
 
                 } else if (loc.startsWith("./")) {
-                    File f = new File(source.getParent(), n);
+                    File f = new File(source.getParent(), loc+"/"+n);
                     TF_Destination.setText(f.getCanonicalPath());
 
                 } else if (loc.startsWith("../")) {

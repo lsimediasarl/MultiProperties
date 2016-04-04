@@ -12,8 +12,9 @@
     </target>
     
     <target name="create-standalone" depends="init" description="Create stand alone executable">
-        <jar destfile="${dist.dir}/JMultiProperties.jar" manifest="Manifests/JMultiProperties.mf">
+        <jar destfile="${build.dir}/MultiProperties.jar" manifest="Manifests/MultiProperties.mf">
             <fileset dir="${build.dir}/classes" includes="lsimedia/multiproperties/**"/>
         </jar>
+        
     </target>
 </project>

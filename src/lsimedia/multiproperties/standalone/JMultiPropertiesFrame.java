@@ -7,6 +7,7 @@ package lsimedia.multiproperties.standalone;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -25,6 +26,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
@@ -39,6 +41,10 @@ import lsimedia.multiproperties.Logit;
  */
 public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionListener, MouseListener, ListSelectionListener, ItemListener, FileFilter {
 
+    static final String ABOUT = ""+
+            "MultiProperties standalone application\n"+
+            "Distributed under the GPLv3 licence\n\n";
+            
     /**
      * The current selected file
      */
@@ -77,7 +83,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         MN_Quit.addActionListener(this);
         MN_Load.addActionListener(this);
         MN_SaveAll.addActionListener(this);
-
+        MN_About.addActionListener(this);
+        
         BT_Load.addActionListener(this);
         BT_Close.addActionListener(this);
         BT_SaveAll.addActionListener(this);
@@ -86,7 +93,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_SaveProcess.setVisible(!lockdown);
         BT_SaveProcess.addActionListener(this);
 
-        PN_Title.setVisible(false);
+        TB_File.setVisible(false);
 
         BT_NewSession.addActionListener(this);
         BT_EditSession.addActionListener(this);
@@ -197,6 +204,9 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         } else if (e.getActionCommand().equals("quit")) {
             close();
 
+        } else if (e.getActionCommand().equals("about")) {
+            JOptionPane.showMessageDialog(this, ABOUT);
+            
         } else if (e.getActionCommand().equals("load")) {
             JFileChooser jf = new JFileChooser(session.getLastFile());
             jf.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -276,7 +286,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                         selected = null;
                         CardLayout layout = (CardLayout) PN_Content.getLayout();
                         layout.show(PN_Content, "empty");
-                        PN_Title.setVisible(false);
+                        TB_File.setVisible(false);
                     }
                 }
                 model.removeElement(cont);
@@ -313,7 +323,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                             selected = null;
                             CardLayout layout = (CardLayout) PN_Content.getLayout();
                             layout.show(PN_Content, "empty");
-                            PN_Title.setVisible(false);
+                            TB_File.setVisible(false);
                         }
                         cont.setVisual(null);
                     }
@@ -349,7 +359,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 MultiProperties cont = model.elementAt(LI_Files.getSelectedIndex());
                 LB_File.setText(cont.getFile().getName());
                 LB_Path.setText(cont.getFile().getParent());
-                PN_Title.setVisible(true);
+                TB_File.setVisible(true);
 
                 selected = cont;
                 if (selected.getVisual() == null) {
@@ -434,7 +444,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                         selected = null;
                         CardLayout layout = (CardLayout) PN_Content.getLayout();
                         layout.show(PN_Content, "empty");
-                        PN_Title.setVisible(false);
+                        TB_File.setVisible(false);
                     }
                     cont.setVisual(null);
                 }
@@ -464,20 +474,23 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         TA_Logit = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jToolBar3 = new javax.swing.JToolBar();
-        CMB_Sessions = new javax.swing.JComboBox<>();
         BT_NewSession = new javax.swing.JButton();
+        CMB_Sessions = new javax.swing.JComboBox<>();
         BT_EditSession = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JToolBar.Separator();
         BT_DeleteSession = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         PN_Content = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        PN_Title = new javax.swing.JPanel();
-        jToolBar2 = new javax.swing.JToolBar();
+        TB_File = new javax.swing.JToolBar();
         BT_Save = new javax.swing.JButton();
         BT_SaveProcess = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
         LB_File = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
         LB_Path = new javax.swing.JLabel();
-        jToolBar1 = new javax.swing.JToolBar();
+        jPanel7 = new javax.swing.JPanel();
+        TB_Main = new javax.swing.JToolBar();
         BT_Load = new javax.swing.JButton();
         BT_SaveAll = new javax.swing.JButton();
         BT_Close = new javax.swing.JButton();
@@ -487,6 +500,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         MN_SaveAll = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         MN_Quit = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        MN_About = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -532,31 +547,38 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jToolBar3.setFloatable(false);
         jToolBar3.setRollover(true);
 
-        CMB_Sessions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        jToolBar3.add(CMB_Sessions);
-
         BT_NewSession.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_NewSession.setText("New");
+        BT_NewSession.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
+        BT_NewSession.setToolTipText("New");
         BT_NewSession.setActionCommand("newSession");
+        BT_NewSession.setBorderPainted(false);
         BT_NewSession.setFocusable(false);
         BT_NewSession.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_NewSession.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar3.add(BT_NewSession);
 
+        CMB_Sessions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        CMB_Sessions.setMaximumSize(new java.awt.Dimension(32767, 22));
+        CMB_Sessions.setMinimumSize(new java.awt.Dimension(31, 22));
+        CMB_Sessions.setPreferredSize(new java.awt.Dimension(200, 22));
+        jToolBar3.add(CMB_Sessions);
+
         BT_EditSession.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_EditSession.setText("Edit");
+        BT_EditSession.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Edit.png"))); // NOI18N
+        BT_EditSession.setToolTipText("Edit");
         BT_EditSession.setActionCommand("editSession");
+        BT_EditSession.setBorderPainted(false);
         BT_EditSession.setFocusable(false);
         BT_EditSession.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_EditSession.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar3.add(BT_EditSession);
+        jToolBar3.add(jSeparator4);
 
         BT_DeleteSession.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_DeleteSession.setText("Delete");
+        BT_DeleteSession.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Delete.png"))); // NOI18N
+        BT_DeleteSession.setToolTipText("Delete");
         BT_DeleteSession.setActionCommand("removeSession");
+        BT_DeleteSession.setBorderPainted(false);
         BT_DeleteSession.setFocusable(false);
         BT_DeleteSession.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_DeleteSession.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar3.add(BT_DeleteSession);
 
         jPanel4.add(jToolBar3, java.awt.BorderLayout.CENTER);
@@ -572,73 +594,74 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         jPanel3.add(PN_Content, java.awt.BorderLayout.CENTER);
 
-        PN_Title.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        jToolBar2.setFloatable(false);
-        jToolBar2.setRollover(true);
+        TB_File.setFloatable(false);
+        TB_File.setRollover(true);
 
         BT_Save.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_Save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Save.png"))); // NOI18N
         BT_Save.setText("Save");
         BT_Save.setActionCommand("save");
+        BT_Save.setBorderPainted(false);
         BT_Save.setFocusable(false);
-        BT_Save.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_Save.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(BT_Save);
+        TB_File.add(BT_Save);
 
         BT_SaveProcess.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_SaveProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Process.png"))); // NOI18N
         BT_SaveProcess.setText("Save and process");
         BT_SaveProcess.setActionCommand("saveProcess");
+        BT_SaveProcess.setBorderPainted(false);
         BT_SaveProcess.setFocusable(false);
-        BT_SaveProcess.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_SaveProcess.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(BT_SaveProcess);
-
-        PN_Title.add(jToolBar2);
+        TB_File.add(BT_SaveProcess);
+        TB_File.add(jSeparator2);
 
         LB_File.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         LB_File.setText("...");
-        PN_Title.add(LB_File);
+        TB_File.add(LB_File);
+        TB_File.add(jSeparator3);
 
         LB_Path.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         LB_Path.setText("...");
-        PN_Title.add(LB_Path);
+        TB_File.add(LB_Path);
 
-        jPanel3.add(PN_Title, java.awt.BorderLayout.NORTH);
+        jPanel3.add(TB_File, java.awt.BorderLayout.NORTH);
 
         SP_Main.setRightComponent(jPanel3);
 
         getContentPane().add(SP_Main, java.awt.BorderLayout.CENTER);
 
-        jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
+        jPanel7.setLayout(new javax.swing.BoxLayout(jPanel7, javax.swing.BoxLayout.LINE_AXIS));
+
+        TB_Main.setFloatable(false);
 
         BT_Load.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_Load.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_Load.setText("Load");
         BT_Load.setActionCommand("load");
+        BT_Load.setBorderPainted(false);
         BT_Load.setFocusable(false);
-        BT_Load.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_Load.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(BT_Load);
+        TB_Main.add(BT_Load);
 
         BT_SaveAll.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_SaveAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Save.png"))); // NOI18N
         BT_SaveAll.setText("Save All");
         BT_SaveAll.setActionCommand("saveAll");
+        BT_SaveAll.setBorderPainted(false);
         BT_SaveAll.setEnabled(false);
         BT_SaveAll.setFocusable(false);
-        BT_SaveAll.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_SaveAll.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(BT_SaveAll);
+        TB_Main.add(BT_SaveAll);
 
         BT_Close.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_Close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Close.png"))); // NOI18N
         BT_Close.setText("Close");
         BT_Close.setActionCommand("close");
+        BT_Close.setBorderPainted(false);
         BT_Close.setEnabled(false);
         BT_Close.setFocusable(false);
-        BT_Close.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_Close.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(BT_Close);
+        TB_Main.add(BT_Close);
 
-        getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
+        jPanel7.add(TB_Main);
+
+        getContentPane().add(jPanel7, java.awt.BorderLayout.NORTH);
 
         jMenuBar1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
@@ -664,6 +687,16 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         jMenuBar1.add(jMenu1);
 
+        jMenu2.setText("Help");
+        jMenu2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+
+        MN_About.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        MN_About.setText("About");
+        MN_About.setActionCommand("about");
+        jMenu2.add(MN_About);
+
+        jMenuBar1.add(jMenu2);
+
         setJMenuBar(jMenuBar1);
 
         setBounds(0, 0, 810, 630);
@@ -688,26 +721,31 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JLabel LB_Path;
     private javax.swing.JLabel LB_Status;
     private javax.swing.JList<String> LI_Files;
+    private javax.swing.JMenuItem MN_About;
     private javax.swing.JMenuItem MN_Load;
     private javax.swing.JMenuItem MN_Quit;
     private javax.swing.JMenuItem MN_SaveAll;
     private javax.swing.JPanel PN_Content;
-    private javax.swing.JPanel PN_Title;
     private javax.swing.JSplitPane SP_Main;
     private javax.swing.JTextArea TA_Logit;
+    private javax.swing.JToolBar TB_File;
+    private javax.swing.JToolBar TB_Main;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JToolBar jToolBar2;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar jToolBar3;
     // End of variables declaration//GEN-END:variables
 

@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Component;
 import lsimedia.multiproperties.handlers.JavaPropertiesHandler;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -49,7 +50,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
     File file = null;
     boolean lockdown = false;
-    
+
     DefaultListModel columns = new DefaultListModel();
     MultiPropertiesTableModel model = new MultiPropertiesTableModel();
 
@@ -71,7 +72,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      * Logging instance
      */
     Logit logit = null;
-    
+
     /**
      * Last imported/opened file
      */
@@ -81,11 +82,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      * If the panel was modified and not yet saved, the flag would be true
      */
     boolean modified = false;
-    
+
     public JMultiProperties(Logit logit, boolean lockdown) {
         this.logit = logit;
         this.lockdown = lockdown;
-        
+
         initComponents();
 
         CMB_Handlers.addItem(new JavaPropertiesHandler());
@@ -101,16 +102,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Import.addActionListener(this);
         BT_ColumnUp.addActionListener(this);
         BT_ColumnDown.addActionListener(this);
-        
+
         BT_Add.addActionListener(this);
         BT_Remove.addActionListener(this);
 
         BT_NewComment.addActionListener(this);
         BT_NewEmpty.addActionListener(this);
         BT_NewProperty.addActionListener(this);
-        BT_Up.addActionListener(this);
-        BT_Down.addActionListener(this);
-        BT_Copy.addActionListener(this);
         BT_Delete.addActionListener(this);
 
         BT_ConfigureHandler.addActionListener(this);
@@ -120,28 +118,26 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_NewComment.addActionListener(this);
         MN_NewProperty.addActionListener(this);
         MN_NewEmpty.addActionListener(this);
-        
+        MN_MoveUp.addActionListener(this);
+        MN_MoveDown.addActionListener(this);
+
         //--- If lockdown disable the two first tabs
         if (lockdown) {
             TAB_Main.setEnabledAt(0, false);
             TAB_Main.setEnabledAt(1, false);
             TAB_Main.setSelectedIndex(2);
-            
-            BT_Up.setVisible(false);
-            BT_Down.setVisible(false);
+
             BT_NewComment.setVisible(false);
             BT_NewEmpty.setVisible(false);
             BT_NewProperty.setVisible(false);
-            
-            BT_Copy.setVisible(false);
+
             BT_Delete.setVisible(false);
         }
-        
+
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
 
-            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -157,11 +153,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         parseMultiproperties(file);
 
     }
-    
+
     public File getFile() {
         return file;
     }
-    
+
     /**
      * Unique listener for data changes
      *
@@ -174,8 +170,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     /**
      * Save the files to filesystem, two steps, first dave the .multiproperties
      * xml file<p>
-     * 
-     * If the process argument is true, than for each column, save the properties via the handler<p>
+     *
+     * If the process argument is true, than for each column, save the
+     * properties via the handler<p>
      *
      */
     public void save(boolean process) {
@@ -249,17 +246,17 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             StreamResult result = new StreamResult(file.toString());
             transformer.transform(source, result);
 
-            logit.log("M","Multiproperties file stored at "+file.getPath(), null);
+            logit.log("M", "Multiproperties file stored at " + file.getPath(), null);
             // System.out.println("SAVED TO :" + file.getPath());
 
             //--- Pass the model to the properties handler to save the specific file
             if (process) handler.save(model, TF_Name.getText(), TA_Description.getText(), file, logit);
 
             modified = false;
-            
+
         } catch (Exception ex) {
             // ex.printStackTrace();
-            logit.log("E","Multiproperties save error "+ex.getMessage(), null);
+            logit.log("E", "Multiproperties save error " + ex.getMessage(), null);
         }
 
     }
@@ -267,6 +264,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     public boolean isModified() {
         return modified;
     }
+
     //**************************************************************************
     //*** ActionListener
     //**************************************************************************
@@ -325,13 +323,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 for (int i = 0;i < f.length;i++) {
                     Column c = h.load(model, f[i]);
                     if (c != null) columns.addElement(c);
-                    
+
                     last = f[i];
                 }
-                
+
                 fireModifiedEvent();
-                
-                
+
             }
 
         } else if (e.getActionCommand().equals("columnUp")) {
@@ -346,7 +343,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 model.swapColumn(index + 1 - 1, index + 1);
 
                 LI_Columns.setSelectedIndex(index - 1);
-                
+
                 fireModifiedEvent();
             }
 
@@ -362,16 +359,16 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 model.swapColumn(index + 1, index + 1 + 1);
 
                 LI_Columns.setSelectedIndex(index + 1);
-                
+
                 fireModifiedEvent();
             }
-            
+
         } else if (e.getActionCommand().equals("newComment")) {
-            String comment = JOptionPane.showInputDialog(this,"Comment");
+            String comment = JOptionPane.showInputDialog(this, "Comment");
             if (comment != null) {
                 int index = TB_Table.getSelectedRow();
-                model.insertRecord(index+1, new CommentRecord(comment));
-                TB_Table.getSelectionModel().setSelectionInterval(index + 1, index+1);
+                model.insertRecord(index + 1, new CommentRecord(comment));
+                TB_Table.getSelectionModel().setSelectionInterval(index + 1, index + 1);
                 fireModifiedEvent();
             }
 
@@ -381,8 +378,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 int index = TB_Table.getSelectedRow();
                 PropertyRecord rec = new PropertyRecord(name);
                 for (int i = 0;i < columns.size();i++) rec.addColumn();
-                model.insertRecord(index+1, rec);
-                TB_Table.getSelectionModel().setSelectionInterval(index + 1, index+1);
+                model.insertRecord(index + 1, rec);
+                TB_Table.getSelectionModel().setSelectionInterval(index + 1, index + 1);
                 fireModifiedEvent();
             }
 
@@ -390,18 +387,24 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             int index = TB_Table.getSelectedRow();
             EmptyRecord rec = new EmptyRecord();
             for (int i = 0;i < columns.size();i++) rec.addColumn();
-            model.insertRecord(index+1, rec);
-            TB_Table.getSelectionModel().setSelectionInterval(index + 1, index+1); 
+            model.insertRecord(index + 1, rec);
+            TB_Table.getSelectionModel().setSelectionInterval(index + 1, index + 1);
             fireModifiedEvent();
 
         } else if (e.getActionCommand().equals("delete")) {
-            int indices[] = TB_Table.getSelectedRows();
-            ArrayList<Record> list = new ArrayList<>();
-            for (int i = 0;i < indices.length;i++) list.add(model.getRecord(indices[i]));
-            for (int i = 0;i < list.size();i++) model.removeRecord(list.get(i));
 
-            fireModifiedEvent();
-            
+            int indices[] = TB_Table.getSelectedRows();
+            if (indices.length > 0) {
+                int rep = JOptionPane.showConfirmDialog(this, "Do you really want to delete the entry ?", "Delete", JOptionPane.YES_NO_OPTION);
+                if (rep == JOptionPane.YES_OPTION) {
+                    ArrayList<Record> list = new ArrayList<>();
+                    for (int i = 0;i < indices.length;i++) list.add(model.getRecord(indices[i]));
+                    for (int i = 0;i < list.size();i++) model.removeRecord(list.get(i));
+
+                    fireModifiedEvent();
+                }
+            }
+
         } else if (e.getActionCommand().equals("copy")) {
             int index = TB_Table.getSelectedRow();
             if (index >= 0) {
@@ -410,7 +413,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     model.insertRecord(index, (Record) rec.clone());
 
                     fireModifiedEvent();
-                    
+
                 } catch (CloneNotSupportedException ex) {
                     ex.printStackTrace();
                 }
@@ -421,7 +424,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             if (row > 0) {
                 model.swapValue(row - 1, row);
                 TB_Table.getSelectionModel().setSelectionInterval(row - 1, row - 1);
-                
+                TB_Table.scrollRectToVisible(new Rectangle(TB_Table.getCellRect(row - 1, 0, true)));
                 fireModifiedEvent();
             }
 
@@ -430,7 +433,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             if (row < TB_Table.getRowCount() - 1) {
                 model.swapValue(row, row + 1);
                 TB_Table.getSelectionModel().setSelectionInterval(row + 1, row + 1);
-                
+                TB_Table.scrollRectToVisible(new Rectangle(TB_Table.getCellRect(row + 1, 0, true)));
                 fireModifiedEvent();
             }
         }
@@ -539,6 +542,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_Copy = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         MN_Delete = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        MN_MoveUp = new javax.swing.JMenuItem();
+        MN_MoveDown = new javax.swing.JMenuItem();
         TAB_Main = new javax.swing.JTabbedPane();
         PN_Overview = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -594,9 +600,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewEmpty = new javax.swing.JButton();
         BT_NewProperty = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
-        BT_Up = new javax.swing.JButton();
-        BT_Down = new javax.swing.JButton();
-        BT_Copy = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         BT_Delete = new javax.swing.JButton();
 
@@ -629,6 +632,19 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_Delete.setText("Delete");
         MN_Delete.setActionCommand("delete");
         PU_Actions.add(MN_Delete);
+        PU_Actions.add(jSeparator5);
+
+        MN_MoveUp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_UP, java.awt.event.InputEvent.ALT_MASK));
+        MN_MoveUp.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        MN_MoveUp.setText("Move up");
+        MN_MoveUp.setActionCommand("up");
+        PU_Actions.add(MN_MoveUp);
+
+        MN_MoveDown.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_UP, java.awt.event.InputEvent.ALT_MASK));
+        MN_MoveDown.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        MN_MoveDown.setText("Move down");
+        MN_MoveDown.setActionCommand("down");
+        PU_Actions.add(MN_MoveDown);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -862,61 +878,37 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jToolBar1.setRollover(true);
 
         BT_NewComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_NewComment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewComment.setText("New comment");
         BT_NewComment.setActionCommand("newComment");
+        BT_NewComment.setBorderPainted(false);
         BT_NewComment.setFocusable(false);
-        BT_NewComment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_NewComment.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_NewComment);
 
         BT_NewEmpty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_NewEmpty.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewEmpty.setText("New empty line");
         BT_NewEmpty.setActionCommand("newEmpty");
+        BT_NewEmpty.setBorderPainted(false);
         BT_NewEmpty.setFocusable(false);
-        BT_NewEmpty.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_NewEmpty.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_NewEmpty);
 
         BT_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_NewProperty.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewProperty.setText("New property");
         BT_NewProperty.setActionCommand("newProperty");
+        BT_NewProperty.setBorderPainted(false);
         BT_NewProperty.setFocusable(false);
-        BT_NewProperty.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_NewProperty.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_NewProperty);
         jToolBar1.add(jSeparator1);
-
-        BT_Up.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_Up.setText("Up");
-        BT_Up.setActionCommand("up");
-        BT_Up.setFocusable(false);
-        BT_Up.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_Up.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(BT_Up);
-
-        BT_Down.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_Down.setText("Down");
-        BT_Down.setActionCommand("down");
-        BT_Down.setFocusable(false);
-        BT_Down.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_Down.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(BT_Down);
-
-        BT_Copy.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_Copy.setText("Copy");
-        BT_Copy.setActionCommand("copy");
-        BT_Copy.setFocusable(false);
-        BT_Copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_Copy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(BT_Copy);
         jToolBar1.add(jSeparator2);
 
         BT_Delete.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_Delete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Delete.png"))); // NOI18N
         BT_Delete.setText("Delete");
         BT_Delete.setActionCommand("delete");
+        BT_Delete.setBorderPainted(false);
         BT_Delete.setFocusable(false);
-        BT_Delete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BT_Delete.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(BT_Delete);
 
         PN_Table.add(jToolBar1, java.awt.BorderLayout.PAGE_START);
@@ -929,39 +921,21 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private void TB_TableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TB_TableKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             if (evt.isAltDown()) {
-                int row = TB_Table.getSelectedRow();
-                if (row > 0) {
-                    model.swapValue(row - 1, row);
-                    TB_Table.getSelectionModel().setSelectionInterval(row - 1, row - 1);
-                    
-                    fireModifiedEvent();
-                }
+                ActionEvent e = new ActionEvent(TB_Table, ActionEvent.ACTION_PERFORMED, MN_MoveUp.getActionCommand());
+                actionPerformed(e);
+
             }
 
         } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
             if (evt.isAltDown()) {
-                int row = TB_Table.getSelectedRow();
-                if (row < TB_Table.getRowCount() - 1) {
-                    model.swapValue(row, row + 1);
-                    TB_Table.getSelectionModel().setSelectionInterval(row + 1, row + 1);
-                    
-                    fireModifiedEvent();
-                }
+                ActionEvent e = new ActionEvent(TB_Table, ActionEvent.ACTION_PERFORMED, MN_MoveDown.getActionCommand());
+                actionPerformed(e);
 
             }
 
         } else if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
-            int row = TB_Table.getSelectedRow();
-            if (row > 0) {
-                Record rec = model.getRecord(row);
-                int rep = JOptionPane.showConfirmDialog(this, "Do you really want to delete the property " + rec.getKey(), "Delete", JOptionPane.YES_NO_OPTION);
-                if (rep == JOptionPane.OK_OPTION) {
-                    model.removeRecord(rec);
-                    
-                    fireModifiedEvent();
-                }
-
-            }
+            ActionEvent e = new ActionEvent(TB_Table, ActionEvent.ACTION_PERFORMED, BT_Delete.getActionCommand());
+            actionPerformed(e);
 
         }
     }//GEN-LAST:event_TB_TableKeyPressed
@@ -971,15 +945,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JButton BT_ColumnDown;
     private javax.swing.JButton BT_ColumnUp;
     private javax.swing.JButton BT_ConfigureHandler;
-    private javax.swing.JButton BT_Copy;
     private javax.swing.JButton BT_Delete;
-    private javax.swing.JButton BT_Down;
     private javax.swing.JButton BT_Import;
     private javax.swing.JButton BT_NewComment;
     private javax.swing.JButton BT_NewEmpty;
     private javax.swing.JButton BT_NewProperty;
     private javax.swing.JButton BT_Remove;
-    private javax.swing.JButton BT_Up;
     private javax.swing.JComboBox<PropertiesHandler> CMB_Handlers;
     private javax.swing.JLabel LB_ColumnDescription;
     private javax.swing.JLabel LB_ColumnName;
@@ -988,6 +959,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JList<Column> LI_Columns;
     private javax.swing.JMenuItem MN_Copy;
     private javax.swing.JMenuItem MN_Delete;
+    private javax.swing.JMenuItem MN_MoveDown;
+    private javax.swing.JMenuItem MN_MoveUp;
     private javax.swing.JMenuItem MN_NewComment;
     private javax.swing.JMenuItem MN_NewEmpty;
     private javax.swing.JMenuItem MN_NewProperty;
@@ -1014,6 +987,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 
@@ -1065,11 +1039,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                                 Column c = model.getColumn(0);
                                 int width = Integer.parseInt(col.getElementsByTagName("Width").item(0).getFirstChild().getNodeValue());
                                 c.setWidth(width);
-                                
+
                             } catch (Exception ex) {
                                 //---
                             }
-                            
+
                         } else if (n2.getNodeName().equals("Column")) {
                             Element col = (Element) n2;
                             Column c = new Column(col);
@@ -1103,8 +1077,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             }
 
             //--- Set column size
-            for (int i = 0;i < columns.size();i++) {
-                Column c = (Column) columns.get(i);
+            //--- First one is the key
+            for (int i = 0;i < model.getColumnCount();i++) {
+                Column c = (Column) model.getColumn(i);
                 TB_Table.getColumnModel().getColumn(i).setPreferredWidth(c.width);
                 TB_Table.getColumnModel().getColumn(i).setWidth(c.width);
             }

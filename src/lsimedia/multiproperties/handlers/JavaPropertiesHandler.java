@@ -66,10 +66,10 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                     
                 } else if (fn.startsWith("./")) {
                     //--- Use same directory has source
-                    file = new File(source.getParent(), file.getName());
+                    file = new File(source.getParent(), file.getPath());
                     
                 } else if (fn.startsWith("../")) {
-                    //--- Use same directory has source
+                    //--- Use relative path
                     file = new File(source.getParent(), file.getPath());
                     
                 }

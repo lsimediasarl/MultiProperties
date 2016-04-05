@@ -45,7 +45,9 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
     static final String ABOUT = ""+
             "MultiProperties standalone application\n"+
-            "Distributed under the GPLv3 licence\n\n";
+            "Distributed under the GPLv3 licence\n\n"+
+            "This application is inspired by the Eclipse plugin \"Multiproperties\" written by Krisztián Zsolt Sallai\n\n";
+            
             
     /**
      * The current selected file
@@ -62,6 +64,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
      */
     DefaultComboBoxModel<MultiPropertiesSession> sessions = new DefaultComboBoxModel<>();
 
+    DefaultListModel logs = new DefaultListModel<String>();
+    
     Logit logit = new Logit();
 
     /**
@@ -83,6 +87,9 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         initComponents();
 
         setIconImage(((ImageIcon) LB_Icon.getIcon()).getImage());
+        if (lockdown) setTitle(getTitle()+" [lockdown]");
+        
+        LI_Logs.setModel(logs);
         
         MN_Quit.addActionListener(this);
         MN_Load.addActionListener(this);
@@ -178,8 +185,20 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 String s[] = logit.fetchLog();
                 if (s == null) break;
 
-                String txt = s[0] + " (" + s[1] + ") " + s[2];
-                TA_Logit.append(txt + "\n");
+                String txt = "<html><i>"+s[0]+"</i>";
+                if (s[1].equals("E")) {
+                    txt += " <font color=\"#ff0000\">(E)";
+                    txt += " "+s[2];
+                    
+                } else if (s[1].equals("I")) {
+                    txt += " <font color=\"#aaaaaa\">(I)";
+                    txt += " "+s[2]+"</font>";
+                    
+                } else {
+                    txt += " ("+s[1]+") "+s[2];
+                }
+                logs.insertElementAt(txt, 0);
+                
                 LB_Status.setText(txt);
             }
 
@@ -475,8 +494,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jScrollPane2 = new javax.swing.JScrollPane();
         LI_Files = new javax.swing.JList<>();
         jPanel5 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        TA_Logit = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        LI_Logs = new javax.swing.JList<>();
         jPanel4 = new javax.swing.JPanel();
         jToolBar3 = new javax.swing.JToolBar();
         BT_NewSession = new javax.swing.JButton();
@@ -540,14 +559,11 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jPanel5.setPreferredSize(new java.awt.Dimension(143, 200));
         jPanel5.setLayout(new java.awt.BorderLayout());
 
-        TA_Logit.setEditable(false);
-        TA_Logit.setColumns(20);
-        TA_Logit.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        TA_Logit.setLineWrap(true);
-        TA_Logit.setRows(5);
-        jScrollPane1.setViewportView(TA_Logit);
+        LI_Logs.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
+        LI_Logs.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        jScrollPane3.setViewportView(LI_Logs);
 
-        jPanel5.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jPanel5.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
         jPanel2.add(jPanel5, java.awt.BorderLayout.SOUTH);
 
@@ -731,13 +747,13 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JLabel LB_Path;
     private javax.swing.JLabel LB_Status;
     private javax.swing.JList<String> LI_Files;
+    private javax.swing.JList<String> LI_Logs;
     private javax.swing.JMenuItem MN_About;
     private javax.swing.JMenuItem MN_Load;
     private javax.swing.JMenuItem MN_Quit;
     private javax.swing.JMenuItem MN_SaveAll;
     private javax.swing.JPanel PN_Content;
     private javax.swing.JSplitPane SP_Main;
-    private javax.swing.JTextArea TA_Logit;
     private javax.swing.JToolBar TB_File;
     private javax.swing.JToolBar TB_Main;
     private javax.swing.JLabel jLabel1;
@@ -750,8 +766,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;

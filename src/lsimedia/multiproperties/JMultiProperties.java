@@ -99,7 +99,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         TB_Table.getTableHeader().setFont(new Font("Arial", 0, 11));
         TB_Table.addMouseListener(this);
         TB_Table.setDefaultRenderer(Record.class, new JRecordCellRenderer());
-
+        TB_Table.getTableHeader().setReorderingAllowed(false);
+        
         LI_Columns.setModel(columns);
         LI_Columns.addListSelectionListener(this);
 

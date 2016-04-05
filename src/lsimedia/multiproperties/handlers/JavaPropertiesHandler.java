@@ -56,6 +56,8 @@ public class JavaPropertiesHandler implements PropertiesHandler {
     @Override
     public boolean save(final MultiPropertiesTableModel model, final String name, final String description, final File source, final Logit logit) {
         //--- For each column, store the Java properties file
+        boolean result = true;
+        
         //--- The column at index 0 is the key, do not handle it
         for (int i = 1;i < model.getColumnCount();i++) {
             try {
@@ -129,10 +131,12 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 error = ex.getMessage();
                 ex.printStackTrace();
                 logit.log("E", "Error storing java properties :"+ex.getMessage(), null);
+                result = false;
             }
+            
         }
 
-        return false;
+        return true;
     }
 
     @Override

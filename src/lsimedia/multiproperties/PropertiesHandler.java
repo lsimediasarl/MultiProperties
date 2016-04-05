@@ -46,4 +46,11 @@ public interface PropertiesHandler {
      * @return 
      */
     public HandlerGUI getGUI(final Column column, final File source);
+    
+    /**
+     * Return the last known error or null if none
+     * @return 
+     */
+    public String getLastError();
+    
 }

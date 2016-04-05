@@ -30,6 +30,11 @@ public class JavaPropertiesHandler implements PropertiesHandler {
         '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
     };
     
+    /**
+     * Last error
+     */
+    String error = null;
+    
     public JavaPropertiesHandler() {
         //---
     }
@@ -121,6 +126,7 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 logit.log("I", "Store java properties at "+file.getCanonicalPath(), null);
                 
             } catch (Exception ex) {
+                error = ex.getMessage();
                 ex.printStackTrace();
                 logit.log("E", "Error storing java properties :"+ex.getMessage(), null);
             }
@@ -185,6 +191,7 @@ public class JavaPropertiesHandler implements PropertiesHandler {
             return c;
             
         } catch (Exception ex) {
+            error = ex.getMessage();
             ex.printStackTrace();
             
         }   
@@ -196,6 +203,11 @@ public class JavaPropertiesHandler implements PropertiesHandler {
     public HandlerGUI getGUI(Column column, File source) {
         //---
         return new JJavaPropertiesHandler(column, source);
+    }
+    
+    @Override
+    public String getLastError() {
+        return error;
     }
     
     //**************************************************************************

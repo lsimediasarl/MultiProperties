@@ -19,7 +19,9 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -48,9 +50,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
     public static final String ACTION_COMMAND_MODIFIED = "dataModified";
 
+    SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
     File file = null;
     boolean lockdown = false;
-
+    
     DefaultListModel columns = new DefaultListModel();
     MultiPropertiesTableModel model = new MultiPropertiesTableModel();
 
@@ -250,7 +254,10 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             // System.out.println("SAVED TO :" + file.getPath());
 
             //--- Pass the model to the properties handler to save the specific file
-            if (process) handler.save(model, TF_Name.getText(), TA_Description.getText(), file, logit);
+            if (process) {
+                boolean rep = handler.save(model, TF_Name.getText(), TA_Description.getText(), file, logit);
+                if (rep == false) JOptionPane.showMessageDialog(this, "An error occured during the saving of the property\n\n"+handler.getLastError());
+            }
 
             modified = false;
 
@@ -679,14 +686,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PN_OverviewLayout.createSequentialGroup()
                         .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(PN_OverviewLayout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(TF_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(LB_Version))
-                        .addContainerGap(522, Short.MAX_VALUE))
-                    .addGroup(PN_OverviewLayout.createSequentialGroup()
-                        .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -696,7 +695,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(PN_OverviewLayout.createSequentialGroup()
                                 .addComponent(jScrollPane3)
-                                .addContainerGap())))))
+                                .addContainerGap())))
+                    .addGroup(PN_OverviewLayout.createSequentialGroup()
+                        .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(PN_OverviewLayout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(TF_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(LB_Version))
+                        .addContainerGap(537, Short.MAX_VALUE))))
         );
         PN_OverviewLayout.setVerticalGroup(
             PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -713,7 +720,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CMB_Handlers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 331, Short.MAX_VALUE)
                 .addComponent(LB_Version)
                 .addContainerGap())
         );
@@ -997,7 +1004,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             source.setEncoding("UTF-8");
             Document xml = builder.parse(source);
             Element root = (Element) xml.getChildNodes().item(0);
-
+            
             model.removeAllElements();
             columns.removeAllElements();
 
@@ -1085,9 +1092,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             }
 
         } catch (SAXException ex) {
+            logit.log("E", "Parsing error "+ex.getMessage(), null);
             ex.printStackTrace();
 
         } catch (IOException ex) {
+            logit.log("E", "Parsing error "+ex.getMessage(), null);
             ex.printStackTrace();
 
         }

@@ -26,6 +26,10 @@ public class Logit {
         logs.add(new String[]{tf.format(new Date()), kind, message});
     }
 
+    public int logSize() {
+        return logs.size();
+    }
+    
     /**
      * Return the log line (date, kind, message) or null if none
      *

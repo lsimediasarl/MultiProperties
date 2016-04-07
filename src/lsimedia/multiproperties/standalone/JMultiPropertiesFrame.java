@@ -252,7 +252,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                     FileOutputStream fout = new FileOutputStream(nf);
 
                     InputStream in = getClass().getResourceAsStream("/lsimedia/multiproperties/Resources/Xml/sample.multiproperties");
-                    System.out.println("IN:"+in);
                     byte buffer[] = new byte[65535];
                     while (true) {
                         int read = in.read(buffer);

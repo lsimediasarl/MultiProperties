@@ -39,6 +39,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import lsimedia.multiproperties.handlers.EmptyPropertiesHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -93,6 +94,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         initComponents();
 
+        CMB_Handlers.addItem(new EmptyPropertiesHandler());
         CMB_Handlers.addItem(new JavaPropertiesHandler());
 
         TB_Table.setModel(model);
@@ -155,14 +157,23 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     //**************************************************************************
     public void setFile(File file) {
         this.file = file;
-        parseMultiproperties(file);
-
+        boolean found = parseMultiproperties(file);
+        if (!found) JOptionPane.showMessageDialog(this, "The handler was not found !\n\nDo not save this file if you want to keep the unknown handler...", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public File getFile() {
         return file;
     }
 
+    /**
+     * Returns the data model
+     * 
+     * @return 
+     */
+    public MultiPropertiesTableModel getModel() {
+        return model;
+    }
+    
     /**
      * Unique listener for data changes
      *
@@ -999,7 +1010,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 
-    private void parseMultiproperties(File f) {
+    /**
+     * Parse the file, if the handler was found, return true, false otherwise
+     * 
+     * @param f 
+     */
+    private boolean parseMultiproperties(File f) {
+        boolean found = false;
         try {
             InputSource source = new InputSource(new FileInputStream(f));
             source.setEncoding("UTF-8");
@@ -1008,9 +1025,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             
             model.removeAllElements();
             columns.removeAllElements();
-
-            //--- The handler used
-            PropertiesHandler handler = null;
 
             NodeList nl = root.getChildNodes();
             for (int i = 0;i < nl.getLength();i++) {
@@ -1033,7 +1047,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                         String hn = e.getFirstChild().getNodeValue();
                         for (int j = 0;j < CMB_Handlers.getItemCount();j++) {
                             PropertiesHandler ph = CMB_Handlers.getItemAt(j);
-                            if (ph.getName().equals(hn)) CMB_Handlers.setSelectedIndex(j);
+                            if (ph.getName().equals(hn)) {
+                                CMB_Handlers.setSelectedIndex(j);
+                                found = true;
+                                break;
+                            }
                         }
                     }
 
@@ -1057,7 +1075,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                             Column c = new Column(col);
                             columns.addElement(c);
                             model.addColumn(c);
-
+                            
                         }
 
                     }
@@ -1101,6 +1119,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             ex.printStackTrace();
 
         }
+        return found;
     }
 
     /**

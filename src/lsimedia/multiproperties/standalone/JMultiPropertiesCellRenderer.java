@@ -19,8 +19,8 @@ import lsimedia.multiproperties.JMultiProperties;
 public class JMultiPropertiesCellRenderer extends javax.swing.JPanel implements ListCellRenderer {
     static final Color COLOR_ODD = new Color(241,245,250);
     
-    static final Font MONO_PLAIN = new java.awt.Font("Monospaced", Font.PLAIN, 11);
-    static final Font MONO_BOLD = new java.awt.Font("Monospaced", Font.BOLD, 11);
+    static final Font MONO_PLAIN = new java.awt.Font("Monospaced", Font.PLAIN, 14);
+    static final Font MONO_BOLD = new java.awt.Font("Monospaced", Font.BOLD, 14);
     
     /**
      * Creates new form JMultiPropertiesFileContainerCellRenderer
@@ -43,10 +43,10 @@ public class JMultiPropertiesCellRenderer extends javax.swing.JPanel implements 
 
         setLayout(new java.awt.BorderLayout());
 
-        LB_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        LB_Name.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         LB_Name.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         LB_Name.setText("...");
-        add(LB_Name, java.awt.BorderLayout.SOUTH);
+        add(LB_Name, java.awt.BorderLayout.CENTER);
 
         LB_Location.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         LB_Location.setText("...");
@@ -60,7 +60,7 @@ public class JMultiPropertiesCellRenderer extends javax.swing.JPanel implements 
         JMultiProperties jm = cont.getVisual();
         boolean modified = false;
         if ((jm != null) && jm.isModified()) modified = true;
-        LB_Location.setFont(modified?MONO_BOLD:MONO_PLAIN);
+        // LB_Location.setFont(modified?MONO_BOLD:MONO_PLAIN);
         LB_Name.setFont(modified?MONO_BOLD:MONO_PLAIN);
         
         LB_Location.setText(cont.getFile().getParent());

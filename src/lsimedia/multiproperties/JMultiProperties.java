@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Component;
 import lsimedia.multiproperties.handlers.JavaPropertiesHandler;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -52,10 +54,10 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     public static final String ACTION_COMMAND_MODIFIED = "dataModified";
 
     SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
+
     File file = null;
     boolean lockdown = false;
-    
+
     DefaultListModel columns = new DefaultListModel();
     MultiPropertiesTableModel model = new MultiPropertiesTableModel();
 
@@ -102,7 +104,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         TB_Table.addMouseListener(this);
         TB_Table.setDefaultRenderer(Record.class, new JRecordCellRenderer());
         TB_Table.getTableHeader().setReorderingAllowed(false);
-        
+
         LI_Columns.setModel(columns);
         LI_Columns.addListSelectionListener(this);
 
@@ -117,6 +119,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewEmpty.addActionListener(this);
         BT_NewProperty.addActionListener(this);
         BT_Delete.addActionListener(this);
+        BT_Merge.addActionListener(this);
 
         BT_ConfigureHandler.addActionListener(this);
 
@@ -167,13 +170,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
     /**
      * Returns the data model
-     * 
-     * @return 
+     *
+     * @return
      */
     public MultiPropertiesTableModel getModel() {
         return model;
     }
-    
+
     /**
      * Unique listener for data changes
      *
@@ -268,7 +271,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             //--- Pass the model to the properties handler to save the specific file
             if (process) {
                 boolean rep = handler.save(model, TF_Name.getText(), TA_Description.getText(), file, logit);
-                if (rep == false) JOptionPane.showMessageDialog(this, "An error occured during the saving of the property\n\n"+handler.getLastError());
+                if (rep == false) JOptionPane.showMessageDialog(this, "An error occured during the saving of the property\n\n" + handler.getLastError());
             }
 
             modified = false;
@@ -455,6 +458,32 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 TB_Table.scrollRectToVisible(new Rectangle(TB_Table.getCellRect(row + 1, 0, true)));
                 fireModifiedEvent();
             }
+
+        } else if (e.getActionCommand().equals("merge")) {
+            //--- Merge other file to the current one
+            JFileChooser jf = new JFileChooser(file);
+            jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            jf.setMultiSelectionEnabled(true);
+            jf.setFileFilter(new FileNameExtensionFilter("Multiproperties", "multiproperties"));
+            int rep = jf.showOpenDialog(this);
+            if (rep == JFileChooser.APPROVE_OPTION) {
+                File source = jf.getSelectedFile();
+                JMultiProperties jm = new JMultiProperties(logit, true);
+                jm.setFile(source);
+                MultiPropertiesTableModel smodel = jm.getModel();
+                JMergeDialog jdialog = new JMergeDialog((Frame) getTopLevelAncestor(), true, model, smodel);
+                jdialog.setLocationRelativeTo(this);
+                jdialog.setVisible(true);
+
+                //--- Check if new column was added (at the end)
+                for (int i = columns.getSize() + 1;i < model.getColumnCount();i++) {
+                    Column c = model.getColumn(i);
+                    columns.addElement(c);
+                }
+
+                fireModifiedEvent();
+            }
+
         }
     }
 
@@ -469,7 +498,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 Record rec = model.getRecord(TB_Table.getSelectedRow());
                 ArrayList<Column> cols = new ArrayList<>();
                 for (int i = 0;i < columns.size();i++) cols.add((Column) columns.get(i));
-                JWriteDialog dlg = new JWriteDialog(null, true, rec, cols, model);
+                JWriteDialog dlg = new JWriteDialog(null, true, rec, model);
                 dlg.pack();
                 dlg.setLocationRelativeTo(this);
                 dlg.setVisible(true);
@@ -618,6 +647,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewComment = new javax.swing.JButton();
         BT_NewEmpty = new javax.swing.JButton();
         BT_NewProperty = new javax.swing.JButton();
+        BT_Merge = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         BT_Delete = new javax.swing.JButton();
@@ -919,6 +949,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewProperty.setBorderPainted(false);
         BT_NewProperty.setFocusable(false);
         jToolBar1.add(BT_NewProperty);
+
+        BT_Merge.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_Merge.setText("Merge");
+        BT_Merge.setActionCommand("merge");
+        BT_Merge.setBorderPainted(false);
+        BT_Merge.setFocusable(false);
+        jToolBar1.add(BT_Merge);
         jToolBar1.add(jSeparator1);
         jToolBar1.add(jSeparator2);
 
@@ -966,6 +1003,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JButton BT_ConfigureHandler;
     private javax.swing.JButton BT_Delete;
     private javax.swing.JButton BT_Import;
+    private javax.swing.JButton BT_Merge;
     private javax.swing.JButton BT_NewComment;
     private javax.swing.JButton BT_NewEmpty;
     private javax.swing.JButton BT_NewProperty;
@@ -1012,8 +1050,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
     /**
      * Parse the file, if the handler was found, return true, false otherwise
-     * 
-     * @param f 
+     *
+     * @param f
      */
     private boolean parseMultiproperties(File f) {
         boolean found = false;
@@ -1022,7 +1060,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             source.setEncoding("UTF-8");
             Document xml = builder.parse(source);
             Element root = (Element) xml.getChildNodes().item(0);
-            
+
             model.removeAllElements();
             columns.removeAllElements();
 
@@ -1075,7 +1113,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                             Column c = new Column(col);
                             columns.addElement(c);
                             model.addColumn(c);
-                            
+
                         }
 
                     }
@@ -1102,24 +1140,31 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 }
             }
 
-            //--- Set column size
-            //--- First one is the key
-            for (int i = 0;i < model.getColumnCount();i++) {
-                Column c = (Column) model.getColumn(i);
-                TB_Table.getColumnModel().getColumn(i).setPreferredWidth(c.width);
-                TB_Table.getColumnModel().getColumn(i).setWidth(c.width);
-            }
+            resizeColumns();
 
         } catch (SAXException ex) {
-            logit.log("E", "Parsing error "+ex.getMessage(), null);
+            logit.log("E", "Parsing error " + ex.getMessage(), null);
             ex.printStackTrace();
 
         } catch (IOException ex) {
-            logit.log("E", "Parsing error "+ex.getMessage(), null);
+            logit.log("E", "Parsing error " + ex.getMessage(), null);
             ex.printStackTrace();
 
         }
         return found;
+    }
+
+    /**
+     * Resize the column with the width defined in the multiproperties file
+     */
+    private void resizeColumns() {
+        //--- Set column size
+        //--- First one is the key
+        for (int i = 0;i < model.getColumnCount();i++) {
+            Column c = (Column) model.getColumn(i);
+            TB_Table.getColumnModel().getColumn(i).setPreferredWidth(c.width);
+            TB_Table.getColumnModel().getColumn(i).setWidth(c.width);
+        }
     }
 
     /**
@@ -1128,6 +1173,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private void fireModifiedEvent() {
         modified = true;
         if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
-
+        resizeColumns();
     }
 }

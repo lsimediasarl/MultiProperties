@@ -81,6 +81,17 @@ public class PropertyRecord extends Record {
         values.set(index, element);
     }
     
+    public void setValueAt(int index, String value) {
+        Value v = values.get(index);
+        v.setValue(value);
+    }
+    
+    public void setValueAt(int index, String value, boolean disabled) {
+        Value v = values.get(index);
+        v.setValue(value);
+        v.setDisable(disabled);
+    }
+    
     public int getValueCount() {
         return values.size();
     }
@@ -93,24 +104,42 @@ public class PropertyRecord extends Record {
         this.defaultValue = defaultValue;
     }
     
+    /**
+     * Which is the key
+     * 
+     * @return 
+     */
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public boolean isDisabled() {
         return disabled;
     }
 
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+        
+    }
+    
     public boolean isMultiLine() {
         return multiLine;
     }
 
+    public void setMultiLine(boolean multiLine) {
+        this.multiLine = multiLine;
+    }
+    
     //**************************************************************************
     //*** Record
     //***************************************************************************
     @Override
-    public RecordGUI getGUI(ArrayList<Column> columns) {
-        return new JPropertyRecord(this, columns);
+    public RecordGUI getGUI(MultiPropertiesTableModel model) {
+        return new JPropertyRecord(this, model);
     }
 
     @Override
@@ -164,9 +193,8 @@ public class PropertyRecord extends Record {
 
     @Override
     public void addColumn() {
-        //--- Nothing here
         values.add(new Value(true, ""));
-
+        
     }
 
     @Override

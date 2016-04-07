@@ -168,7 +168,7 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 String property = en.nextElement();
                 String value = prop.getProperty(property);
                 
-                Record rec = model.find(property);
+                Record rec = model.getRecord(property);
                 if (rec == null) {
                     //--- Not found, add the entry with the default value
                     PropertyRecord pr = new PropertyRecord(property);

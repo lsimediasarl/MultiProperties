@@ -19,7 +19,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
     PropertyRecord pr = null;
     javax.swing.Timer timer = null;
 
-    public JPropertyRecord(PropertyRecord pr, ArrayList<Column> columns) {
+    public JPropertyRecord(PropertyRecord pr, MultiPropertiesTableModel model) {
         this.pr = pr;
 
         initComponents();
@@ -32,7 +32,8 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
         for (int i = 0;i < pr.values.size();i++) {
             PropertyRecord.Value v = pr.values.get(i);
 
-            JColumnValue jc = new JColumnValue(columns.get(i).toString(), v.disabled, v.value, pr.defaultValue);
+            //--- Add 1 to the column index, because the column 0 is the Key
+            JColumnValue jc = new JColumnValue(model.getColumnName(i+1), v.disabled, v.value, pr.defaultValue);
             PN_Columns.add(jc);
 
         }
@@ -158,7 +159,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                                 .addComponent(TF_Name)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(CB_Disabled))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         PN_GeneralLayout.setVerticalGroup(
@@ -196,7 +197,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                 .addContainerGap()
                 .addGroup(PN_DescriptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 711, Short.MAX_VALUE))
                 .addContainerGap())
         );
         PN_DescriptionLayout.setVerticalGroup(

@@ -6,6 +6,7 @@
 package lsimedia.multiproperties;
 
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -17,8 +18,10 @@ import javax.swing.table.TableModel;
 public class MultiPropertiesTableModel implements TableModel {
     ArrayList<TableModelListener> listeners = new ArrayList<>();
 
-    ArrayList<Column> columns = new ArrayList<Column>();
+    // ArrayList<Column> columns = new ArrayList<Column>();
 
+    DefaultListModel<Column> columns = new DefaultListModel<>();
+    
     /**
      * The records
      */
@@ -26,14 +29,19 @@ public class MultiPropertiesTableModel implements TableModel {
 
     public MultiPropertiesTableModel() {
         //---
-        columns.add(new Column("Key"));
+        columns.addElement(new Column("Key"));
     }
 
     //**************************************************************************
     //*** API
     //**************************************************************************
+    public DefaultListModel<Column> getColumnListModel() {
+        return columns;
+        
+    }
+    
     public void addColumn(Column c) {
-        columns.add(c);
+        columns.addElement(c);
 
         TableModelEvent e = new TableModelEvent(this, TableModelEvent.HEADER_ROW);
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
@@ -41,7 +49,7 @@ public class MultiPropertiesTableModel implements TableModel {
     
     
     public void removeColumn(Column c) {
-        columns.remove(c);
+        columns.removeElement(c);
         
         TableModelEvent e = new TableModelEvent(this, TableModelEvent.HEADER_ROW);
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
@@ -86,6 +94,22 @@ public class MultiPropertiesTableModel implements TableModel {
         return records.get(index);
     }
 
+    /**
+     * Return the first occurence of the key
+     * @param key
+     * @return 
+     */
+    public Record getRecord(String key) {
+        for (int i=0;i<records.size();i++) {
+            Record rec = records.get(i);
+            String c = rec.getKey();
+            if (c == null) continue;
+            
+            if (c.equals(key)) return rec;
+        }
+        return null;
+    }
+    
     public void addRecord(Record r) {
         records.add(r);
 
@@ -117,27 +141,13 @@ public class MultiPropertiesTableModel implements TableModel {
     public void removeAllElements() {
         records.clear();
         columns.clear();
-        columns.add(new Column("Key"));
+        columns.addElement(new Column("Key"));
         
         TableModelEvent e = new TableModelEvent(this);
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
     }
 
-    /**
-     * Return the first occurence of the key
-     * @param key
-     * @return 
-     */
-    public Record find(String key) {
-        for (int i=0;i<records.size();i++) {
-            Record rec = records.get(i);
-            String c = rec.getKey();
-            if (c == null) continue;
-            
-            if (c.equals(key)) return rec;
-        }
-        return null;
-    }
+    
     
     /**
      * Swapt to record value
@@ -190,7 +200,25 @@ public class MultiPropertiesTableModel implements TableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        //--- Not supported
+        Record rec = records.get(rowIndex);
+        if (rec instanceof EmptyRecord) {
+            //--- Do nothing here
+            
+        } else if (rec instanceof CommentRecord) {
+            CommentRecord cr = (CommentRecord) rec;
+            cr.setValue(aValue.toString());
+            
+        } else if (rec instanceof PropertyRecord) {
+            //--- If rowIndex is 0, the change the key
+            PropertyRecord pr = (PropertyRecord) rec;
+            if (columnIndex == 0) {
+                pr.setName(aValue.toString());
+                
+            } else {
+                pr.setValueAt(columnIndex-1, aValue.toString());
+                
+            }
+        }
     }
 
     

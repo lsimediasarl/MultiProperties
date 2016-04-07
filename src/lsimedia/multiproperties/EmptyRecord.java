@@ -6,10 +6,7 @@
 package lsimedia.multiproperties;
 
 import java.util.ArrayList;
-import javax.swing.JComponent;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *
@@ -36,7 +33,7 @@ public class EmptyRecord extends Record {
     //*** Record
     //**************************************************************************
     @Override
-    public RecordGUI getGUI(ArrayList<Column> columns) {
+    public RecordGUI getGUI(MultiPropertiesTableModel model) {
         return null;
     }
 

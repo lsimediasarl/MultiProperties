@@ -21,7 +21,7 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
     /**
      * Creates new form JCommentRecord
      */
-    public JCommentRecord(CommentRecord cr, ArrayList<Column> columns) {
+    public JCommentRecord(CommentRecord cr) {
         this.cr = cr;
         
         initComponents();

@@ -54,19 +54,21 @@ public class CommentRecord extends Record {
         return value;
     }
     
-    
+    public void setValue(String value) {
+        this.value = value;
+    }
     
     //**************************************************************************
     //*** Record
     //**************************************************************************
     @Override
-    public RecordGUI getGUI(ArrayList<Column> columns) {
-        return new JCommentRecord(this, columns);
+    public RecordGUI getGUI(MultiPropertiesTableModel model) {
+        return new JCommentRecord(this);
     }
 
     @Override
     public String getKey() {
-        return null;
+        return "";
     }
     
     @Override

@@ -70,7 +70,7 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         TA_Value = new javax.swing.JTextArea();
 
         setMaximumSize(new java.awt.Dimension(32767, 100));
-        setPreferredSize(new java.awt.Dimension(683, 100));
+        setPreferredSize(new java.awt.Dimension(680, 100));
 
         CB_Column.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_Column.setText("...");
@@ -94,7 +94,7 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
                 .addContainerGap()
                 .addComponent(CB_Column, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(

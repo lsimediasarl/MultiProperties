@@ -25,11 +25,11 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
     /**
      * Creates new form JWriteDialog
      */
-    public JWriteDialog(java.awt.Frame parent, boolean modal, Record record, ArrayList<Column> columns, MultiPropertiesTableModel model) {
+    public JWriteDialog(java.awt.Frame parent, boolean modal, Record record, MultiPropertiesTableModel model) {
         super(parent, modal);
         this.record = record;
         this.model = model;
-        rgui = record.getGUI(columns);
+        rgui = record.getGUI(model);
 
         initComponents();
 
@@ -93,7 +93,7 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
-        setBounds(0, 0, 710, 670);
+        setBounds(0, 0, 750, 670);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

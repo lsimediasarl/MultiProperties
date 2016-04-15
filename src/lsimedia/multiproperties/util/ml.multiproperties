@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MultiProperties xmlns="hu.skzs.multiproperties">
+    <Version>1.2</Version>
+    <Name>ML</Name>
+    <Description/>
+    <Handler>Empty</Handler>
+    <Columns>
+        <Key>
+            <Width>120</Width>
+        </Key>
+        <Column>
+            <Width>100</Width>
+            <Name>fr</Name>
+            <Description/>
+            <HandlerConfiguration/>
+        </Column>
+    </Columns>
+    <Records>
+        <Comment>
+            <Value>Title</Value>
+        </Comment>
+        <Property>
+            <Name>word_yes</Name>
+            <Description/>
+            <Disabled>false</Disabled>
+            <MultiLine>false</MultiLine>
+            <DefaultValue>Yes</DefaultValue>
+            <Value disabled="false">Oui</Value>
+        </Property>
+    </Records>
+</MultiProperties>

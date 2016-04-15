@@ -1,7 +1,7 @@
 # MultiProperties
 Netbeans implementation of the very useful Eclipse plugin "Multiproperties" by Krisztián Zsolt Sallai.
 
-The original Eclipse plugin can be found here https://github.com/skazsi/multiproperties
+The original Eclipse plugin can be found here [Eclipe plugin](https://github.com/skazsi/multiproperties)
 
 The files written by the eclipse plugin (*.multiproperties) can be edited under
 netbeans using this plugin.
@@ -16,7 +16,8 @@ This plugin is written from scratch, no code sharing with the original plugin.
 
 Not every feature of the original plugin is implemented.
 
-The plugin is available in the netbeans plugin portal http://plugins.netbeans.org/plugin/63739/?show=true
+The plugin is available in the netbeans plugin portal [MultiProperties netbeans plugin](http://plugins.netbeans.org/plugin/63739/?show=true)
+
 
 ## Compatibility with Eclipse plugin
 The netbeans generated files (*.multiproperties) is compatible with the one
@@ -35,5 +36,15 @@ an application and save the multiproperties files.
 The standalone version implements the concept of "Session", which is a group of opened
 files, so it's easy to switch from a group of file to another group of files.
 
-The Java Web Start for the standalone version can be found at
-http://tools.knop-tech.com
+A Java Web Start for the standalone version can be found at
+[www.knop-tech.com](http://tools.knop-tech.com)
+
+## Utils
+
+A ResourceBundle implementation is available to directly use the multiproperties
+file for localization.
+
+Example
+
+    ResourceBundle bundle = ResourceBundle.getBundle("lsimedia/multiproperties/utils/ml", new Locale("fr"), MultiPropertiesResourceBundleControl.Control);  
+    String key = bundle.getString("word_yes");  

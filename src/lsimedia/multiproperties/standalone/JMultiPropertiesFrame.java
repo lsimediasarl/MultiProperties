@@ -105,12 +105,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_SaveAll.addActionListener(this);
         BT_SaveProcessAll.addActionListener(this);
         
-        BT_Save.addActionListener(this);
-        BT_SaveProcess.setVisible(!lockdown);
-        BT_SaveProcess.addActionListener(this);
-
-        TB_File.setVisible(false);
-
         BT_NewSession.addActionListener(this);
         BT_EditSession.addActionListener(this);
         BT_DeleteSession.addActionListener(this);
@@ -353,7 +347,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                         selected = null;
                         CardLayout layout = (CardLayout) PN_Content.getLayout();
                         layout.show(PN_Content, "empty");
-                        TB_File.setVisible(false);
+                        
                     }
                 }
                 model.removeElement(cont);
@@ -390,7 +384,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                             selected = null;
                             CardLayout layout = (CardLayout) PN_Content.getLayout();
                             layout.show(PN_Content, "empty");
-                            TB_File.setVisible(false);
+                            
                         }
                         cont.setVisual(null);
                     }
@@ -426,8 +420,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 MultiProperties cont = model.elementAt(LI_Files.getSelectedIndex());
                 LB_File.setText(cont.getFile().getName());
                 LB_File.setToolTipText(cont.getFile().getPath());
-                TB_File.setVisible(true);
-
+                
                 selected = cont;
                 if (selected.getVisual() == null) {
                     JMultiProperties jm = new JMultiProperties(logit, lockdown);
@@ -511,7 +504,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                         selected = null;
                         CardLayout layout = (CardLayout) PN_Content.getLayout();
                         layout.show(PN_Content, "empty");
-                        TB_File.setVisible(false);
+                        
                     }
                     cont.setVisual(null);
                 }
@@ -558,9 +551,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_SaveAll = new javax.swing.JButton();
         BT_SaveProcessAll = new javax.swing.JButton();
         BT_Close = new javax.swing.JButton();
-        TB_File = new javax.swing.JToolBar();
-        BT_Save = new javax.swing.JButton();
-        BT_SaveProcess = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MN_New = new javax.swing.JMenuItem();
@@ -720,27 +710,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         jPanel7.add(TB_Main);
 
-        TB_File.setFloatable(false);
-        TB_File.setRollover(true);
-
-        BT_Save.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_Save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Save.png"))); // NOI18N
-        BT_Save.setText("Save");
-        BT_Save.setActionCommand("save");
-        BT_Save.setBorderPainted(false);
-        BT_Save.setFocusable(false);
-        TB_File.add(BT_Save);
-
-        BT_SaveProcess.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_SaveProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Process.png"))); // NOI18N
-        BT_SaveProcess.setText("Save and process");
-        BT_SaveProcess.setActionCommand("saveProcess");
-        BT_SaveProcess.setBorderPainted(false);
-        BT_SaveProcess.setFocusable(false);
-        TB_File.add(BT_SaveProcess);
-
-        jPanel7.add(TB_File);
-
         getContentPane().add(jPanel7, java.awt.BorderLayout.NORTH);
 
         jMenuBar1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
@@ -805,9 +774,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JButton BT_EditSession;
     private javax.swing.JButton BT_Load;
     private javax.swing.JButton BT_NewSession;
-    private javax.swing.JButton BT_Save;
     private javax.swing.JButton BT_SaveAll;
-    private javax.swing.JButton BT_SaveProcess;
     private javax.swing.JButton BT_SaveProcessAll;
     private javax.swing.JComboBox<String> CMB_Sessions;
     private javax.swing.JLabel LB_File;
@@ -823,7 +790,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JMenuItem MN_SaveProcessAll;
     private javax.swing.JPanel PN_Content;
     private javax.swing.JSplitPane SP_Main;
-    private javax.swing.JToolBar TB_File;
     private javax.swing.JToolBar TB_Main;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;

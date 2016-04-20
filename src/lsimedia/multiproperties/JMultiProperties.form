@@ -580,6 +580,40 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
               <SubComponents>
+                <Component class="javax.swing.JButton" name="BT_Save">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Arial" size="11" style="0"/>
+                    </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/Save.png"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" value="Save"/>
+                    <Property name="actionCommand" type="java.lang.String" value="save"/>
+                    <Property name="borderPainted" type="boolean" value="false"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                    <Property name="horizontalTextPosition" type="int" value="4"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="BT_SaveProcess">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Arial" size="11" style="0"/>
+                    </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/Process.png"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" value="Save and process"/>
+                    <Property name="actionCommand" type="java.lang.String" value="saveProcess"/>
+                    <Property name="borderPainted" type="boolean" value="false"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                    <Property name="horizontalTextPosition" type="int" value="4"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
+                </Component>
                 <Component class="javax.swing.JButton" name="BT_NewComment">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -632,8 +666,6 @@
                     <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
                 </Component>
                 <Component class="javax.swing.JToolBar$Separator" name="jSeparator2">
                 </Component>

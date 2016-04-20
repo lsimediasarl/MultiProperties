@@ -121,6 +121,10 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Delete.addActionListener(this);
         BT_Merge.addActionListener(this);
 
+        BT_Save.addActionListener(this);
+        BT_SaveProcess.setVisible(!lockdown);
+        BT_SaveProcess.addActionListener(this);
+
         BT_ConfigureHandler.addActionListener(this);
 
         MN_Copy.addActionListener(this);
@@ -274,6 +278,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 if (rep == false) JOptionPane.showMessageDialog(this, "An error occured during the saving of the property\n\n" + handler.getLastError());
             }
 
+            BT_Save.setEnabled(false);
+            BT_SaveProcess.setEnabled(false);
             modified = false;
 
         } catch (Exception ex) {
@@ -484,6 +490,20 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 fireModifiedEvent();
             }
 
+        } else if (e.getActionCommand().equals("save")) {
+            save(false);
+            BT_Save.setEnabled(false);
+            BT_SaveProcess.setEnabled(false);
+            
+            modified = false;
+
+        } else if (e.getActionCommand().equals("saveProcess")) {
+            save(true);
+            BT_Save.setEnabled(false);
+            BT_SaveProcess.setEnabled(false);
+   
+            modified = false;
+
         }
     }
 
@@ -644,11 +664,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             }
         };
         jToolBar1 = new javax.swing.JToolBar();
+        BT_Save = new javax.swing.JButton();
+        BT_SaveProcess = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         BT_NewComment = new javax.swing.JButton();
         BT_NewEmpty = new javax.swing.JButton();
         BT_NewProperty = new javax.swing.JButton();
         BT_Merge = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JToolBar.Separator();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         BT_Delete = new javax.swing.JButton();
 
@@ -926,6 +948,27 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
+        BT_Save.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_Save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Save.png"))); // NOI18N
+        BT_Save.setToolTipText("Save");
+        BT_Save.setActionCommand("save");
+        BT_Save.setBorderPainted(false);
+        BT_Save.setEnabled(false);
+        BT_Save.setFocusable(false);
+        BT_Save.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jToolBar1.add(BT_Save);
+
+        BT_SaveProcess.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_SaveProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Process.png"))); // NOI18N
+        BT_SaveProcess.setToolTipText("Save and process");
+        BT_SaveProcess.setActionCommand("saveProcess");
+        BT_SaveProcess.setBorderPainted(false);
+        BT_SaveProcess.setEnabled(false);
+        BT_SaveProcess.setFocusable(false);
+        BT_SaveProcess.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jToolBar1.add(BT_SaveProcess);
+        jToolBar1.add(jSeparator1);
+
         BT_NewComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_NewComment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewComment.setText("New comment");
@@ -956,7 +999,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Merge.setBorderPainted(false);
         BT_Merge.setFocusable(false);
         jToolBar1.add(BT_Merge);
-        jToolBar1.add(jSeparator1);
         jToolBar1.add(jSeparator2);
 
         BT_Delete.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
@@ -1008,6 +1050,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JButton BT_NewEmpty;
     private javax.swing.JButton BT_NewProperty;
     private javax.swing.JButton BT_Remove;
+    private javax.swing.JButton BT_Save;
+    private javax.swing.JButton BT_SaveProcess;
     private javax.swing.JComboBox<PropertiesHandler> CMB_Handlers;
     private javax.swing.JLabel LB_ColumnDescription;
     private javax.swing.JLabel LB_ColumnName;
@@ -1171,6 +1215,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      * Fire the listeners that the data has changed
      */
     private void fireModifiedEvent() {
+        BT_Save.setEnabled(true);
+        BT_SaveProcess.setEnabled(true);
+            
         modified = true;
         if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
         resizeColumns();

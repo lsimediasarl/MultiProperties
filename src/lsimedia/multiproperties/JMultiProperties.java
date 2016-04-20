@@ -8,10 +8,12 @@ package lsimedia.multiproperties;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import lsimedia.multiproperties.handlers.JavaPropertiesHandler;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Rectangle;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -25,9 +27,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -41,6 +46,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import static lsimedia.multiproperties.JRecordCellRenderer.COLOR_COMMENT;
 import lsimedia.multiproperties.handlers.EmptyPropertiesHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -104,14 +110,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         TB_Table.addMouseListener(this);
         TB_Table.setDefaultRenderer(Record.class, new JRecordCellRenderer());
         TB_Table.getTableHeader().setReorderingAllowed(false);
-
+        // SP_Table.setRowHeaderView(PN_Rows);
+        // SP_Table.setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, BT_Collapse);
         LI_Columns.setModel(columns);
         LI_Columns.addListSelectionListener(this);
-
+        
         BT_Import.addActionListener(this);
         BT_ColumnUp.addActionListener(this);
         BT_ColumnDown.addActionListener(this);
-
+        
         BT_Add.addActionListener(this);
         BT_Remove.addActionListener(this);
 
@@ -127,6 +134,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         BT_ConfigureHandler.addActionListener(this);
 
+        MN_Sticky.addActionListener(this);
         MN_Copy.addActionListener(this);
         MN_Delete.addActionListener(this);
         MN_NewComment.addActionListener(this);
@@ -134,7 +142,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_NewEmpty.addActionListener(this);
         MN_MoveUp.addActionListener(this);
         MN_MoveDown.addActionListener(this);
-
+        
         //--- If lockdown disable the two first tabs
         if (lockdown) {
             TAB_Main.setEnabledAt(0, false);
@@ -494,16 +502,20 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             save(false);
             BT_Save.setEnabled(false);
             BT_SaveProcess.setEnabled(false);
-            
+
             modified = false;
 
         } else if (e.getActionCommand().equals("saveProcess")) {
             save(true);
             BT_Save.setEnabled(false);
             BT_SaveProcess.setEnabled(false);
-   
+
             modified = false;
 
+        } else if (e.getActionCommand().equals("sticky")) {
+            SP_Table.setRowHeaderView(MN_Sticky.isSelected()?PN_Rows:null);
+            SP_Table.revalidate();
+                
         }
     }
 
@@ -603,6 +615,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private void initComponents() {
 
         PU_Actions = new javax.swing.JPopupMenu();
+        MN_Sticky = new javax.swing.JCheckBoxMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
         MN_NewProperty = new javax.swing.JMenuItem();
         MN_NewComment = new javax.swing.JMenuItem();
         MN_NewEmpty = new javax.swing.JMenuItem();
@@ -613,6 +627,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         MN_MoveUp = new javax.swing.JMenuItem();
         MN_MoveDown = new javax.swing.JMenuItem();
+        PN_Rows = new javax.swing.JPanel();
+        PN_Keys = new javax.swing.JPanel();
         TAB_Main = new javax.swing.JTabbedPane();
         PN_Overview = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -641,7 +657,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_ColumnDown = new javax.swing.JButton();
         BT_Import = new javax.swing.JButton();
         PN_Table = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        SP_Table = new javax.swing.JScrollPane();
         TB_Table = new JTable() {
             public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int colIndex) {
                 Component c = super.prepareRenderer(renderer, rowIndex, colIndex);
@@ -675,6 +691,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Delete = new javax.swing.JButton();
 
         PU_Actions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+
+        MN_Sticky.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, 0));
+        MN_Sticky.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        MN_Sticky.setText("Sticky keys column");
+        MN_Sticky.setActionCommand("sticky");
+        PU_Actions.add(MN_Sticky);
+        PU_Actions.add(jSeparator6);
 
         MN_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_NewProperty.setText("New property");
@@ -716,6 +739,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_MoveDown.setText("Move down");
         MN_MoveDown.setActionCommand("down");
         PU_Actions.add(MN_MoveDown);
+
+        PN_Rows.setLayout(new java.awt.BorderLayout());
+
+        PN_Keys.setLayout(new javax.swing.BoxLayout(PN_Keys, javax.swing.BoxLayout.Y_AXIS));
+        PN_Rows.add(PN_Keys, java.awt.BorderLayout.NORTH);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -941,9 +969,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 TB_TableKeyPressed(evt);
             }
         });
-        jScrollPane1.setViewportView(TB_Table);
+        SP_Table.setViewportView(TB_Table);
 
-        PN_Table.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        PN_Table.add(SP_Table, java.awt.BorderLayout.CENTER);
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -1035,6 +1063,10 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             ActionEvent e = new ActionEvent(TB_Table, ActionEvent.ACTION_PERFORMED, BT_Delete.getActionCommand());
             actionPerformed(e);
 
+        } else if (evt.getKeyCode() == KeyEvent.VK_S) {
+            MN_Sticky.setSelected(!MN_Sticky.isSelected());
+            ActionEvent e = new ActionEvent(MN_Sticky, ActionEvent.ACTION_PERFORMED, MN_Sticky.getActionCommand());
+            actionPerformed(e);
         }
     }//GEN-LAST:event_TB_TableKeyPressed
 
@@ -1065,11 +1097,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JMenuItem MN_NewComment;
     private javax.swing.JMenuItem MN_NewEmpty;
     private javax.swing.JMenuItem MN_NewProperty;
+    private javax.swing.JCheckBoxMenuItem MN_Sticky;
     private javax.swing.JPanel PN_ColumnConfig;
     private javax.swing.JPanel PN_Columns;
+    private javax.swing.JPanel PN_Keys;
     private javax.swing.JPanel PN_Overview;
+    private javax.swing.JPanel PN_Rows;
     private javax.swing.JPanel PN_Table;
     private javax.swing.JPopupMenu PU_Actions;
+    private javax.swing.JScrollPane SP_Table;
     private javax.swing.JTabbedPane TAB_Main;
     private javax.swing.JTextArea TA_ColumnDescription;
     private javax.swing.JTextArea TA_Description;
@@ -1080,7 +1116,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1089,6 +1124,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 
@@ -1183,7 +1219,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     }
                 }
             }
-
+            fillRowHeader();
             resizeColumns();
 
         } catch (SAXException ex) {
@@ -1211,15 +1247,39 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         }
     }
 
+    private void fillRowHeader() {
+        PN_Keys.removeAll();
+        Color bg = new Color(230, 230, 230);
+        //--- Add flavor keys
+        for (int i = 0;i < model.getRowCount();i++) {
+            Record rec = (Record) model.getValueAt(i, 0);
+            JTextField tf = new JTextField(rec.getKey());
+            if (rec instanceof CommentRecord) {
+                CommentRecord cr = (CommentRecord) rec;
+                tf.setText(cr.getValue().toUpperCase());
+                tf.setForeground(Color.BLUE);
+            }
+            Dimension dim = tf.getPreferredSize();
+            tf.setPreferredSize(new Dimension(dim.width + 10, 22));
+            tf.setEditable(false);
+            // tf.setBackground(bg);
+
+            tf.setFont(new Font("Monospaced", Font.BOLD, 11));
+            PN_Keys.add(tf);
+        }
+        PN_Keys.revalidate();
+    }
+
     /**
      * Fire the listeners that the data has changed
      */
     private void fireModifiedEvent() {
         BT_Save.setEnabled(true);
         BT_SaveProcess.setEnabled(true);
-            
+
         modified = true;
         if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
         resizeColumns();
+        fillRowHeader();
     }
 }

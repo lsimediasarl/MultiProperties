@@ -66,7 +66,8 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 String tokens[] = c.getHandlerConfiguration().split("\\|");
                 String fn = tokens[0];
                 if (fn.equals("")) continue;
-                        
+                fn = fn.replace('\\', '/');
+                
                 File file = new File(fn);
                 if (fn.startsWith("/")) {
                     //--- Absolute path, do nothing

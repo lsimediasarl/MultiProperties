@@ -51,8 +51,10 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
         String tokens[] = column.getHandlerConfiguration().split("\\|");
         try {
             String fn = tokens[0];
+            fn = fn.replace('\\', '/');
             if (!fn.equals("")) {
                 File f = new File(fn);
+
                 if (fn.startsWith("/")) {
                     //--- Absolute
                     TF_Location.setText(f.getParent());

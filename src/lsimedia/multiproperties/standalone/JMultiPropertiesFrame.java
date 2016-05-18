@@ -21,7 +21,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
@@ -33,17 +35,19 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import lsimedia.multiproperties.JMultiProperties;
 import lsimedia.multiproperties.Logit;
+import lsimedia.multiproperties.LogitListener;
 
 /**
  *
  * @author sbodmer
  */
-public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionListener, MouseListener, ListSelectionListener, ItemListener, FileFilter {
+public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionListener, MouseListener, ListSelectionListener, ItemListener, FileFilter, LogitListener {
 
     static final String ABOUT = ""
             + "MultiProperties standalone application\n"
@@ -65,9 +69,12 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
      */
     DefaultComboBoxModel<MultiPropertiesSession> sessions = new DefaultComboBoxModel<>();
 
+    /**
+     * Logs services
+     */
     DefaultListModel logs = new DefaultListModel<String>();
-
-    Logit logit = new Logit();
+    SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
+    Logit logit = null;
 
     /**
      * If gui is i lockdown mode
@@ -84,7 +91,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
      */
     public JMultiPropertiesFrame(boolean lockdown) {
         this.lockdown = lockdown;
-
+        logit = new Logit(this);
+        
         initComponents();
 
         setIconImage(((ImageIcon) LB_Icon.getIcon()).getImage());
@@ -179,28 +187,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == timer) {
-            //--- Print the logs
-            while (true) {
-                String s[] = logit.fetchLog();
-                if (s == null) break;
-
-                String txt = "<html><i>" + s[0] + "</i>";
-                if (s[1].equals("E")) {
-                    txt += " <font color=\"#ff0000\">(E)";
-                    txt += " " + s[2];
-
-                } else if (s[1].equals("I")) {
-                    txt += " <font color=\"#aaaaaa\">(I)";
-                    txt += " " + s[2] + "</font>";
-
-                } else {
-                    txt += " (" + s[1] + ") " + s[2];
-                }
-                logs.insertElementAt(txt, 0);
-
-                LB_Status.setText(txt);
-            }
-
             boolean enabled = false;
             DefaultListModel<MultiProperties> model = session.getModel();
             for (int i = 0;i < model.size();i++) {
@@ -483,6 +469,37 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     }
 
     //**************************************************************************
+    //*** LogitListener
+    //**************************************************************************
+    @Override
+    public void logitLineLogged(final String kind, final String message, final Object arg) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                String txt = "<html><i>" + tf.format(new Date()) + "</i>";
+                if (kind.equals("E")) {
+                    txt += " <font color=\"#ff0000\">(E)";
+                    txt += " " + message;
+                    txt += "</font>";
+
+                } else if (kind.equals("I")) {
+                    txt += " <font color=\"#aaaaaa\">(I)";
+                    txt += " " +message;
+                    txt += "</font>";
+
+                } else {
+                    txt += " (" + kind + ") " + message;
+                }
+                txt += "</html>";
+                
+                logs.insertElementAt(txt, 0);
+
+                LB_Status.setText(txt);
+            }
+        });
+        
+    }
+    
+    //**************************************************************************
     //*** ItemListener
     //**************************************************************************
     @Override
@@ -596,7 +613,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jPanel5.setPreferredSize(new java.awt.Dimension(143, 200));
         jPanel5.setLayout(new java.awt.BorderLayout());
 
-        LI_Logs.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
+        LI_Logs.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         LI_Logs.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane3.setViewportView(LI_Logs);
 
@@ -993,5 +1010,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
             }
         });
     }
+
+    
 
 }

@@ -1,3 +1,6 @@
+0.9.3 [2016-05-18]
+ Added the logs card in netbeans plugin
+
 0.9.2 [2016-04-20]
  Netbeans save feature is a bit confusing for me, so I'm adding manual save and process buttons
  Added sticky key columns (context menu)

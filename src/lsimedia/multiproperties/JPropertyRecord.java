@@ -19,7 +19,13 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
     PropertyRecord pr = null;
     javax.swing.Timer timer = null;
 
-    public JPropertyRecord(PropertyRecord pr, MultiPropertiesTableModel model) {
+    /**
+     * The selected one when dialig was opened so the user can directly see
+     * the correct column
+     */
+    JColumnValue selected = null;
+    
+    public JPropertyRecord(PropertyRecord pr, MultiPropertiesTableModel model, int selectedColumn) {
         this.pr = pr;
 
         initComponents();
@@ -36,8 +42,10 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
             JColumnValue jc = new JColumnValue(model.getColumnName(i+1), v.disabled, v.value, pr.defaultValue);
             PN_Columns.add(jc);
 
+            if (selectedColumn == (i+1)) selected = jc;
+            
         }
-
+        
         timer = new javax.swing.Timer(1000, this);
         timer.start();
     }
@@ -89,6 +97,13 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                 if (jc.isDisabled()) jc.setValue(TA_Default.getText());
                 
             }
+            
+            //--- Scroll to selected field
+            if (selected != null) {
+                PN_Columns.scrollRectToVisible(selected.getBounds());
+                selected.focus();
+                selected = null;
+            }
         }
     }
 
@@ -106,7 +121,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
         jLabel1 = new javax.swing.JLabel();
         TF_Name = new javax.swing.JTextField();
         CB_Disabled = new javax.swing.JCheckBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        SP_Columns = new javax.swing.JScrollPane();
         PN_Columns = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -130,7 +145,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
         CB_Disabled.setText("Disabled");
 
         PN_Columns.setLayout(new javax.swing.BoxLayout(PN_Columns, javax.swing.BoxLayout.Y_AXIS));
-        jScrollPane1.setViewportView(PN_Columns);
+        SP_Columns.setViewportView(PN_Columns);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -148,7 +163,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
             .addGroup(PN_GeneralLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(SP_Columns)
                     .addGroup(PN_GeneralLayout.createSequentialGroup()
                         .addGroup(PN_GeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
@@ -175,7 +190,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                     .addComponent(jLabel2)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                .addComponent(SP_Columns, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -221,13 +236,13 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
     private javax.swing.JPanel PN_Columns;
     private javax.swing.JPanel PN_Description;
     private javax.swing.JPanel PN_General;
+    private javax.swing.JScrollPane SP_Columns;
     private javax.swing.JTextArea TA_Default;
     private javax.swing.JTextArea TA_Description;
     private javax.swing.JTextField TF_Name;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;

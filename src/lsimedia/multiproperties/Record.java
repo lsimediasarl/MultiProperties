@@ -34,7 +34,7 @@ public abstract class Record implements Cloneable {
      * Return the panel to changed the record
      * @return 
      */
-    public abstract RecordGUI getGUI(MultiPropertiesTableModel model);
+    public abstract RecordGUI getGUI(MultiPropertiesTableModel model, int selectedColumn);
     
     /**
      * Dump the record

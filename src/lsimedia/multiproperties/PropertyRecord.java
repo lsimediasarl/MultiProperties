@@ -138,8 +138,8 @@ public class PropertyRecord extends Record {
     //*** Record
     //***************************************************************************
     @Override
-    public RecordGUI getGUI(MultiPropertiesTableModel model) {
-        return new JPropertyRecord(this, model);
+    public RecordGUI getGUI(MultiPropertiesTableModel model,int selectedColumn) {
+        return new JPropertyRecord(this, model, selectedColumn);
     }
 
     @Override

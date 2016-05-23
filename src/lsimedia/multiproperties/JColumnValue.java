@@ -45,6 +45,13 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         TA_Value.setText(value);
     }
     
+    /**
+     * Set the focus
+     */ 
+    public void focus() {
+        TA_Value.requestFocusInWindow();
+    }
+    
     //**************************************************************************
     //*** ActionListener
     //**************************************************************************

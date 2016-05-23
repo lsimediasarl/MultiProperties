@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import lsimedia.multiproperties.handlers.JavaPropertiesHandler;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
@@ -96,6 +97,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      */
     boolean modified = false;
 
+    /**
+     * Default write dialog dimension
+     */
+    Dimension writeDialogSize = new Dimension(640,480);
+    
     public JMultiProperties(Logit logit, boolean lockdown) {
         this.logit = logit;
         this.lockdown = lockdown;
@@ -526,15 +532,20 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == TB_Table) {
             if (e.getClickCount() >= 2) {
+                int sc = TB_Table.getSelectedColumn();
+                
                 //--- Popup the modification frame
                 Record rec = model.getRecord(TB_Table.getSelectedRow());
                 ArrayList<Column> cols = new ArrayList<>();
                 for (int i = 0;i < columns.size();i++) cols.add((Column) columns.get(i));
-                JWriteDialog dlg = new JWriteDialog(null, true, rec, model);
+                JWriteDialog dlg = new JWriteDialog(null, true, rec, model, sc);
                 dlg.pack();
+                dlg.setSize(writeDialogSize);
                 dlg.setLocationRelativeTo(this);
                 dlg.setVisible(true);
 
+                writeDialogSize = dlg.getSize();
+                
                 TB_Table.repaint();
 
                 fireModifiedEvent();

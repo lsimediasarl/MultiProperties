@@ -62,7 +62,7 @@ public class CommentRecord extends Record {
     //*** Record
     //**************************************************************************
     @Override
-    public RecordGUI getGUI(MultiPropertiesTableModel model) {
+    public RecordGUI getGUI(MultiPropertiesTableModel model, int selectedColumn) {
         return new JCommentRecord(this);
     }
 

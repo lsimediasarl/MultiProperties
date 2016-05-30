@@ -422,7 +422,26 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 for (int i = 0;i < columns.size();i++) rec.addColumn();
                 model.insertRecord(index + 1, rec);
                 TB_Table.getSelectionModel().setSelectionInterval(index + 1, index + 1);
+                
                 fireModifiedEvent();
+                
+                //--- Open it
+                int sc = TB_Table.getSelectedColumn();
+                ArrayList<Column> cols = new ArrayList<>();
+                for (int i = 0;i < columns.size();i++) cols.add((Column) columns.get(i));
+                JWriteDialog dlg = new JWriteDialog(null, true, rec, model, sc);
+                dlg.pack();
+                dlg.setSize(writeDialogSize);
+                dlg.setLocationRelativeTo(this);
+                dlg.setVisible(true);
+
+                writeDialogSize = dlg.getSize();
+                
+                TB_Table.repaint();
+                
+                
+                
+                
             }
 
         } else if (e.getActionCommand().equals("newEmpty")) {
@@ -694,9 +713,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Save = new javax.swing.JButton();
         BT_SaveProcess = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        BT_NewProperty = new javax.swing.JButton();
         BT_NewComment = new javax.swing.JButton();
         BT_NewEmpty = new javax.swing.JButton();
-        BT_NewProperty = new javax.swing.JButton();
         BT_Merge = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         BT_Delete = new javax.swing.JButton();
@@ -1008,6 +1027,14 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jToolBar1.add(BT_SaveProcess);
         jToolBar1.add(jSeparator1);
 
+        BT_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_NewProperty.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
+        BT_NewProperty.setText("New property");
+        BT_NewProperty.setActionCommand("newProperty");
+        BT_NewProperty.setBorderPainted(false);
+        BT_NewProperty.setFocusable(false);
+        jToolBar1.add(BT_NewProperty);
+
         BT_NewComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_NewComment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewComment.setText("New comment");
@@ -1023,14 +1050,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewEmpty.setBorderPainted(false);
         BT_NewEmpty.setFocusable(false);
         jToolBar1.add(BT_NewEmpty);
-
-        BT_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_NewProperty.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
-        BT_NewProperty.setText("New property");
-        BT_NewProperty.setActionCommand("newProperty");
-        BT_NewProperty.setBorderPainted(false);
-        BT_NewProperty.setFocusable(false);
-        jToolBar1.add(BT_NewProperty);
 
         BT_Merge.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Merge.setText("Merge");
@@ -1290,7 +1309,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         modified = true;
         if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
-        resizeColumns();
+        // resizeColumns();
+        
         fillRowHeader();
     }
 }

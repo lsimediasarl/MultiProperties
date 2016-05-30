@@ -645,6 +645,20 @@
                 </Component>
                 <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
                 </Component>
+                <Component class="javax.swing.JButton" name="BT_NewProperty">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Arial" size="11" style="0"/>
+                    </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="New property"/>
+                    <Property name="actionCommand" type="java.lang.String" value="newProperty"/>
+                    <Property name="borderPainted" type="boolean" value="false"/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
                 <Component class="javax.swing.JButton" name="BT_NewComment">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -669,20 +683,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="New empty line"/>
                     <Property name="actionCommand" type="java.lang.String" value="newEmpty"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
-                    <Property name="focusable" type="boolean" value="false"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="BT_NewProperty">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Arial" size="11" style="0"/>
-                    </Property>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="New property"/>
-                    <Property name="actionCommand" type="java.lang.String" value="newProperty"/>
                     <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                   </Properties>

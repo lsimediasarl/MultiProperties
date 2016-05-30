@@ -68,7 +68,7 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
                 boolean same = false;
                 //--- Check if multiple same keys
                 for (int i=0;i<table.getRowCount();i++) {
-                    Record rec = (Record) table.getValueAt(i, 0);
+                    Record rec = (Record) table.getModel().getValueAt(i, 0);
                     if (rec.getKey() != null) {
                         if ((i != row) && rec.getKey().equals(pr.getKey())) same = true;
                     }

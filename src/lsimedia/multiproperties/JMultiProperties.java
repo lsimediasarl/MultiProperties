@@ -48,6 +48,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import static lsimedia.multiproperties.JRecordCellRenderer.COLOR_COMMENT;
+import static lsimedia.multiproperties.JRecordCellRenderer.COLOR_DISABLED;
+import static lsimedia.multiproperties.JRecordCellRenderer.COLOR_ERROR;
 import lsimedia.multiproperties.handlers.EmptyPropertiesHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -59,7 +61,7 @@ import org.xml.sax.SAXException;
 public final class JMultiProperties extends JPanel implements ActionListener, MouseListener, ListSelectionListener {
 
     public static final String ACTION_COMMAND_MODIFIED = "dataModified";
-
+    
     SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     File file = null;
@@ -116,7 +118,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         TB_Table.addMouseListener(this);
         TB_Table.setDefaultRenderer(Record.class, new JRecordCellRenderer());
         TB_Table.getTableHeader().setReorderingAllowed(false);
-        // SP_Table.setRowHeaderView(PN_Rows);
+        SP_Table.setRowHeaderView(PN_Rows);
         // SP_Table.setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, BT_Collapse);
         LI_Columns.setModel(columns);
         LI_Columns.addListSelectionListener(this);
@@ -140,7 +142,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         BT_ConfigureHandler.addActionListener(this);
 
-        MN_Sticky.addActionListener(this);
         MN_Copy.addActionListener(this);
         MN_Delete.addActionListener(this);
         MN_NewComment.addActionListener(this);
@@ -536,11 +537,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             BT_SaveProcess.setEnabled(false);
 
             modified = false;
-
-        } else if (e.getActionCommand().equals("sticky")) {
-            SP_Table.setRowHeaderView(MN_Sticky.isSelected()?PN_Rows:null);
-            SP_Table.revalidate();
-                
+        
         }
     }
 
@@ -645,8 +642,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private void initComponents() {
 
         PU_Actions = new javax.swing.JPopupMenu();
-        MN_Sticky = new javax.swing.JCheckBoxMenuItem();
-        jSeparator6 = new javax.swing.JPopupMenu.Separator();
         MN_NewProperty = new javax.swing.JMenuItem();
         MN_NewComment = new javax.swing.JMenuItem();
         MN_NewEmpty = new javax.swing.JMenuItem();
@@ -721,13 +716,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Delete = new javax.swing.JButton();
 
         PU_Actions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-
-        MN_Sticky.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, 0));
-        MN_Sticky.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        MN_Sticky.setText("Sticky keys column");
-        MN_Sticky.setActionCommand("sticky");
-        PU_Actions.add(MN_Sticky);
-        PU_Actions.add(jSeparator6);
 
         MN_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_NewProperty.setText("New property");
@@ -1093,10 +1081,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             ActionEvent e = new ActionEvent(TB_Table, ActionEvent.ACTION_PERFORMED, BT_Delete.getActionCommand());
             actionPerformed(e);
 
-        } else if (evt.getKeyCode() == KeyEvent.VK_S) {
-            MN_Sticky.setSelected(!MN_Sticky.isSelected());
-            ActionEvent e = new ActionEvent(MN_Sticky, ActionEvent.ACTION_PERFORMED, MN_Sticky.getActionCommand());
-            actionPerformed(e);
         }
     }//GEN-LAST:event_TB_TableKeyPressed
 
@@ -1127,7 +1111,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JMenuItem MN_NewComment;
     private javax.swing.JMenuItem MN_NewEmpty;
     private javax.swing.JMenuItem MN_NewProperty;
-    private javax.swing.JCheckBoxMenuItem MN_Sticky;
     private javax.swing.JPanel PN_ColumnConfig;
     private javax.swing.JPanel PN_Columns;
     private javax.swing.JPanel PN_Keys;
@@ -1154,7 +1137,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
-    private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 
@@ -1213,7 +1195,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                                 Column c = model.getColumn(0);
                                 int width = Integer.parseInt(col.getElementsByTagName("Width").item(0).getFirstChild().getNodeValue());
                                 c.setWidth(width);
-
+                                
                             } catch (Exception ex) {
                                 //---
                             }
@@ -1269,12 +1251,23 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      */
     private void resizeColumns() {
         //--- Set column size
-        //--- First one is the key
+        //--- First one is the key wich is hidden
         for (int i = 0;i < model.getColumnCount();i++) {
             Column c = (Column) model.getColumn(i);
-            TB_Table.getColumnModel().getColumn(i).setPreferredWidth(c.width);
-            TB_Table.getColumnModel().getColumn(i).setWidth(c.width);
+            if (i == 0) {
+                //--- Hide key column (do not remove it from column model)
+                // TB_Table.getColumnModel().getColumn(i).setMaxWidth(0);
+                TB_Table.getColumnModel().getColumn(i).setMinWidth(0);
+                TB_Table.getColumnModel().getColumn(i).setPreferredWidth(0);
+                TB_Table.getColumnModel().getColumn(i).setWidth(0);
+                
+            } else {
+                TB_Table.getColumnModel().getColumn(i).setPreferredWidth(c.width);
+                TB_Table.getColumnModel().getColumn(i).setWidth(c.width);
+            }
+            
         }
+        
     }
 
     private void fillRowHeader() {
@@ -1284,17 +1277,43 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         for (int i = 0;i < model.getRowCount();i++) {
             Record rec = (Record) model.getValueAt(i, 0);
             JTextField tf = new JTextField(rec.getKey());
+            tf.setFont(new Font("Monospaced", Font.BOLD, 11));
+            
             if (rec instanceof CommentRecord) {
                 CommentRecord cr = (CommentRecord) rec;
-                tf.setText(cr.getValue().toUpperCase());
+                tf.setText(cr.getValue());
                 tf.setForeground(Color.BLUE);
+                
+            } else if (rec instanceof PropertyRecord) {
+                //--- Check if multiple same keys
+                PropertyRecord pr = (PropertyRecord) rec;
+                
+                boolean same = false;
+                for (int j=0;j<model.getRowCount();j++) {
+                    Record tmp = (Record) model.getValueAt(j, 0);
+                    if (tmp.getKey() != null) {
+                        if ((j != i) && pr.getKey().equals(tmp.getKey())) same = true;
+                    }
+                }
+                if (same) {
+                    tf.setText(pr.name);
+                    tf.setForeground(Color.RED);
+                    
+                } else if (pr.disabled) {
+                    tf.setText(pr.name);
+                    tf.setForeground(Color.LIGHT_GRAY);
+                    
+                    
+                } else {
+                    tf.setText(pr.name);
+                    
+                }
+                
             }
             Dimension dim = tf.getPreferredSize();
             tf.setPreferredSize(new Dimension(dim.width + 10, 22));
             tf.setEditable(false);
             // tf.setBackground(bg);
-
-            tf.setFont(new Font("Monospaced", Font.BOLD, 11));
             PN_Keys.add(tf);
         }
         PN_Keys.revalidate();

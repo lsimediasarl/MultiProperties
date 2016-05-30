@@ -12,7 +12,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 /**
- *
+ * The table contains the list of 
  * @author sbodmer
  */
 public class MultiPropertiesTableModel implements TableModel {

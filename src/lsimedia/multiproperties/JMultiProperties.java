@@ -865,7 +865,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         TA_ColumnDescription.setColumns(20);
         TA_ColumnDescription.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TA_ColumnDescription.setRows(5);
-        TA_ColumnDescription.setToolTipText("<html>The eclipse plugin does not support saving in the same folder has the multiproperties.<br>\nSet \"SAMEFOLDER\" here to keep eclipse compatibility for the new setting\n</html>");
+        TA_ColumnDescription.setToolTipText("<html>The eclipse plugin does not support saving in the same folder has the multiproperties.<br>\n</html>");
         jScrollPane4.setViewportView(TA_ColumnDescription);
 
         BT_ConfigureHandler.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N

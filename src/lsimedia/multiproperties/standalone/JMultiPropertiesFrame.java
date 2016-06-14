@@ -418,6 +418,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
                 CardLayout layout = (CardLayout) PN_Content.getLayout();
                 layout.show(PN_Content, cont.getFile().getPath());
+                TAB_Main.setSelectedIndex(0);
             }
         }
     }
@@ -547,9 +548,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         LI_Files = new javax.swing.JList<>();
-        jPanel5 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        LI_Logs = new javax.swing.JList<>();
         jPanel4 = new javax.swing.JPanel();
         jToolBar3 = new javax.swing.JToolBar();
         BT_NewSession = new javax.swing.JButton();
@@ -558,10 +556,15 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jSeparator4 = new javax.swing.JToolBar.Separator();
         BT_DeleteSession = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        TAB_Main = new javax.swing.JTabbedPane();
+        jPanel8 = new javax.swing.JPanel();
         PN_Content = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         LB_File = new javax.swing.JLabel();
+        PN_Logs = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        LI_Logs = new javax.swing.JList<>();
         jPanel7 = new javax.swing.JPanel();
         TB_Main = new javax.swing.JToolBar();
         BT_Load = new javax.swing.JButton();
@@ -610,17 +613,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jPanel5.setPreferredSize(new java.awt.Dimension(143, 200));
-        jPanel5.setLayout(new java.awt.BorderLayout());
-
-        LI_Logs.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        LI_Logs.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jScrollPane3.setViewportView(LI_Logs);
-
-        jPanel5.add(jScrollPane3, java.awt.BorderLayout.CENTER);
-
-        jPanel2.add(jPanel5, java.awt.BorderLayout.SOUTH);
-
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         jToolBar3.setFloatable(false);
@@ -668,10 +660,14 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
+        TAB_Main.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+
+        jPanel8.setLayout(new java.awt.BorderLayout());
+
         PN_Content.setLayout(new java.awt.CardLayout());
         PN_Content.add(jLabel1, "empty");
 
-        jPanel3.add(PN_Content, java.awt.BorderLayout.CENTER);
+        jPanel8.add(PN_Content, java.awt.BorderLayout.CENTER);
 
         jPanel6.setBackground(new java.awt.Color(144, 202, 249));
 
@@ -680,7 +676,22 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         LB_File.setText("...");
         jPanel6.add(LB_File);
 
-        jPanel3.add(jPanel6, java.awt.BorderLayout.PAGE_START);
+        jPanel8.add(jPanel6, java.awt.BorderLayout.PAGE_START);
+
+        TAB_Main.addTab("Properties", jPanel8);
+
+        PN_Logs.setPreferredSize(new java.awt.Dimension(143, 200));
+        PN_Logs.setLayout(new java.awt.BorderLayout());
+
+        LI_Logs.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        LI_Logs.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        jScrollPane3.setViewportView(LI_Logs);
+
+        PN_Logs.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        TAB_Main.addTab("Logs", PN_Logs);
+
+        jPanel3.add(TAB_Main, java.awt.BorderLayout.CENTER);
 
         SP_Main.setRightComponent(jPanel3);
 
@@ -806,7 +817,9 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JMenuItem MN_SaveAll;
     private javax.swing.JMenuItem MN_SaveProcessAll;
     private javax.swing.JPanel PN_Content;
+    private javax.swing.JPanel PN_Logs;
     private javax.swing.JSplitPane SP_Main;
+    private javax.swing.JTabbedPane TAB_Main;
     private javax.swing.JToolBar TB_Main;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
@@ -816,9 +829,9 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;

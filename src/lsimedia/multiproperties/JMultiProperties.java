@@ -135,7 +135,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewProperty.addActionListener(this);
         BT_Delete.addActionListener(this);
         BT_Merge.addActionListener(this);
-
+        BT_Copy.addActionListener(this);
+        
         BT_Save.addActionListener(this);
         BT_SaveProcess.setVisible(!lockdown);
         BT_SaveProcess.addActionListener(this);
@@ -711,6 +712,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewProperty = new javax.swing.JButton();
         BT_NewComment = new javax.swing.JButton();
         BT_NewEmpty = new javax.swing.JButton();
+        BT_Copy = new javax.swing.JButton();
         BT_Merge = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         BT_Delete = new javax.swing.JButton();
@@ -830,7 +832,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CMB_Handlers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 331, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
                 .addComponent(LB_Version)
                 .addContainerGap())
         );
@@ -905,7 +907,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(LB_ColumnDescription)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BT_ConfigureHandler)
                 .addContainerGap())
@@ -950,16 +952,16 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PN_ColumnsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PN_ColumnsLayout.createSequentialGroup()
                         .addComponent(BT_Add)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BT_Remove)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(23, 23, 23)
                         .addComponent(BT_ColumnUp)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BT_ColumnDown))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BT_Import)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1039,6 +1041,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewEmpty.setFocusable(false);
         jToolBar1.add(BT_NewEmpty);
 
+        BT_Copy.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_Copy.setText("Copy");
+        BT_Copy.setActionCommand("copy");
+        BT_Copy.setBorderPainted(false);
+        BT_Copy.setFocusable(false);
+        BT_Copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_Copy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(BT_Copy);
+
         BT_Merge.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Merge.setText("Merge");
         BT_Merge.setActionCommand("merge");
@@ -1089,6 +1100,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JButton BT_ColumnDown;
     private javax.swing.JButton BT_ColumnUp;
     private javax.swing.JButton BT_ConfigureHandler;
+    private javax.swing.JButton BT_Copy;
     private javax.swing.JButton BT_Delete;
     private javax.swing.JButton BT_Import;
     private javax.swing.JButton BT_Merge;

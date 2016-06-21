@@ -93,7 +93,7 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
-        setBounds(0, 0, 750, 670);
+        setBounds(0, 0, 810, 630);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

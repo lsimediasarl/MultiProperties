@@ -46,8 +46,8 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
             
         }
         
-        timer = new javax.swing.Timer(1000, this);
-        timer.start();
+        timer = new javax.swing.Timer(100, this);
+        if (selectedColumn != -1) timer.start();
     }
 
     //**************************************************************************
@@ -174,7 +174,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                                 .addComponent(TF_Name)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(CB_Disabled))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         PN_GeneralLayout.setVerticalGroup(
@@ -212,7 +212,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                 .addContainerGap()
                 .addGroup(PN_DescriptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 711, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE))
                 .addContainerGap())
         );
         PN_DescriptionLayout.setVerticalGroup(

@@ -84,9 +84,9 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         CB_Column.setActionCommand("enable");
         CB_Column.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         CB_Column.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        CB_Column.setMaximumSize(new java.awt.Dimension(100, 22));
-        CB_Column.setMinimumSize(new java.awt.Dimension(100, 22));
-        CB_Column.setPreferredSize(new java.awt.Dimension(100, 22));
+        CB_Column.setMaximumSize(new java.awt.Dimension(200, 22));
+        CB_Column.setMinimumSize(new java.awt.Dimension(200, 22));
+        CB_Column.setPreferredSize(new java.awt.Dimension(200, 22));
 
         TA_Value.setColumns(20);
         TA_Value.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
@@ -99,9 +99,9 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(CB_Column, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(CB_Column, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(

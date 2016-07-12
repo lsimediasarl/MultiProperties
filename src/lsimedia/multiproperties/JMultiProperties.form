@@ -319,7 +319,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="PN_ColumnConfig" pref="493" max="32767" attributes="0"/>
+                          <Component id="PN_ColumnConfig" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="BT_Add" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>

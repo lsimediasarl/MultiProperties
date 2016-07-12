@@ -1,3 +1,6 @@
+0.9.3.4 [2016-07-12]
+ When visual view is selected, disable source view modification
+
 0.9.3.3 [2016-06-21]
  Columns panel layout changed
  

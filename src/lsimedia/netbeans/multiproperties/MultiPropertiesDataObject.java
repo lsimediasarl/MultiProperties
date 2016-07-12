@@ -94,9 +94,7 @@ public class MultiPropertiesDataObject extends MultiDataObject {
     public MultiPropertiesDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         registerEditor("text/multiproperties+xml", true);
-
-        
-            
+  
     }
 
     @Override
@@ -114,7 +112,11 @@ public class MultiPropertiesDataObject extends MultiDataObject {
     )
     @Messages("LBL_MultiProperties_EDITOR=Source")
     public static MultiViewEditorElement createEditor(Lookup lkp) {
-        return new MultiViewEditorElement(lkp);
+        //--- The source view can be edited and saved before switching
+        //--- to visual view. After the visual view is selected no more
+        //--- edition is availble via source view to avoid confussion
+        MultiViewEditorElement ed = new MultiViewEditorElement(lkp);
+        return ed;
     }
 
     //**************************************************************************

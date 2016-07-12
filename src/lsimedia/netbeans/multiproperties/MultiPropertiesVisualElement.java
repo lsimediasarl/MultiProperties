@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.scene.paint.Color;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -41,7 +42,12 @@ import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.netbeans.spi.actions.AbstractSavable;
 import org.openide.awt.UndoRedo;
+import org.openide.cookies.EditorCookie;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -67,8 +73,10 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
     
     private MultiPropertiesDataObject obj;
     private JToolBar toolbar = new JToolBar();
+    private EditorCookie ec = null;
     private transient MultiViewElementCallback callback;
         
+    
     /**
      * Logs related
      */
@@ -83,7 +91,6 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
     
     public MultiPropertiesVisualElement(Lookup lkp) {
         obj = lkp.lookup(MultiPropertiesDataObject.class);
-        assert obj != null;
         logit = new Logit(this);
         
         initComponents();
@@ -104,7 +111,10 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
         //--- Add the save action
         obj.addPropertyChangeListener(this);
 
-        //--- Register save button
+        //--- Avoid modification from source view
+        ec = obj.getCookie(EditorCookie.class);
+        ec.getOpenedPanes()[0].setEnabled(false);
+        ec.getOpenedPanes()[0].setBackground(java.awt.Color.LIGHT_GRAY);
         
     }
 
@@ -190,7 +200,6 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
             //--- Register saveable ?
             //--- I'm a bit confused how the saveable works, please help here ;^)
             MultiSavable sav = new MultiSavable();
-            
             
         }
     }

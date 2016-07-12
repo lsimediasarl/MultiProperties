@@ -230,7 +230,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             for (int i = 0;i < cm.getColumnCount();i++) {
                 Column c = model.getColumn(i);
                 TableColumn tc = cm.getColumn(i);
-                c.setWidth(tc.getWidth());
+                c.setWidth(tc.getWidth()==0?150:tc.getWidth());
             }
 
             Document doc = builder.newDocument();

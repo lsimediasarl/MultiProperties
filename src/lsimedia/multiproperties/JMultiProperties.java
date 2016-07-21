@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
 public final class JMultiProperties extends JPanel implements ActionListener, MouseListener, ListSelectionListener {
 
     public static final String ACTION_COMMAND_MODIFIED = "dataModified";
-    
+
     SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     File file = null;
@@ -102,8 +102,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     /**
      * Default write dialog dimension
      */
-    Dimension writeDialogSize = new Dimension(800,600);
-    
+    Dimension writeDialogSize = new Dimension(800, 600);
+
     public JMultiProperties(Logit logit, boolean lockdown) {
         this.logit = logit;
         this.lockdown = lockdown;
@@ -122,11 +122,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         // SP_Table.setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, BT_Collapse);
         LI_Columns.setModel(columns);
         LI_Columns.addListSelectionListener(this);
-        
+
         BT_Import.addActionListener(this);
         BT_ColumnUp.addActionListener(this);
         BT_ColumnDown.addActionListener(this);
-        
+
         BT_Add.addActionListener(this);
         BT_Remove.addActionListener(this);
 
@@ -136,7 +136,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Delete.addActionListener(this);
         BT_Merge.addActionListener(this);
         BT_Copy.addActionListener(this);
-        
+
         BT_Save.addActionListener(this);
         BT_SaveProcess.setVisible(!lockdown);
         BT_SaveProcess.addActionListener(this);
@@ -150,7 +150,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_NewEmpty.addActionListener(this);
         MN_MoveUp.addActionListener(this);
         MN_MoveDown.addActionListener(this);
-        
+
         //--- If lockdown disable the two first tabs
         if (lockdown) {
             TAB_Main.setEnabledAt(0, false);
@@ -230,7 +230,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             for (int i = 0;i < cm.getColumnCount();i++) {
                 Column c = model.getColumn(i);
                 TableColumn tc = cm.getColumn(i);
-                c.setWidth(tc.getWidth()==0?150:tc.getWidth());
+                c.setWidth(tc.getWidth() == 0 ? 150 : tc.getWidth());
             }
 
             Document doc = builder.newDocument();
@@ -424,9 +424,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 for (int i = 0;i < columns.size();i++) rec.addColumn();
                 model.insertRecord(index + 1, rec);
                 TB_Table.getSelectionModel().setSelectionInterval(index + 1, index + 1);
-                
+
                 fireModifiedEvent();
-                
+
                 //--- Open it
                 int sc = TB_Table.getSelectedColumn();
                 ArrayList<Column> cols = new ArrayList<>();
@@ -438,12 +438,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 dlg.setVisible(true);
 
                 writeDialogSize = dlg.getSize();
-                
+
                 TB_Table.repaint();
-                
-                
-                
-                
+
             }
 
         } else if (e.getActionCommand().equals("newEmpty")) {
@@ -471,20 +468,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         } else if (e.getActionCommand().equals("copy")) {
             int index = TB_Table.getSelectedRow();
             if (index >= 0) {
-                try {
-                    Record rec = model.getRecord(index);
-                    Record nrec = (Record) rec.clone();
-                    if (nrec instanceof PropertyRecord) {
-                        PropertyRecord prec = (PropertyRecord) nrec;
-                        prec.setName(prec.getName()+"_"+System.currentTimeMillis());
-                    }
-                    model.insertRecord(index, nrec);
+                Record rec = model.getRecord(index);
+                Record nrec = (Record) rec.copy();
+                model.insertRecord(index, nrec);
 
-                    fireModifiedEvent();
+                fireModifiedEvent();
 
-                } catch (CloneNotSupportedException ex) {
-                    ex.printStackTrace();
-                }
             }
 
         } else if (e.getActionCommand().equals("up")) {
@@ -543,7 +532,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             BT_SaveProcess.setEnabled(false);
 
             modified = false;
-        
+
         }
     }
 
@@ -555,7 +544,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         if (e.getSource() == TB_Table) {
             if (e.getClickCount() >= 2) {
                 int sc = TB_Table.getSelectedColumn();
-                
+
                 //--- Popup the modification frame
                 Record rec = model.getRecord(TB_Table.getSelectedRow());
                 ArrayList<Column> cols = new ArrayList<>();
@@ -567,7 +556,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 dlg.setVisible(true);
 
                 writeDialogSize = dlg.getSize();
-                
+
                 TB_Table.repaint();
 
                 fireModifiedEvent();
@@ -1212,7 +1201,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                                 Column c = model.getColumn(0);
                                 int width = Integer.parseInt(col.getElementsByTagName("Width").item(0).getFirstChild().getNodeValue());
                                 c.setWidth(width);
-                                
+
                             } catch (Exception ex) {
                                 //---
                             }
@@ -1277,14 +1266,14 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 TB_Table.getColumnModel().getColumn(i).setMinWidth(0);
                 TB_Table.getColumnModel().getColumn(i).setPreferredWidth(0);
                 TB_Table.getColumnModel().getColumn(i).setWidth(0);
-                
+
             } else {
                 TB_Table.getColumnModel().getColumn(i).setPreferredWidth(c.width);
                 TB_Table.getColumnModel().getColumn(i).setWidth(c.width);
             }
-            
+
         }
-        
+
     }
 
     private void fillRowHeader() {
@@ -1295,18 +1284,18 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             Record rec = (Record) model.getValueAt(i, 0);
             JTextField tf = new JTextField(rec.getKey());
             tf.setFont(new Font("Monospaced", Font.BOLD, 11));
-            
+
             if (rec instanceof CommentRecord) {
                 CommentRecord cr = (CommentRecord) rec;
                 tf.setText(cr.getValue());
                 tf.setForeground(Color.BLUE);
-                
+
             } else if (rec instanceof PropertyRecord) {
                 //--- Check if multiple same keys
                 PropertyRecord pr = (PropertyRecord) rec;
-                
+
                 boolean same = false;
-                for (int j=0;j<model.getRowCount();j++) {
+                for (int j = 0;j < model.getRowCount();j++) {
                     Record tmp = (Record) model.getValueAt(j, 0);
                     if (tmp.getKey() != null) {
                         if ((j != i) && pr.getKey().equals(tmp.getKey())) same = true;
@@ -1315,17 +1304,16 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 if (same) {
                     tf.setText(pr.name);
                     tf.setForeground(Color.RED);
-                    
+
                 } else if (pr.disabled) {
                     tf.setText(pr.name);
                     tf.setForeground(Color.LIGHT_GRAY);
-                    
-                    
+
                 } else {
                     tf.setText(pr.name);
-                    
+
                 }
-                
+
             }
             Dimension dim = tf.getPreferredSize();
             tf.setPreferredSize(new Dimension(dim.width + 10, 22));
@@ -1346,7 +1334,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         modified = true;
         if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
         // resizeColumns();
-        
+
         fillRowHeader();
     }
 }

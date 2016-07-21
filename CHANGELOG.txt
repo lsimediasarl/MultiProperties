@@ -1,6 +1,9 @@
+0.9.3.6 [2016-07-21]
+ Changed the clone() to custom copy() method to avoid reference problems
+
 0.9.3.5 [2016-07-21]
  Fixed the property copy not changing the key
-
+ 
 0.9.3.4 [2016-07-12]
  When visual view is selected, disable source view modification
 

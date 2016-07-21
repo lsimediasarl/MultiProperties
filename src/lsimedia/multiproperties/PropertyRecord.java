@@ -26,7 +26,7 @@ public class PropertyRecord extends Record {
     /**
      * The order is important => columns
      */
-    ArrayList<Value> values = new ArrayList<>();
+    transient ArrayList<Value> values = new ArrayList<>();
 
     public PropertyRecord(String name) {
         super();
@@ -202,18 +202,24 @@ public class PropertyRecord extends Record {
         values.remove(index);
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        PropertyRecord c = (PropertyRecord) super.clone();
-        //--- Clone the values
-        for (int i=0;i<values.size();i++) c.setValueAt(i, (PropertyRecord.Value) values.get(i).clone());
+    public Object copy() {
+        PropertyRecord c = new PropertyRecord(name+"_copy");
+        
+        c.setDefaultValue(defaultValue);
+        c.setDisabled(disabled);
+        c.setMultiLine(multiLine);
+        for (int i=0;i<values.size();i++) {
+            Value v = values.get(i);
+            c.addColumn();
+            c.setValueAt(i, v.copy());
+        }
         return c;
     }
 
     //**************************************************************************
     //*** Helpful class
     //**************************************************************************
-    public class Value implements Cloneable {
+    public class Value {
 
         String value = "";
         boolean disabled = true;    //--- Use default value
@@ -244,9 +250,8 @@ public class PropertyRecord extends Record {
 
         }
 
-        @Override
-        public Object clone() throws CloneNotSupportedException {
-            return super.clone();
+        public Value copy() {
+            return new Value(disabled, value);
         }
     }
 }

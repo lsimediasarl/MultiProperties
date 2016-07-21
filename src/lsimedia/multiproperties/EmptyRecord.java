@@ -5,7 +5,6 @@
  */
 package lsimedia.multiproperties;
 
-import java.util.ArrayList;
 import org.w3c.dom.Element;
 
 /**
@@ -16,19 +15,17 @@ public class EmptyRecord extends Record {
 
     public EmptyRecord() {
         super();
-        
+
     }
-    
+
     public EmptyRecord(Element record) {
         super(record);
-
 
     }
 
     //**************************************************************************
     //*** API
     //**************************************************************************    
-    
     //**************************************************************************
     //*** Record
     //**************************************************************************
@@ -41,7 +38,7 @@ public class EmptyRecord extends Record {
     public String getKey() {
         return null;
     }
-    
+
     @Override
     public void save(Element records) {
         Element e = records.getOwnerDocument().createElement("Empty");
@@ -52,15 +49,19 @@ public class EmptyRecord extends Record {
     public void swapColumn(int fromIndex, int toIndex) {
         //--- Nonthing here
     }
-    
+
     @Override
     public void addColumn() {
         //--- Nothing here
     }
-    
+
     @Override
     public void removeColumn(int index) {
         //--- Nothing here
     }
-   
+
+    @Override
+    public Object copy() {
+        return new EmptyRecord();
+   }
 }

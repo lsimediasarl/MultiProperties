@@ -7,9 +7,6 @@ package lsimedia.multiproperties;
 
 import lsimedia.multiproperties.Record;
 import lsimedia.multiproperties.RecordGUI;
-import lsimedia.multiproperties.Column;
-import java.util.ArrayList;
-import javax.swing.JComponent;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -95,4 +92,8 @@ public class CommentRecord extends Record {
         //--- Nothing here
     }
     
+    @Override
+    public Object copy() {
+        return new CommentRecord(value);
+    }
 }

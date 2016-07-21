@@ -5,9 +5,6 @@
  */
 package lsimedia.multiproperties;
 
-import lsimedia.multiproperties.Column;
-import java.util.ArrayList;
-import javax.swing.JComponent;
 import org.w3c.dom.Element;
 
 
@@ -15,7 +12,7 @@ import org.w3c.dom.Element;
  *
  * @author sbodmer
  */
-public abstract class Record implements Cloneable {
+public abstract class Record {
     
     public Record() {
         //---
@@ -63,8 +60,10 @@ public abstract class Record implements Cloneable {
      */
     public abstract void removeColumn(int index);
     
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+    /**
+     * Return a deep copy of this object
+     * @return 
+     */
+    public abstract Object copy();
+    
 }

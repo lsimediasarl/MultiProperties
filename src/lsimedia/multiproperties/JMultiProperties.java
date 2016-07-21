@@ -473,7 +473,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             if (index >= 0) {
                 try {
                     Record rec = model.getRecord(index);
-                    model.insertRecord(index, (Record) rec.clone());
+                    Record nrec = (Record) rec.clone();
+                    if (nrec instanceof PropertyRecord) {
+                        PropertyRecord prec = (PropertyRecord) nrec;
+                        prec.setName(prec.getName()+"_"+System.currentTimeMillis());
+                    }
+                    model.insertRecord(index, nrec);
 
                     fireModifiedEvent();
 

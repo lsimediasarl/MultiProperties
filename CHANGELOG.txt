@@ -1,3 +1,6 @@
+0.9.3.7 [2016-07-21]
+ Fixed the java handler when the key contains colon (escape ':')
+
 0.9.3.6 [2016-07-21]
  Changed the clone() to custom copy() method to avoid reference problems
 

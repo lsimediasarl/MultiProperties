@@ -53,6 +53,18 @@ public class JavaPropertiesHandler implements PropertiesHandler {
     //**************************************************************************
     //*** PropertiesHandler
     //**************************************************************************
+    /**
+     * There is some specific stuff to do
+     * <PRE>
+     * escape ':'
+     * </PRE>
+     * @param model
+     * @param name
+     * @param description
+     * @param source
+     * @param logit
+     * @return 
+     */
     @Override
     public boolean save(final MultiPropertiesTableModel model, final String name, final String description, final File source, final Logit logit) {
         //--- For each column, store the Java properties file
@@ -106,6 +118,7 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                     } else if (rec instanceof PropertyRecord) {
                         PropertyRecord pr = (PropertyRecord) rec;
                         String key = pr.getName();
+                        key = key.replaceAll(":", "\\\\:");
                         
                         PropertyRecord.Value v = pr.getValueAt(i - 1);
                         String val = v.isDisabled() ? pr.getDefaultValue() : v.getValue();
@@ -119,6 +132,7 @@ public class JavaPropertiesHandler implements PropertiesHandler {
 
                         } else {
                             fw.write("" + key + "=" + unicodeEscape(val) + "\n");
+                            
                         }
 
                     }

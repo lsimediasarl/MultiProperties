@@ -37,7 +37,7 @@ The standalone version implements the concept of "Session", which is a group of 
 files, so it's easy to switch from a group of file to another group of files.
 
 A Java Web Start for the standalone version can be found at
-[www.knop-tech.com](http://tools.knop-tech.com)
+[tools.knop-tech.com](http://tools.knop-tech.com)
 
 ## Todos
 

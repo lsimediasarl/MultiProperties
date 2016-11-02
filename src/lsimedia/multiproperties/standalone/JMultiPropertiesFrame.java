@@ -106,6 +106,11 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         MN_SaveAll.addActionListener(this);
         MN_SaveProcessAll.addActionListener(this);
         
+        MN_SaveProcessAll.setVisible(!lockdown);
+        BT_SaveProcessAll.setVisible(!lockdown);
+        
+        MN_New.setEnabled(false);
+        
         MN_About.addActionListener(this);
 
         BT_Load.addActionListener(this);

@@ -184,6 +184,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         if (!found) JOptionPane.showMessageDialog(this, "The handler was not found !\n\nDo not save this file if you want to keep the unknown handler...", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Force to hide the process button (only save is available in any case)
+     * @param hide 
+     */
+    public void hideProcessAction(boolean hide) {
+        BT_SaveProcess.setVisible(!hide);
+        
+    }
+    
     public File getFile() {
         return file;
     }

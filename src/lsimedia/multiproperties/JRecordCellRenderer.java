@@ -79,7 +79,7 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
                     txt = "<html><pre><b><font color=\"" + COLOR_ERROR + "\">" + pr.name + "</font></b></pre></html>";
                     
                 } else if (pr.disabled) {
-                    txt = "<html><pre><b><font color=\"" + COLOR_DISABLED + "\">" + pr.name + "</font></b></pre></html>";
+                    txt = "<html><pre><b><i><font color=\"" + COLOR_DISABLED + "\">" + pr.name + "</font></i></b></pre></html>";
                     
                 } else {
                     txt = "<html><pre><b>" + pr.name + "</b></pre></html>";
@@ -91,7 +91,7 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
                 txt = v.getValue().replaceAll("\n", "<br>");
                 if (v.disabled) {
                     txt = pr.defaultValue.replaceAll("\n", "<br>");
-                    txt = "<html><font color=\"" + COLOR_DISABLED + "\">" + txt + "</font></html>";
+                    txt = "<html><i><font color=\"" + COLOR_DISABLED + "\">" + txt + "</font></i></html>";
                     
                 } else {
                     txt = "<html>"+txt+"</html>";

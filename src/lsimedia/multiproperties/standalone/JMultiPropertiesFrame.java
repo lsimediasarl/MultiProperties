@@ -414,7 +414,8 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
                 
                 selected = cont;
                 if (selected.getVisual() == null) {
-                    JMultiProperties jm = new JMultiProperties(logit, lockdown);
+                    JMultiProperties jm = new JMultiProperties(logit);
+                    if (lockdown) jm.lockdown();
                     jm.setFile(cont.getFile());
                     selected.setVisual(jm);
                     PN_Content.add(jm, cont.getFile().getPath());

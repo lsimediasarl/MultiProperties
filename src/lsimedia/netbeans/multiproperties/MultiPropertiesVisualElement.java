@@ -80,7 +80,7 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
         //--- Parse the file
         FileObject fo = obj.getPrimaryFile();
         
-        jm = new JMultiProperties(logit, false);
+        jm = new JMultiProperties(logit);
         jm.setFile(new File(fo.getPath()));
         jm.setActionListener(this);
         PN_Data.add(jm, BorderLayout.CENTER);

@@ -43,6 +43,7 @@ A Java Web Start for the standalone version can be found at
 
 - Update eclipse plugin to implement the relative path (to the .multiproperties file)
   for handled save files
+- Write the property handler class for android resources
 
 ## Utils
 

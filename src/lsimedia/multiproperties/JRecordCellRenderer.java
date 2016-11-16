@@ -16,7 +16,7 @@ import javax.swing.table.TableCellRenderer;
  */
 public class JRecordCellRenderer extends javax.swing.JPanel implements TableCellRenderer {
 
-    static public final String COLOR_DISABLED = "#888888";
+    static public final String COLOR_DISABLED = "#ff00ff";  // "#888888"
     static public final String COLOR_COMMENT = "#0000ff";
     static public final String COLOR_ERROR = "#ff0000";
     

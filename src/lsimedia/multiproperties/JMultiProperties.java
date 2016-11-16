@@ -8,13 +8,13 @@ package lsimedia.multiproperties;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import lsimedia.multiproperties.handlers.JavaPropertiesHandler;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -25,15 +25,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -47,9 +44,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import static lsimedia.multiproperties.JRecordCellRenderer.COLOR_COMMENT;
-import static lsimedia.multiproperties.JRecordCellRenderer.COLOR_DISABLED;
-import static lsimedia.multiproperties.JRecordCellRenderer.COLOR_ERROR;
 import lsimedia.multiproperties.handlers.EmptyPropertiesHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -104,10 +98,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
      */
     Dimension writeDialogSize = new Dimension(800, 600);
 
-    public JMultiProperties(Logit logit, boolean lockdown) {
+    public JMultiProperties(Logit logit) {
         this.logit = logit;
-        this.lockdown = lockdown;
-
+        
         initComponents();
 
         CMB_Handlers.addItem(new EmptyPropertiesHandler());
@@ -138,7 +131,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Copy.addActionListener(this);
 
         BT_Save.addActionListener(this);
-        BT_SaveProcess.setVisible(!lockdown);
         BT_SaveProcess.addActionListener(this);
 
         BT_ConfigureHandler.addActionListener(this);
@@ -150,19 +142,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         MN_NewEmpty.addActionListener(this);
         MN_MoveUp.addActionListener(this);
         MN_MoveDown.addActionListener(this);
-
-        //--- If lockdown disable the two first tabs
-        if (lockdown) {
-            TAB_Main.setEnabledAt(0, false);
-            TAB_Main.setEnabledAt(1, false);
-            TAB_Main.setSelectedIndex(2);
-
-            BT_NewComment.setVisible(false);
-            BT_NewEmpty.setVisible(false);
-            BT_NewProperty.setVisible(false);
-
-            BT_Delete.setVisible(false);
-        }
 
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -186,13 +165,44 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
     /**
      * Force to hide the process button (only save is available in any case)
-     * @param hide 
+     *
+     * @param hide
      */
     public void hideProcessAction(boolean hide) {
         BT_SaveProcess.setVisible(!hide);
-        
+
     }
-    
+
+    public void lockdown() {
+        lockdown = true;
+        
+        BT_SaveProcess.setVisible(false);
+        
+        TAB_Main.setEnabledAt(0, false);
+        TAB_Main.setEnabledAt(1, false);
+        TAB_Main.setSelectedIndex(2);
+
+        BT_NewComment.setVisible(false);
+        BT_NewEmpty.setVisible(false);
+        BT_NewProperty.setVisible(false);
+
+        BT_Delete.setVisible(false);
+    }
+
+    /**
+     * Hide the save button
+     *
+     * @param hide
+     */
+    public void hideSaveAction(boolean hide) {
+        BT_Save.setVisible(!hide);
+
+    }
+
+    public void selectTab(int index) {
+        TAB_Main.setSelectedIndex(index);;
+    }
+
     public File getFile() {
         return file;
     }
@@ -512,10 +522,18 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             int rep = jf.showOpenDialog(this);
             if (rep == JFileChooser.APPROVE_OPTION) {
                 File source = jf.getSelectedFile();
-                JMultiProperties jm = new JMultiProperties(logit, true);
+                JMultiProperties jm = new JMultiProperties(logit);
+                jm.lockdown();
                 jm.setFile(source);
                 MultiPropertiesTableModel smodel = jm.getModel();
-                JMergeDialog jdialog = new JMergeDialog((Frame) getTopLevelAncestor(), true, model, smodel);
+                Container comp = getTopLevelAncestor();
+                JMergeDialog jdialog = null;
+                if (comp instanceof Frame) {
+                    jdialog = new JMergeDialog((Frame) comp, true, model, smodel);
+                    
+                } else {
+                    jdialog = new JMergeDialog((Dialog) comp, true, model, smodel);
+                }
                 jdialog.setLocationRelativeTo(this);
                 jdialog.setVisible(true);
 

@@ -27,6 +27,19 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
         super(parent, modal);
         this.current = current;
         this.source = source;
+        
+        prepare();
+    }
+
+    public JMergeDialog(final java.awt.Dialog parent, final boolean modal, final MultiPropertiesTableModel current, final MultiPropertiesTableModel source) {
+        super(parent, modal);
+        this.current = current;
+        this.source = source;
+        
+        prepare();
+    }
+
+    private void prepare() {
 
         initComponents();
 
@@ -76,7 +89,7 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
                 if (columnIndex == -1) {
                     //--- To be merged column (add 1,because the index 0 is the key column)
                     Column mc = source.getColumn(i + 1);
-                    
+
                     //--- Create new column in current model and fill it
                     Column c = new Column(into);
                     c.description = mc.description;
@@ -86,7 +99,7 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
                     //--- Add a new value to each row of the current model and add the column
                     for (int j = 0;j < current.getRowCount();j++) current.getRecord(j).addColumn();
                     current.addColumn(c);
-                    
+
                     columnIndex = current.getColumnCount() - 1;
                 }
 
@@ -121,14 +134,14 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
                         pr.setDisabled(toMerge.isDisabled());
                         pr.setMultiLine(toMerge.isMultiLine());
                         pr.setValueAt(columnIndex - 1, toMerge.getValueAt(i));
-                        
+
                     } else {
                         //--- Key was found, but not a property column, do nothing
-                        
+
                     }
 
                 }
-                
+
             }
 
             setVisible(false);

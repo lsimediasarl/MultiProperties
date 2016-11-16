@@ -1,6 +1,6 @@
 0.9.3.8 [2016-11-15]
  Added the hideProcessAction() method in main panel to avoid processing at all
- Switched to Java 7 so older project an use it
+ Switched to Java 7 so older project can use it
 
 0.9.3.7 [2016-07-21]
  Fixed the java handler when the key contains colon (escape ':')

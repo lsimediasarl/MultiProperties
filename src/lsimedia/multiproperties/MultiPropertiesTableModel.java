@@ -6,6 +6,7 @@
 package lsimedia.multiproperties;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.DefaultListModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -164,6 +165,19 @@ public class MultiPropertiesTableModel implements TableModel {
         for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
     }
     
+    /**
+     * Sort the record by key
+     */
+    public void sort() {
+        Object a[] = records.toArray();
+        Arrays.sort(a);
+        records.clear();
+        for(int i=0;i<a.length;i++) records.add((Record) a[i]);
+        
+        TableModelEvent e = new TableModelEvent(this, 0, records.size()-1);
+        for (int i = 0;i < listeners.size();i++) listeners.get(i).tableChanged(e);
+        
+    }
     //**************************************************************************
     //*** TableModel
     //**************************************************************************

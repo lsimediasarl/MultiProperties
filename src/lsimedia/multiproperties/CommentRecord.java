@@ -96,4 +96,9 @@ public class CommentRecord extends Record {
     public Object copy() {
         return new CommentRecord(value);
     }
+
+    @Override
+    public String getSortString() {
+        return getValue()+""+hashCode();
+    }
 }

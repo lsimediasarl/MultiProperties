@@ -678,8 +678,8 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="11" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Copy"/>
-                    <Property name="actionCommand" type="java.lang.String" value="copy"/>
+                    <Property name="text" type="java.lang.String" value="Clone"/>
+                    <Property name="actionCommand" type="java.lang.String" value="clone"/>
                     <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                     <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -695,6 +695,19 @@
                     <Property name="actionCommand" type="java.lang.String" value="merge"/>
                     <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="BT_Sort">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Arial" size="11" style="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Sort keys"/>
+                    <Property name="actionCommand" type="java.lang.String" value="sort"/>
+                    <Property name="borderPainted" type="boolean" value="false"/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                    <Property name="horizontalTextPosition" type="int" value="0"/>
+                    <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JToolBar$Separator" name="jSeparator2">

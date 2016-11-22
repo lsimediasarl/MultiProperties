@@ -10,7 +10,11 @@ import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Properties;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import lsimedia.multiproperties.Column;
 import lsimedia.multiproperties.CommentRecord;
 import lsimedia.multiproperties.HandlerGUI;
@@ -19,24 +23,37 @@ import lsimedia.multiproperties.MultiPropertiesTableModel;
 import lsimedia.multiproperties.PropertiesHandler;
 import lsimedia.multiproperties.PropertyRecord;
 import lsimedia.multiproperties.Record;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
- * The Java properties file
+ * The Android value files (/res/values/string.xml)
  *
  * @author sbodmer
  */
-public class JavaPropertiesHandler implements PropertiesHandler {
+public class AndroidValuesHandler implements PropertiesHandler {
+
+    DocumentBuilder builder = null;
+    
     private static final char[] hexChar = {
-        '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
     
     /**
      * Last error
      */
     String error = null;
-    
-    public JavaPropertiesHandler() {
-        //---
+
+    public AndroidValuesHandler() {
+        try {
+             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            
+        }
+
     }
 
     //**************************************************************************
@@ -47,7 +64,7 @@ public class JavaPropertiesHandler implements PropertiesHandler {
     }
 
     public String getName() {
-        return "Java Properties Handler";
+        return "Android Values Handler";
     }
 
     //**************************************************************************
@@ -58,18 +75,19 @@ public class JavaPropertiesHandler implements PropertiesHandler {
      * <PRE>
      * escape ':'
      * </PRE>
+     *
      * @param model
      * @param name
      * @param description
      * @param source
      * @param logit
-     * @return 
+     * @return
      */
     @Override
     public boolean save(final MultiPropertiesTableModel model, final String name, final String description, final File source, final Logit logit) {
-        //--- For each column, store the Java properties file
+        //--- For each column, store the xml file
         boolean result = true;
-        
+
         //--- The column at index 0 is the key, do not handle it
         for (int i = 1;i < model.getColumnCount();i++) {
             try {
@@ -79,33 +97,41 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                 String fn = tokens[0];
                 if (fn.equals("")) continue;
                 fn = fn.replace('\\', '/');
-                
+
                 File file = new File(fn);
                 if (fn.startsWith("/")) {
                     //--- Absolute path, do nothing
-                    
+
                 } else if (fn.startsWith("./")) {
                     //--- Use same directory has source
                     file = new File(source.getParent(), file.getPath());
-                    
+
                 } else if (fn.startsWith("../")) {
                     //--- Use relative path
                     file = new File(source.getParent(), file.getPath());
-                    
-                }
 
-                // System.out.println("JAVA PROPERTIES FILE IS:" + file.getCanonicalPath());
+                }
 
                 //--- Headers
                 // FileWriter fw = new FileWriter(file);
-                PrintWriter fw = new PrintWriter(file, "us-ascii");
+                PrintWriter fw = new PrintWriter(file, "UTF-8");
+                fw.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+                fw.write("<resources>\n");
                 if (tokens[1].equals("true")) {
                     String parts[] = description.split("\\n");
-                    for (int j = 0;j < parts.length;j++) fw.write("#" + unicodeEscape(parts[j]) + "\n");
+                    for (int j = 0;j < parts.length;j++) {
+                        fw.write("<!-- ");
+                        fw.write(escape(parts[j]) + "\n");
+                        fw.write("-->\n");
+                    }
                 }
                 if (tokens[2].equals("true")) {
                     String parts[] = c.getDescription().split("\\n");
-                    for (int j = 0;j < parts.length;j++) fw.write("#" + unicodeEscape(parts[j]) + "\n");
+                    for (int j = 0;j < parts.length;j++) {
+                        fw.write("<!-- ");
+                        fw.write(escape(parts[j]) + "\n");
+                        fw.write("-->\n");
+                    }
                 }
 
                 //--- Records
@@ -113,60 +139,87 @@ public class JavaPropertiesHandler implements PropertiesHandler {
                     Record rec = model.getRecord(j);
                     if (rec instanceof CommentRecord) {
                         CommentRecord cr = (CommentRecord) rec;
-                        fw.write("#" + unicodeEscape(cr.getValue()) + "\n");
+                        fw.write("<!-- ");
+                        fw.write(escape(cr.getValue()));
+                        fw.write("-->\n");
 
                     } else if (rec instanceof PropertyRecord) {
                         PropertyRecord pr = (PropertyRecord) rec;
                         String key = pr.getName();
                         key = key.replaceAll(":", "\\\\:");
-                        
+
                         PropertyRecord.Value v = pr.getValueAt(i - 1);
                         String val = v.isDisabled() ? pr.getDefaultValue() : v.getValue();
-                        if (pr.isMultiLine()) val = val.replaceAll("\n","\\\\n");
-                            
+                        if (pr.isMultiLine()) val = val.replaceAll("\n", "\\\\n");
+
                         if (tokens[3].equals("true") && pr.isDisabled()) {
-                            fw.write("#" + key + "=" + unicodeEscape(val) + "\n");
+                            fw.write("<!-- string name=\"" + key + "\">" + escape(val) + "</string -->\n");
 
                         } else if (v.isDisabled()) {
-                            if (!tokens[4].equals("true")) fw.write("" + key + "=" + unicodeEscape(val) + "\n");
+                            if (!tokens[4].equals("true")) {
+                                fw.write("<string name=\"" + key + "\">" + escape(val) + "</string>\n");
+                            }
 
                         } else {
-                            fw.write("" + key + "=" + unicodeEscape(val) + "\n");
-                            
+                            fw.write("<string name=\"" + key + "\">" + escape(val) + "</string>\n");
+
                         }
 
                     }
 
                 }
+                fw.write("</resources>");
                 fw.close();
 
-                logit.log("I", "Store java properties at "+file.getCanonicalPath(), null);
-                
+                logit.log("I", "Storing android values xml at " + file.getCanonicalPath(), null);
+
             } catch (Exception ex) {
                 error = ex.getMessage();
                 ex.printStackTrace();
-                logit.log("E", "Error storing java properties :"+ex.getMessage(), null);
+                logit.log("E", "Error storing android values xml :" + ex.getMessage(), null);
                 result = false;
             }
-            
+
         }
 
         return result;
     }
 
+    /**
+     * Load the xml file
+     *
+     * @param model
+     * @param f
+     * @return
+     */
     @Override
     public Column load(MultiPropertiesTableModel model, File f) {
         //--- Load the java properties file
-        Properties prop = new Properties();
         try {
-            FileInputStream fin = new FileInputStream(f);
-            prop.load(fin);
+            Document document = builder.parse(f);
+            
+            //--- Store the keys in a map for later use
+            HashMap<String, String> hm = new HashMap<>();
+            NodeList nl = document.getElementsByTagName("string");
+            for (int i=0;i<nl.getLength();i++) {
+                Element e = (Element) nl.item(i);
+                String key = e.getAttribute("name");
+                if (e.getFirstChild() != null) {
+                    String value = e.getFirstChild().getNodeValue();
+                    value = value.replaceAll("\\\\'", "'");
+                    hm.put(key, value);
+                    
+                } else {
+                    //---
+                }
+                
+            }
             
             Column c = new Column(f.getName());
-            c.setHandlerConfiguration(f.getPath()+"|false|true|true|false|false");
-            
+            c.setHandlerConfiguration(f.getPath() + "|false|true|true|false|false");
+
             //--- Add the new column to all property records
-            for (int i=0;i<model.getRowCount();i++) {
+            for (int i = 0;i < model.getRowCount();i++) {
                 Record rec = model.getRecord(i);
                 if (rec instanceof PropertyRecord) {
                     PropertyRecord pr = (PropertyRecord) rec;
@@ -175,83 +228,76 @@ public class JavaPropertiesHandler implements PropertiesHandler {
             }
             //--- Add column
             model.addColumn(c);
-            
+
             //--- Fill the the added column
             ArrayList<Record> newRecords = new ArrayList<>();
-            Enumeration<String> en = (Enumeration<String>) prop.propertyNames();
-            while (en.hasMoreElements()) {
-                String property = en.nextElement();
-                String value = prop.getProperty(property);
-                
+            Iterator<String> it = hm.keySet().iterator();
+            while (it.hasNext()) {
+                String property = it.next();
+                String value = hm.get(property);
+
                 Record rec = model.getRecord(property);
                 if (rec == null) {
                     //--- Not found, add the entry with the default value
                     PropertyRecord pr = new PropertyRecord(property);
                     pr.setDefaultValue(value);
-                    
-                    for (int i=0;i<model.getColumnCount()-1;i++) pr.addColumn();
+
+                    for (int i = 0;i < model.getColumnCount() - 1;i++) pr.addColumn();
                     //--- Last column contains the value
-                    PropertyRecord.Value v = pr.getValueAt(pr.getValueCount()-1);
+                    PropertyRecord.Value v = pr.getValueAt(pr.getValueCount() - 1);
                     v.setValue(value);
                     v.setDisable(false);
                     newRecords.add(pr);
-                    
+
                 } else if (rec instanceof PropertyRecord) {
                     PropertyRecord pr = (PropertyRecord) rec;
-                    PropertyRecord.Value v = pr.getValueAt(pr.getValueCount()-1);
+                    PropertyRecord.Value v = pr.getValueAt(pr.getValueCount() - 1);
                     v.setValue(value);
                     v.setDisable(false);
                 }
             }
-            
+
             //--- Add the new records
-            for (int i=0;i<newRecords.size();i++) model.addRecord(newRecords.get(i));
-            
+            for (int i = 0;i < newRecords.size();i++) model.addRecord(newRecords.get(i));
+
             return c;
-            
+
         } catch (Exception ex) {
             error = ex.getMessage();
             ex.printStackTrace();
-            
-        }   
+
+        }
         return null;
-        
+
     }
-    
+
     @Override
     public HandlerGUI getGUI(Column column, File source) {
         //---
-        return new JJavaPropertiesHandler(column, source);
+        return new JAndroidValuesHandler(column, source);
     }
-    
+
     @Override
     public String getLastError() {
         return error;
     }
-    
+
     //**************************************************************************
     //*** Private
     //**************************************************************************
-    
     /**
-     * Convert utf-8 to unicode escaped sequence
+     * Escape the some chars
+     *
      * @param s
-     * @return 
+     * @return
      */
-    private static String unicodeEscape(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0;i < s.length();i++) {
-            char c = s.charAt(i);
-            if ((c >> 7) > 0) {
-                sb.append("\\u");
-                sb.append(hexChar[(c >> 12) & 0xF]); // append the hex character for the left-most 4-bits
-                sb.append(hexChar[(c >> 8) & 0xF]);  // hex for the second group of 4-bits from the left
-                sb.append(hexChar[(c >> 4) & 0xF]);  // hex for the third group
-                sb.append(hexChar[c & 0xF]);         // hex for the last group, e.g., the right most 4-bits
-            } else {
-                sb.append(c);
-            }
-        }
-        return sb.toString();
+    private static String escape(final String s) {
+        String sb = s.replace('<', ' ');
+        sb = sb.replace('>', ' ');
+        sb = sb.replaceAll("'", "\\\\'");
+        sb = sb.replaceAll("\n", "\\\\\\n");
+        return sb;
     }
+    
+    
 }

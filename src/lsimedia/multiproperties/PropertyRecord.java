@@ -5,7 +5,6 @@
  */
 package lsimedia.multiproperties;
 
-import lsimedia.multiproperties.Column;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -214,6 +213,11 @@ public class PropertyRecord extends Record {
             c.setValueAt(i, v.copy());
         }
         return c;
+    }
+
+    @Override
+    public String getSortString() {
+        return getKey()+""+hashCode();
     }
 
     //**************************************************************************

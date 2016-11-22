@@ -63,5 +63,12 @@ public class EmptyRecord extends Record {
     @Override
     public Object copy() {
         return new EmptyRecord();
-   }
+    }
+
+    @Override
+    public String getSortString() {
+        return ""+hashCode();
+    }
+
+    
 }

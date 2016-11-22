@@ -44,6 +44,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import lsimedia.multiproperties.handlers.AndroidValuesHandler;
 import lsimedia.multiproperties.handlers.EmptyPropertiesHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -105,7 +106,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         CMB_Handlers.addItem(new EmptyPropertiesHandler());
         CMB_Handlers.addItem(new JavaPropertiesHandler());
-
+        CMB_Handlers.addItem(new AndroidValuesHandler());
+        
         TB_Table.setModel(model);
         TB_Table.getTableHeader().setFont(new Font("Arial", 0, 11));
         TB_Table.addMouseListener(this);
@@ -122,14 +124,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         BT_Add.addActionListener(this);
         BT_Remove.addActionListener(this);
-
+        
         BT_NewComment.addActionListener(this);
         BT_NewEmpty.addActionListener(this);
         BT_NewProperty.addActionListener(this);
         BT_Delete.addActionListener(this);
         BT_Merge.addActionListener(this);
         BT_Copy.addActionListener(this);
-
+        BT_Sort.addActionListener(this);
+        
         BT_Save.addActionListener(this);
         BT_SaveProcess.addActionListener(this);
 
@@ -484,7 +487,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 }
             }
 
-        } else if (e.getActionCommand().equals("copy")) {
+        } else if (e.getActionCommand().equals("clone")) {
             int index = TB_Table.getSelectedRow();
             if (index >= 0) {
                 Record rec = model.getRecord(index);
@@ -560,6 +563,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
             modified = false;
 
+        } else if (e.getActionCommand().equals("sort")) {
+            PN_Keys.removeAll();
+            model.sort();
+            fillRowHeader();
+            PN_Keys.revalidate();
+            
         }
     }
 
@@ -735,6 +744,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_NewEmpty = new javax.swing.JButton();
         BT_Copy = new javax.swing.JButton();
         BT_Merge = new javax.swing.JButton();
+        BT_Sort = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         BT_Delete = new javax.swing.JButton();
 
@@ -973,7 +983,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             .addGroup(PN_ColumnsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
+                    .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(PN_ColumnsLayout.createSequentialGroup()
                         .addComponent(BT_Add)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1063,8 +1073,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jToolBar1.add(BT_NewEmpty);
 
         BT_Copy.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        BT_Copy.setText("Copy");
-        BT_Copy.setActionCommand("copy");
+        BT_Copy.setText("Clone");
+        BT_Copy.setActionCommand("clone");
         BT_Copy.setBorderPainted(false);
         BT_Copy.setFocusable(false);
         BT_Copy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1077,6 +1087,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Merge.setBorderPainted(false);
         BT_Merge.setFocusable(false);
         jToolBar1.add(BT_Merge);
+
+        BT_Sort.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        BT_Sort.setText("Sort keys");
+        BT_Sort.setActionCommand("sort");
+        BT_Sort.setBorderPainted(false);
+        BT_Sort.setFocusable(false);
+        BT_Sort.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BT_Sort.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(BT_Sort);
         jToolBar1.add(jSeparator2);
 
         BT_Delete.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
@@ -1131,6 +1150,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JButton BT_Remove;
     private javax.swing.JButton BT_Save;
     private javax.swing.JButton BT_SaveProcess;
+    private javax.swing.JButton BT_Sort;
     private javax.swing.JComboBox<PropertiesHandler> CMB_Handlers;
     private javax.swing.JLabel LB_ColumnDescription;
     private javax.swing.JLabel LB_ColumnName;
@@ -1364,4 +1384,5 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         fillRowHeader();
     }
+    
 }

@@ -19,7 +19,7 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
     static public final String COLOR_DISABLED = "#ff00ff";  // "#888888"
     static public final String COLOR_COMMENT = "#0000ff";
     static public final String COLOR_ERROR = "#ff0000";
-    
+    static public final String COLOR_FINAL = "#ff00ff";
     /**
      * Creates new form JRecordCellRenderer
      */
@@ -89,6 +89,7 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
             } else {
                 PropertyRecord.Value v = pr.getValueAt(column - 1);
                 txt = v.getValue().replaceAll("\n", "<br>");
+                LB_Content.setOpaque(v.fi);
                 if (v.disabled) {
                     txt = pr.defaultValue.replaceAll("\n", "<br>");
                     txt = "<html><i><font color=\"" + COLOR_DISABLED + "\">" + txt + "</font></i></html>";

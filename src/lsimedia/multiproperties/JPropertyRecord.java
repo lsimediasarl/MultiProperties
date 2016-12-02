@@ -18,28 +18,36 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
 
     PropertyRecord pr = null;
     javax.swing.Timer timer = null;
-
+    boolean lockdown = false;
+    
     /**
      * The selected one when dialig was opened so the user can directly see
      * the correct column
      */
     JColumnValue selected = null;
     
-    public JPropertyRecord(PropertyRecord pr, MultiPropertiesTableModel model, int selectedColumn) {
+    public JPropertyRecord(PropertyRecord pr, MultiPropertiesTableModel model, int selectedColumn, boolean lockdown) {
         this.pr = pr;
-
+        this.lockdown = lockdown;
+        
         initComponents();
 
+        TF_Name.setEditable(!lockdown);
         TF_Name.setText(pr.name);
+        
         TA_Default.setText(pr.defaultValue);
+        TA_Default.setEditable(!lockdown);
+        
         CB_Disabled.setSelected(pr.disabled);
+        CB_Disabled.setEnabled(!lockdown);
+        
         TA_Description.setText(pr.description);
 
         for (int i = 0;i < pr.values.size();i++) {
             PropertyRecord.Value v = pr.values.get(i);
 
             //--- Add 1 to the column index, because the column 0 is the Key
-            JColumnValue jc = new JColumnValue(model.getColumnName(i+1), v.disabled, v.value, pr.defaultValue);
+            JColumnValue jc = new JColumnValue(model.getColumnName(i+1), v.disabled, v.fi, v.value, pr.defaultValue, lockdown);
             PN_Columns.add(jc);
 
             if (selectedColumn == (i+1)) selected = jc;
@@ -69,6 +77,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
             PropertyRecord.Value v = pr.values.get(i);
             v.disabled = jc.isDisabled();
             v.value = jc.getValue();
+            v.fi = jc.isFinal();
             if (v.value.contains("\n")) pr.multiLine = true;
 
         }

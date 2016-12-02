@@ -21,11 +21,12 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
     /**
      * Creates new form JCommentRecord
      */
-    public JCommentRecord(CommentRecord cr) {
+    public JCommentRecord(CommentRecord cr, boolean lockdown) {
         this.cr = cr;
         
         initComponents();
         
+        TF_Value.setEditable(!lockdown);
         TF_Value.setText(cr.value);
     }
 

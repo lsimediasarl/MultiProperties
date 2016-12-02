@@ -91,10 +91,37 @@ public class MultiPropertiesTableModel implements TableModel {
         return columns.get(index);
     }
     
+    /**
+     * Return the column index for the passed columns name
+     * @param title
+     * @return 
+     */
+    public int getColumnIndex(String name) {
+        for (int i=0;i<columns.getSize();i++) {
+            Column c = columns.get(i);
+            if (c.getName().equals(name)) return i;
+        }
+        return -1;
+    }
+    
     public Record getRecord(int index) {
         return records.get(index);
     }
 
+    /**
+     * Index 0 is always the "Key" column
+     * 
+     * @return 
+     */
+    public String[] getColumnNames() {
+        String names[] = new String[columns.size()];
+        for (int i=0;i<columns.getSize();i++) {
+            Column c = columns.get(i);
+            names[i] = c.getName();
+        }
+        return names;
+    }
+    
     /**
      * Return the first occurence of the key
      * @param key

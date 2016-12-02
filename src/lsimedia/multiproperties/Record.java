@@ -31,7 +31,7 @@ public abstract class Record implements Comparable {
      * Return the panel to changed the record
      * @return 
      */
-    public abstract RecordGUI getGUI(MultiPropertiesTableModel model, int selectedColumn);
+    public abstract RecordGUI getGUI(MultiPropertiesTableModel model, int selectedColumn, boolean lockdown);
     
     /**
      * Dump the record

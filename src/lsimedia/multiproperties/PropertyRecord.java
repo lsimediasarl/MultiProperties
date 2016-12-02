@@ -45,7 +45,7 @@ public class PropertyRecord extends Record {
 
                 } else if (n.getNodeName().equals("Disabled")) {
                     disabled = n.getFirstChild().getNodeValue().equals("true");
-
+    
                 } else if (n.getNodeName().equals("Description")) {
                     description = n.getFirstChild().getNodeValue();
 
@@ -58,8 +58,9 @@ public class PropertyRecord extends Record {
                 } else if (n.getNodeName().equals("Value")) {
                     Element e = (Element) n;
                     boolean disabled = e.getAttribute("disabled").equals("true");
+                    boolean fi = e.getAttribute("final").equals("true");
                     String v = (e.getFirstChild() != null ? e.getFirstChild().getNodeValue() : "");
-                    values.add(new Value(disabled, v));
+                    values.add(new Value(disabled, fi, v));
                 }
 
             } catch (Exception ex) {
@@ -133,12 +134,28 @@ public class PropertyRecord extends Record {
         this.multiLine = multiLine;
     }
     
+    /**
+     * Set all non translated value to the final state (or not)<p>
+     * 
+     * @param fi 
+     */
+    public void setFinal(boolean fi) {
+       for (int i=0;i<values.size();i++) {
+           PropertyRecord.Value v = values.get(i);
+           if (fi) {
+               if (!v.isDisabled()) v.setFinal(true);
+               
+           } else {
+               v.setFinal(false);
+           }
+       } 
+    }
     //**************************************************************************
     //*** Record
     //***************************************************************************
     @Override
-    public RecordGUI getGUI(MultiPropertiesTableModel model,int selectedColumn) {
-        return new JPropertyRecord(this, model, selectedColumn);
+    public RecordGUI getGUI(MultiPropertiesTableModel model,int selectedColumn, boolean lockdown) {
+        return new JPropertyRecord(this, model, selectedColumn, lockdown);
     }
 
     @Override
@@ -175,6 +192,7 @@ public class PropertyRecord extends Record {
             w = records.getOwnerDocument().createElement("Value");
             w.appendChild(records.getOwnerDocument().createTextNode(v.value));
             w.setAttribute("disabled", "" + v.disabled);
+            w.setAttribute("final", "" + v.fi);
             e.appendChild(w);
         }
 
@@ -192,7 +210,7 @@ public class PropertyRecord extends Record {
 
     @Override
     public void addColumn() {
-        values.add(new Value(true, ""));
+        values.add(new Value(true, false, ""));
         
     }
 
@@ -227,9 +245,11 @@ public class PropertyRecord extends Record {
 
         String value = "";
         boolean disabled = true;    //--- Use default value
-
-        public Value(boolean disabled, String value) {
+        boolean fi = false;         //--- Final state
+        
+        public Value(boolean disabled, boolean fi, String value) {
             this.disabled = disabled;
+            this.fi = fi;
             this.value = value;
         }
 
@@ -254,8 +274,15 @@ public class PropertyRecord extends Record {
 
         }
 
+        public void setFinal(boolean fi) {
+            this.fi = fi;
+        }
+        public boolean isFinal() {
+            return fi;
+        }
+        
         public Value copy() {
-            return new Value(disabled, value);
+            return new Value(disabled, fi, value);
         }
     }
 }

@@ -12,6 +12,7 @@
     </target>
     
     <target name="create-standalone" depends="init" description="Create stand alone executable">
+        <echo message="Creating stand alone jar"/>
         <jar destfile="${build.dir}/MultiProperties.jar" manifest="Manifests/MultiProperties.mf">
             <fileset dir="${build.dir}/classes" includes="lsimedia/multiproperties/**"/>    
         </jar>

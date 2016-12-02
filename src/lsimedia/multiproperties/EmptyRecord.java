@@ -30,7 +30,7 @@ public class EmptyRecord extends Record {
     //*** Record
     //**************************************************************************
     @Override
-    public RecordGUI getGUI(MultiPropertiesTableModel model, int selectedColumn) {
+    public RecordGUI getGUI(MultiPropertiesTableModel model, int selectedColumn, boolean lockdown) {
         return null;
     }
 

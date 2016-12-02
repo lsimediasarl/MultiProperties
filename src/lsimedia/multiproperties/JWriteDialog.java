@@ -8,14 +8,13 @@ package lsimedia.multiproperties;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 /**
  *
  * @author sbodmer
  */
 public class JWriteDialog extends javax.swing.JDialog implements ActionListener {
-
+    boolean lockdown = false;
     Record record = null;
 
     RecordGUI rgui = null;
@@ -24,12 +23,15 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
 
     /**
      * Creates new form JWriteDialog
+     * 
+     * If in lockdown mode, restrict some actions
      */
-    public JWriteDialog(java.awt.Frame parent, boolean modal, Record record, MultiPropertiesTableModel model, int selectedColumn) {
+    public JWriteDialog(java.awt.Frame parent, boolean modal, Record record, MultiPropertiesTableModel model, int selectedColumn, boolean lockdown) {
         super(parent, modal);
         this.record = record;
         this.model = model;
-        rgui = record.getGUI(model, selectedColumn);
+        this.lockdown = lockdown;
+        rgui = record.getGUI(model, selectedColumn, lockdown);
 
         initComponents();
 

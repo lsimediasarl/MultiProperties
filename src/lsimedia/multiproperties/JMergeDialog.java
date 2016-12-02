@@ -27,7 +27,7 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
         super(parent, modal);
         this.current = current;
         this.source = source;
-        
+
         prepare();
     }
 
@@ -35,7 +35,7 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
         super(parent, modal);
         this.current = current;
         this.source = source;
-        
+
         prepare();
     }
 
@@ -69,81 +69,146 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ok")) {
-            //--- Start merging
-            for (int i = 0;i < TB_Columns.getRowCount();i++) {
-                boolean selected = (boolean) TB_Columns.getValueAt(i, 0);
-                if (!selected) continue;
+            if (CB_Add.isSelected()) {
+                //--------------------------------------------------------------
+                //--- Add keys (do not overwrite)
+                //--------------------------------------------------------------
+                for (int i = 0;i < TB_Columns.getRowCount();i++) {
+                    boolean selected = (boolean) TB_Columns.getValueAt(i, 0);
+                    if (!selected) continue;
 
-                //--- Find the column to merge into
-                int columnIndex = -1;
-                String into = TB_Columns.getValueAt(i, 2).toString();
-                for (int j = 1;j < current.getColumnCount();j++) {
-                    if (current.getColumnName(j).equals(into)) {
-                        columnIndex = j;
-                        break;
+                    //--- Find the column to merge into if exists
+                    int columnIndex = -1;
+                    String into = TB_Columns.getValueAt(i, 2).toString();
+                    for (int j = 1;j < current.getColumnCount();j++) {
+                        if (current.getColumnName(j).equals(into)) {
+                            columnIndex = j;
+                            break;
+                        }
+
                     }
+                    //--- If column not found, create a new one
+                    if (columnIndex == -1) {
+                        //--- To be merged column (add 1,because the index 0 is the key column)
+                        Column mc = source.getColumn(i + 1);
 
+                        //--- Create new column in current model and fill it
+                        Column c = new Column(into);
+                        c.description = mc.description;
+                        c.width = mc.width;
+                        c.handlerConfiguration = mc.handlerConfiguration;
+
+                        //--- Add a new value to each row of the current model and add the column
+                        for (int j = 0;j < current.getRowCount();j++) current.getRecord(j).addColumn();
+                        current.addColumn(c);
+
+                    }
                 }
 
-                //--- If column not found, create a new one
-                if (columnIndex == -1) {
-                    //--- To be merged column (add 1,because the index 0 is the key column)
-                    Column mc = source.getColumn(i + 1);
-
-                    //--- Create new column in current model and fill it
-                    Column c = new Column(into);
-                    c.description = mc.description;
-                    c.width = mc.width;
-                    c.handlerConfiguration = mc.handlerConfiguration;
-
-                    //--- Add a new value to each row of the current model and add the column
-                    for (int j = 0;j < current.getRowCount();j++) current.getRecord(j).addColumn();
-                    current.addColumn(c);
-
-                    columnIndex = current.getColumnCount() - 1;
-                }
-
-                //--- Merge it, only handle property record, the value index to
-                //--- merge into is defined in columIndex
+                //--- For each source key, add it o current file
                 for (int j = 0;j < source.getRowCount();j++) {
                     Record tmp = source.getRecord(j);
                     if (!(tmp instanceof PropertyRecord)) continue;
 
                     PropertyRecord toMerge = (PropertyRecord) tmp;
+                    //--- Create new record
+                    PropertyRecord pr = new PropertyRecord(toMerge.getKey());
+                    pr.setDefaultValue(toMerge.getDefaultValue());
+                    pr.setDisabled(toMerge.isDisabled());
+                    pr.setMultiLine(toMerge.isMultiLine());
+                    
+                    //--- Fill all values
+                    for (int k = 0;k < current.getColumnCount() - 1;k++) {
+                        pr.addColumn();
+                        String name = current.getColumnName(k+1);
+                        int sIndex = source.getColumnIndex(name);
+                        if (sIndex == -1) continue;
+                        
+                        pr.setValueAt(k, toMerge.getValueAt(sIndex-1));
+                        
+                    }
+                    current.addRecord(pr);
+                    
+                }
+                
+            } else {
+                //--- Start merging
+                //--- For each selected column
+                for (int i = 0;i < TB_Columns.getRowCount();i++) {
+                    boolean selected = (boolean) TB_Columns.getValueAt(i, 0);
+                    if (!selected) continue;
 
-                    //--- Search key in current model
-                    Record rec = current.getRecord(toMerge.getKey());
-                    if (rec == null) {
-                        //--- Create new record
-                        PropertyRecord pr = new PropertyRecord(toMerge.getKey());
-                        pr.setDefaultValue(toMerge.getDefaultValue());
-                        pr.setDisabled(toMerge.isDisabled());
-                        pr.setMultiLine(toMerge.isMultiLine());
-                        //--- Fill all values
-                        for (int k = 0;k < current.getColumnCount() - 1;k++) {
-                            pr.addColumn();
-                            pr.setValueAt(k, toMerge.getValueAt(i));
+                    //--- Find the column to merge into
+                    int columnIndex = -1;
+                    String into = TB_Columns.getValueAt(i, 2).toString();
+                    for (int j = 1;j < current.getColumnCount();j++) {
+                        if (current.getColumnName(j).equals(into)) {
+                            columnIndex = j;
+                            break;
                         }
-                        current.addRecord(pr);
 
-                    } else if (rec instanceof PropertyRecord) {
-                        PropertyRecord pr = (PropertyRecord) rec;
+                    }
 
-                        //--- Replace the value at columnIndex
-                        pr.setDefaultValue(toMerge.getDefaultValue());
-                        pr.setDisabled(toMerge.isDisabled());
-                        pr.setMultiLine(toMerge.isMultiLine());
-                        pr.setValueAt(columnIndex - 1, toMerge.getValueAt(i));
+                    //--- If column not found, create a new one
+                    if (columnIndex == -1) {
+                        //--- To be merged column (add 1,because the index 0 is the key column)
+                        Column mc = source.getColumn(i + 1);
 
-                    } else {
-                        //--- Key was found, but not a property column, do nothing
+                        //--- Create new column in current model and fill it
+                        Column c = new Column(into);
+                        c.description = mc.description;
+                        c.width = mc.width;
+                        c.handlerConfiguration = mc.handlerConfiguration;
+
+                        //--- Add a new value to each row of the current model and add the column
+                        for (int j = 0;j < current.getRowCount();j++) current.getRecord(j).addColumn();
+                        current.addColumn(c);
+
+                        columnIndex = current.getColumnCount() - 1;
+                    }
+
+                    //--- Merge it, only handle property record, the value index to
+                    //--- merge into is defined in columIndex
+                    for (int j = 0;j < source.getRowCount();j++) {
+                        Record tmp = source.getRecord(j);
+                        if (!(tmp instanceof PropertyRecord)) continue;
+
+                        PropertyRecord toMerge = (PropertyRecord) tmp;
+
+                        //--- Search key in current model
+                        Record rec = current.getRecord(toMerge.getKey());
+                        //--- If not overwrite is selected, add the new value in any case
+                        if (rec == null) {
+                            //--- Create new record
+                            PropertyRecord pr = new PropertyRecord(toMerge.getKey());
+                            pr.setDefaultValue(toMerge.getDefaultValue());
+                            pr.setDisabled(toMerge.isDisabled());
+                            pr.setMultiLine(toMerge.isMultiLine());
+                            //--- Fill all values
+                            for (int k = 0;k < current.getColumnCount() - 1;k++) {
+                                pr.addColumn();
+                                pr.setValueAt(k, toMerge.getValueAt(i));
+                            }
+                            current.addRecord(pr);
+
+                        } else if (rec instanceof PropertyRecord) {
+                            PropertyRecord pr = (PropertyRecord) rec;
+
+                            //--- Replace the value at columnIndex
+                            pr.setDefaultValue(toMerge.getDefaultValue());
+                            pr.setDisabled(toMerge.isDisabled());
+                            pr.setMultiLine(toMerge.isMultiLine());
+                            pr.setValueAt(columnIndex - 1, toMerge.getValueAt(i));
+
+                        } else {
+                            //--- Key was found, but not a property column, do nothing
+
+                        }
 
                     }
 
                 }
-
             }
-
             setVisible(false);
             dispose();
 
@@ -170,6 +235,7 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
         jScrollPane1 = new javax.swing.JScrollPane();
         TB_Columns = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        CB_Add = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -221,8 +287,12 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
         jScrollPane1.setViewportView(TB_Columns);
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        jLabel1.setText("<html>New columns will be added at the end (new columns are in <b>bold</b>).<br><br>\n The current same keys values and default value will be overwritten by the merged ones.<br><br>\n New values will be added to the current file.<br><br>\nOnly values and disabled state will be merged (not description, handler, etc.).<br><br>\n It's possible to choose which column to merge into by changing the \"Merge into\" columns values.<br> </html>");
+        jLabel1.setText("<html>New columns will be added at the end (new columns are in <b>bold</b>).<br><br>\n The current same keys values and default value will be overwritten by the merged ones or added<br><br>\n New values will be added to the current file.<br><br>\nOnly values and disabled state will be merged (not description, handler, etc.).<br><br>\n It's possible to choose which column to merge into by changing the \"Merge into\" columns values.<br> </html>");
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        CB_Add.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        CB_Add.setSelected(true);
+        CB_Add.setText("Do not overwrite but add the key");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -230,9 +300,11 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                    .addComponent(CB_Add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -240,8 +312,11 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(CB_Add)))
                 .addContainerGap())
         );
 
@@ -267,6 +342,7 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BT_Cancel;
     private javax.swing.JButton BT_Ok;
+    private javax.swing.JCheckBox CB_Add;
     private javax.swing.JTable TB_Columns;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

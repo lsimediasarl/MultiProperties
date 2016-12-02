@@ -40,15 +40,42 @@
             <Property name="actionCommand" type="java.lang.String" value="newEmpty"/>
           </Properties>
         </MenuItem>
-        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
-        </Component>
-        <MenuItem class="javax.swing.JMenuItem" name="MN_Copy">
+        <MenuItem class="javax.swing.JMenuItem" name="MN_Clone">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Copy"/>
-            <Property name="actionCommand" type="java.lang.String" value="copy"/>
+            <Property name="text" type="java.lang.String" value="Clone"/>
+            <Property name="actionCommand" type="java.lang.String" value="clone"/>
+          </Properties>
+        </MenuItem>
+        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
+        </Component>
+        <MenuItem class="javax.swing.JMenuItem" name="MN_SetFinalAll">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="11" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Set Final to all columns"/>
+            <Property name="actionCommand" type="java.lang.String" value="setFinalAll"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="MN_SetFinalTranslatedOnly">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="11" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Set Final to translated columns only"/>
+            <Property name="actionCommand" type="java.lang.String" value="setFinalTranslatedOnly"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="MN_UnFinal">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="11" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Remove Final"/>
+            <Property name="actionCommand" type="java.lang.String" value="unfinal"/>
           </Properties>
         </MenuItem>
         <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
@@ -66,6 +93,35 @@
           </Properties>
         </MenuItem>
         <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator5">
+        </Component>
+        <MenuItem class="javax.swing.JMenuItem" name="MN_Copy">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="11" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Copy"/>
+            <Property name="actionCommand" type="java.lang.String" value="copy"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="MN_Cut">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="11" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Cut"/>
+            <Property name="actionCommand" type="java.lang.String" value="cut"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="MN_Paste">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="11" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Paste"/>
+            <Property name="actionCommand" type="java.lang.String" value="paste"/>
+          </Properties>
+        </MenuItem>
+        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator6">
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="MN_MoveUp">
           <Properties>
@@ -155,10 +211,17 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jLabel1" min="-2" pref="100" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="TF_Name" min="-2" pref="252" max="-2" attributes="0"/>
+                              <EmptySpace pref="539" max="32767" attributes="0"/>
+                          </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel2" min="-2" pref="100" max="-2" attributes="0"/>
-                                  <Component id="jLabel4" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="LB_Version" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel2" alignment="0" pref="100" max="32767" attributes="0"/>
+                                  <Component id="jLabel4" alignment="0" pref="100" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -171,17 +234,6 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel1" min="-2" pref="100" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="TF_Name" min="-2" pref="252" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="LB_Version" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace pref="537" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -205,8 +257,8 @@
                           <Component id="CMB_Handlers" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="367" max="32767" attributes="0"/>
-                      <Component id="LB_Version" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="332" max="32767" attributes="0"/>
+                      <Component id="LB_Version" min="-2" pref="21" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -584,18 +636,16 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JToolBar" name="jToolBar1">
-              <Properties>
-                <Property name="floatable" type="boolean" value="false"/>
-                <Property name="rollover" type="boolean" value="true"/>
-              </Properties>
+            <Container class="javax.swing.JPanel" name="PN_Actions">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
-                  <BorderConstraints direction="First"/>
+                  <BorderConstraints direction="North"/>
                 </Constraint>
               </Constraints>
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout">
+                <Property name="alignment" type="int" value="0"/>
+              </Layout>
               <SubComponents>
                 <Component class="javax.swing.JButton" name="BT_Save">
                   <Properties>
@@ -607,10 +657,12 @@
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Save"/>
                     <Property name="actionCommand" type="java.lang.String" value="save"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                     <Property name="horizontalTextPosition" type="int" value="4"/>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[28, 28]"/>
+                    </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="BT_SaveProcess">
@@ -623,10 +675,12 @@
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Save and process"/>
                     <Property name="actionCommand" type="java.lang.String" value="saveProcess"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                     <Property name="horizontalTextPosition" type="int" value="4"/>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[28, 28]"/>
+                    </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
@@ -641,7 +695,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="New property"/>
                     <Property name="actionCommand" type="java.lang.String" value="newProperty"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                   </Properties>
                 </Component>
@@ -655,7 +708,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="New comment"/>
                     <Property name="actionCommand" type="java.lang.String" value="newComment"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                   </Properties>
                 </Component>
@@ -669,21 +721,7 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="New empty line"/>
                     <Property name="actionCommand" type="java.lang.String" value="newEmpty"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="BT_Copy">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Arial" size="11" style="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Clone"/>
-                    <Property name="actionCommand" type="java.lang.String" value="clone"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
-                    <Property name="focusable" type="boolean" value="false"/>
-                    <Property name="horizontalTextPosition" type="int" value="0"/>
-                    <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="BT_Merge">
@@ -691,9 +729,11 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="11" style="0"/>
                     </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/merge.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Merge"/>
                     <Property name="actionCommand" type="java.lang.String" value="merge"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                   </Properties>
                 </Component>
@@ -702,12 +742,12 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="11" style="0"/>
                     </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/sort.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Sort keys"/>
                     <Property name="actionCommand" type="java.lang.String" value="sort"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
-                    <Property name="horizontalTextPosition" type="int" value="0"/>
-                    <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JToolBar$Separator" name="jSeparator2">
@@ -722,7 +762,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Delete"/>
                     <Property name="actionCommand" type="java.lang.String" value="delete"/>
-                    <Property name="borderPainted" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                   </Properties>
                 </Component>

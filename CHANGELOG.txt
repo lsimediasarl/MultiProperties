@@ -1,3 +1,6 @@
+0.9.6.0 [2016-12-05]
+ Added the column menu in table context (set all column to final/unfinal)
+
 0.9.5.0 [2016-11-30]
  Implemented "final" flag in property records
  Implemented copy/cut/paste actions

@@ -56,7 +56,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Set Final to all columns"/>
+            <Property name="text" type="java.lang.String" value="Set Final to selected rows"/>
             <Property name="actionCommand" type="java.lang.String" value="setFinalAll"/>
           </Properties>
         </MenuItem>
@@ -65,7 +65,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Set Final to translated columns only"/>
+            <Property name="text" type="java.lang.String" value="Set Final to selected translated fields only"/>
             <Property name="actionCommand" type="java.lang.String" value="setFinalTranslatedOnly"/>
           </Properties>
         </MenuItem>
@@ -74,10 +74,19 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Remove Final"/>
+            <Property name="text" type="java.lang.String" value="Remove Final to selected rows"/>
             <Property name="actionCommand" type="java.lang.String" value="unfinal"/>
           </Properties>
         </MenuItem>
+        <Menu class="javax.swing.JMenu" name="MN_Columns">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Columns"/>
+            <Property name="actionCommand" type="java.lang.String" value="columns"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="11" style="0"/>
+            </Property>
+          </Properties>
+        </Menu>
         <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="MN_Delete">

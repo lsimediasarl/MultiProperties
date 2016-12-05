@@ -38,6 +38,7 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
         cr.value = TF_Value.getText();
     }
 
+    @Override
     public void cancel() {
         //---
     }

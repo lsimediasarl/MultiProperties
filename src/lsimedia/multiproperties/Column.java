@@ -5,6 +5,9 @@
  */
 package lsimedia.multiproperties;
 
+import java.awt.Font;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,8 +23,15 @@ public class Column {
     int width = 100;
     String handlerConfiguration = "";
     
+    /**
+     * The menu item to use for column selection
+     */
+    JMenu menu = null;
+    
     public Column(String name) {
         this.name = name;
+        
+        prepare();
     }
     
     public Column(Element e) {
@@ -48,12 +58,36 @@ public class Column {
             }
         }
 
+        prepare();
     }
 
+    @Override
     public String toString() {
         return name;
     }
     
+    private void prepare() {
+        menu = new JMenu(name);
+        menu.setFont(new Font("Arial", Font.PLAIN, 11));
+        JMenuItem item = new JMenuItem("Set final");
+        item.setFont(new Font("Arial", Font.PLAIN, 11));
+        item.setActionCommand("columnSetFinal");
+        item.putClientProperty("column", this);
+        menu.add(item);
+        
+        item = new JMenuItem("Set to unfinal");
+        item.setFont(new Font("Arial", Font.PLAIN, 11));
+        item.setActionCommand("columnSetUnFinal");
+        item.putClientProperty("column", this);
+        menu.add(item);
+        
+        item = new JMenuItem("Set to default value");
+        item.setFont(new Font("Arial", Font.PLAIN, 11));
+        item.setActionCommand("columnSetToDefault");
+        item.putClientProperty("column", this);
+        menu.add(item);
+        
+    }
     //**************************************************************************
     //*** API
     //**************************************************************************
@@ -62,8 +96,13 @@ public class Column {
 
     }
 
+    public JMenu getMenu() {
+        return menu;
+    }
+    
     public void setName(String name) {
         this.name = name;
+        menu.setText(name);
     }
     
     public String getDescription() {

@@ -5,8 +5,6 @@
  */
 package lsimedia.multiproperties;
 
-import lsimedia.multiproperties.Record;
-import lsimedia.multiproperties.RecordGUI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

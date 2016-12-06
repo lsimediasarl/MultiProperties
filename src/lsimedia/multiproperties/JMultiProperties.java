@@ -600,14 +600,17 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 int index = TB_Table.getSelectedRow();
                 CommentRecord cr = new CommentRecord(comment);
                 for (int i = 0;i < columns.size();i++) cr.addColumn();
-                if (index == model.getRowCount() - 1) {
+                if ((index == -1) || (index == model.getRowCount() - 1)) {
                     model.addRecord(cr);
-
+                    index = model.getRowCount()-1;
+                    
                 } else {
-                    model.insertRecord(index + 1, cr);
+                    model.insertRecord(index, cr);
                 }
-                TB_Table.getSelectionModel().setSelectionInterval(index + 1, index + 1);
+                //--- Order is important, first fire event then select it
                 fireModifiedEvent();
+                TB_Table.getSelectionModel().setSelectionInterval(index, index);
+                
             }
 
         } else if (e.getActionCommand().equals("newProperty")) {
@@ -616,16 +619,16 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 int index = TB_Table.getSelectedRow();
                 PropertyRecord rec = new PropertyRecord(name);
                 for (int i = 0;i < columns.size();i++) rec.addColumn();
-
-                if (index == model.getRowCount() - 1) {
+                if ((index == -1) || (index == model.getRowCount() - 1)) {
                     model.addRecord(rec);
-
+                    index = model.getRowCount()-1;
+                    
                 } else {
-                    model.insertRecord(index + 1, rec);
+                    model.insertRecord(index, rec);
                 }
-                TB_Table.getSelectionModel().setSelectionInterval(index + 1, index + 1);
-
+                //--- Order is important, first fire event then select it
                 fireModifiedEvent();
+                TB_Table.getSelectionModel().setSelectionInterval(index, index);
 
                 //--- Open it
                 int sc = TB_Table.getSelectedColumn();
@@ -647,18 +650,18 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             int index = TB_Table.getSelectedRow();
             EmptyRecord rec = new EmptyRecord();
             for (int i = 0;i < columns.size();i++) rec.addColumn();
-
-            if (index == model.getRowCount() - 1) {
+            if ((index == -1) || (index == model.getRowCount() - 1)) {
                 model.addRecord(rec);
-
+                index = model.getRowCount()-1;
+                
             } else {
-                model.insertRecord(index + 1, rec);
+                model.insertRecord(index, rec);
             }
-            TB_Table.getSelectionModel().setSelectionInterval(index + 1, index + 1);
             fireModifiedEvent();
+            TB_Table.getSelectionModel().setSelectionInterval(index, index);
+            
 
         } else if (e.getActionCommand().equals("delete")) {
-
             int indices[] = TB_Table.getSelectedRows();
             if (indices.length > 0) {
                 int rep = JOptionPane.showConfirmDialog(this, "Do you really want to delete the entry ?", "Delete", JOptionPane.YES_NO_OPTION);
@@ -1694,10 +1697,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         BT_Save.setEnabled(true);
         BT_SaveProcess.setEnabled(true);
 
+        //--- Fill row header first
+        fillRowHeader();
+        
         modified = true;
         if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
 
-        fillRowHeader();
+        
     }
 
     private class CopyAction extends AbstractAction {

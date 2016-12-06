@@ -161,7 +161,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
         jLabel2.setText("Default value");
 
         TA_Default.setColumns(20);
-        TA_Default.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        TA_Default.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TA_Default.setRows(5);
         jScrollPane3.setViewportView(TA_Default);
 
@@ -199,7 +199,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                     .addComponent(jLabel2)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(SP_Columns, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                .addComponent(SP_Columns, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

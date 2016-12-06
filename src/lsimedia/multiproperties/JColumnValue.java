@@ -7,6 +7,8 @@ package lsimedia.multiproperties;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  *
@@ -37,6 +39,7 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         
         TA_Value.setText(disabled?def:value);
         TA_Value.setEnabled(!disabled);
+        
     }
 
     //**************************************************************************
@@ -78,6 +81,7 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
             
         }
     }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -151,6 +155,8 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
     private javax.swing.JTextArea TA_Value;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    
 
     
 }

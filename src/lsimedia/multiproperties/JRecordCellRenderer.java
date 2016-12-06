@@ -53,17 +53,18 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         LB_Content.setOpaque(column == 0);
+        String txt = "";
         if (value instanceof String) {
-            LB_Content.setText(value.toString().replaceAll("\n", "\\\\n"));
+            txt = value.toString().replaceAll("\n", "\\\\n");
+            LB_Content.setText(txt);
 
         } else if (value instanceof CommentRecord) {
             CommentRecord cr = (CommentRecord) value;
-            String txt = "<html><font color=\"" + COLOR_COMMENT + "\"><b>" + cr.value + "</b></font></html>";
+            txt = "<html><font color=\"" + COLOR_COMMENT + "\"><b>" + cr.value + "</b></font></html>";
             LB_Content.setText(txt);
 
         } else if (value instanceof PropertyRecord) {
             PropertyRecord pr = (PropertyRecord) value;
-            String txt = "";
             if (column == 0) {
                 boolean same = false;
                 //--- Check if multiple same keys
@@ -106,6 +107,7 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
             LB_Content.setText("");
 
         }
+        setToolTipText(txt);
         if (isSelected) {
             LB_Content.setOpaque(false);
             setBackground(table.getSelectionBackground());

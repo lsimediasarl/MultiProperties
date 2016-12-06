@@ -83,7 +83,7 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
                 .addContainerGap(244, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab1", jPanel1);
+        jTabbedPane1.addTab("Texte", jPanel1);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents

@@ -1820,8 +1820,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 index++;
             }
             //--- Clear the clipboard
-            CLIPBOARD.setContents(null, owner);
-
+            CLIPBOARD.setContents(null, null);
+            
             fireModifiedEvent();
 
         }

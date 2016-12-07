@@ -18,8 +18,8 @@ public class PropertyRecord extends Record {
 
     String name = "";
     String description = "";
-    boolean disabled = false;    //--- Write has comment
-    boolean multiLine = false;
+    boolean disabled = false;   //--- Write has comment
+    boolean multiLine = true;   //--- Always multiline      
     String defaultValue = "";
 
     /**
@@ -50,7 +50,8 @@ public class PropertyRecord extends Record {
                     description = n.getFirstChild().getNodeValue();
 
                 } else if (n.getNodeName().equals("MultiLine")) {
-                    multiLine = n.getFirstChild().getNodeValue().equals("true");
+                    //--- Do not handle here, always multiline
+                    // multiLine = n.getFirstChild().getNodeValue().equals("true");
 
                 } else if (n.getNodeName().equals("DefaultValue")) {
                     defaultValue = n.getFirstChild().getNodeValue();
@@ -124,14 +125,6 @@ public class PropertyRecord extends Record {
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
         
-    }
-    
-    public boolean isMultiLine() {
-        return multiLine;
-    }
-
-    public void setMultiLine(boolean multiLine) {
-        this.multiLine = multiLine;
     }
     
     /**
@@ -224,7 +217,6 @@ public class PropertyRecord extends Record {
         
         c.setDefaultValue(defaultValue);
         c.setDisabled(disabled);
-        c.setMultiLine(multiLine);
         for (int i=0;i<values.size();i++) {
             Value v = values.get(i);
             c.addColumn();

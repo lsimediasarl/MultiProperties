@@ -115,7 +115,6 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
                     PropertyRecord pr = new PropertyRecord(toMerge.getKey());
                     pr.setDefaultValue(toMerge.getDefaultValue());
                     pr.setDisabled(toMerge.isDisabled());
-                    pr.setMultiLine(toMerge.isMultiLine());
                     
                     //--- Fill all values
                     for (int k = 0;k < current.getColumnCount() - 1;k++) {
@@ -183,7 +182,6 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
                             PropertyRecord pr = new PropertyRecord(toMerge.getKey());
                             pr.setDefaultValue(toMerge.getDefaultValue());
                             pr.setDisabled(toMerge.isDisabled());
-                            pr.setMultiLine(toMerge.isMultiLine());
                             //--- Fill all values
                             for (int k = 0;k < current.getColumnCount() - 1;k++) {
                                 pr.addColumn();
@@ -197,7 +195,6 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
                             //--- Replace the value at columnIndex
                             pr.setDefaultValue(toMerge.getDefaultValue());
                             pr.setDisabled(toMerge.isDisabled());
-                            pr.setMultiLine(toMerge.isMultiLine());
                             pr.setValueAt(columnIndex - 1, toMerge.getValueAt(i));
 
                         } else {

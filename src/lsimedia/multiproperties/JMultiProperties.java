@@ -1797,8 +1797,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     PropertyRecord pr = new PropertyRecord(tmp.getKey());
                     pr.setDefaultValue(tmp.getDefaultValue());
                     pr.setDisabled(tmp.isDisabled());
-                    pr.setMultiLine(tmp.isMultiLine());
-
+                    
                     //--- Fill all values (start at 1 to avoid "Key" column
                     for (int k = 1;k < model.getColumnCount();k++) {
                         pr.addColumn();

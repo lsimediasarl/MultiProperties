@@ -150,7 +150,7 @@ public class AndroidValuesHandler implements PropertiesHandler {
 
                         PropertyRecord.Value v = pr.getValueAt(i - 1);
                         String val = v.isDisabled() ? pr.getDefaultValue() : v.getValue();
-                        if (pr.isMultiLine()) val = val.replaceAll("\n", "\\\\n");
+                        val = val.replaceAll("\n", "\\\\n");
 
                         if (tokens[3].equals("true") && pr.isDisabled()) {
                             fw.write("<!-- string name=\"" + key + "\">" + escape(val) + "</string -->\n");

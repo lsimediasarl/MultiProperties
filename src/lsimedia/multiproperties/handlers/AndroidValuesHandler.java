@@ -73,7 +73,10 @@ public class AndroidValuesHandler implements PropertiesHandler {
     /**
      * There is some specific stuff to do
      * <PRE>
-     * escape ':'
+     * escape : for the keys
+     * escape " as "\"" for the value
+     * escape '\n' as "\n" for the value
+     * escape ' as "\'" for the value
      * </PRE>
      *
      * @param model
@@ -151,7 +154,9 @@ public class AndroidValuesHandler implements PropertiesHandler {
                         PropertyRecord.Value v = pr.getValueAt(i - 1);
                         String val = v.isDisabled() ? pr.getDefaultValue() : v.getValue();
                         val = val.replaceAll("\n", "\\\\n");
-
+                        val = val.replaceAll("\"","\\\\\"");
+                        val = val.replaceAll("'","\\\'");
+                        
                         if (tokens[3].equals("true") && pr.isDisabled()) {
                             fw.write("<!-- string name=\"" + key + "\">" + escape(val) + "</string -->\n");
 

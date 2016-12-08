@@ -5,7 +5,6 @@
  */
 package lsimedia.multiproperties;
 
-import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -42,6 +41,7 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
 
         LB_Content.setBackground(new java.awt.Color(230, 230, 230));
         LB_Content.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        LB_Content.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         add(LB_Content, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -110,9 +110,11 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
         setToolTipText(txt);
         if (isSelected) {
             LB_Content.setOpaque(false);
+            LB_Content.setForeground(table.getSelectionForeground());
             setBackground(table.getSelectionBackground());
 
         } else {
+            LB_Content.setForeground(table.getForeground());
             setBackground(table.getBackground());
 
         }

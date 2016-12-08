@@ -877,9 +877,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         if (e.getSource() == TB_Table.getSelectionModel()) {
             //if (e.getValueIsAdjusting() == false) return;
             //--- Clear old selection
-            for (int i = 0;i < selectedIndexes.length;i++) ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setBackground(COLOR_KEY);
+            for (int i = 0;i < selectedIndexes.length;i++) {
+                ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setForeground(TB_Table.getForeground());
+                ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setBackground(COLOR_KEY);
+            }
             selectedIndexes = TB_Table.getSelectedRows();
-            for (int i = 0;i < selectedIndexes.length;i++) ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setBackground(TB_Table.getSelectionBackground());
+            for (int i = 0;i < selectedIndexes.length;i++) {
+                ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setBackground(TB_Table.getSelectionBackground());
+                ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setForeground(TB_Table.getSelectionForeground());
+            }
 
         } else if (e.getSource() == LI_Columns) {
             if (e.getValueIsAdjusting() == false) {
@@ -1650,7 +1656,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             Record rec = (Record) model.getValueAt(i, 0);
             JTextField tf = new JTextField(rec.getKey());
             tf.setFont(new Font("Monospaced", Font.BOLD, 11));
-
+            tf.setForeground(TB_Table.getForeground());
+            tf.setBackground(COLOR_KEY);
             if (rec instanceof CommentRecord) {
                 CommentRecord cr = (CommentRecord) rec;
                 tf.setText(cr.getValue());

@@ -81,12 +81,17 @@ public class Column {
         item.putClientProperty("column", this);
         menu.add(item);
         
-        item = new JMenuItem("Set to default value");
+        item = new JMenuItem("Remove the values (use default value)");
         item.setFont(new Font("Arial", Font.PLAIN, 11));
         item.setActionCommand("columnSetToDefault");
         item.putClientProperty("column", this);
         menu.add(item);
         
+        item = new JMenuItem("Move the value to defaut");
+        item.setFont(new Font("Arial", Font.PLAIN, 11));
+        item.setActionCommand("columnMoveToDefault");
+        item.putClientProperty("column", this);
+        menu.add(item);
     }
     //**************************************************************************
     //*** API

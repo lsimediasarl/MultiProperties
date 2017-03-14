@@ -1,3 +1,6 @@
+1.0.0.0 [2017-03-14]
+ Bumped to initial release
+
 0.9.6.1 [2016-12-07]
  Fixed the multiline  save for java properties (now always multiline)
  Fixed the android value escape chars

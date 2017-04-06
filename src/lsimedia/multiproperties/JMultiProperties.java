@@ -1797,8 +1797,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         public void actionPerformed(ActionEvent ae) {
             int index = TB_Table.getSelectedRow();
             if (index == -1) index = TB_Table.getRowCount();
-            index++;
-
+            
             RecordDnDVector dnd = (RecordDnDVector) CLIPBOARD.getContents(null);
             if (dnd == null) return;
 
@@ -1817,29 +1816,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     model.insertRecord(index, cr);
 
                 } else if (rec instanceof PropertyRecord) {
-                    PropertyRecord tmp = (PropertyRecord) rec;
-
-                    //--- Create new record
-                    PropertyRecord pr = new PropertyRecord(tmp.getKey());
-                    pr.setDefaultValue(tmp.getDefaultValue());
-                    pr.setDisabled(tmp.isDisabled());
-
-                    //--- Fill all values (start at 1 to avoid "Key" column
-                    for (int k = 1;k < model.getColumnCount();k++) {
-                        pr.addColumn();
-                        String name = model.getColumnName(k);
-                        int sIndex = RecordDnDVector.indexOf(columnNames, name);
-                        if (sIndex <= 0) continue;
-
-                        pr.setValueAt(k - 1, tmp.getValueAt(sIndex - 1));
-
-                    }
-                    if (index > model.getRowCount() - 1) {
-                        model.addRecord(rec);
-
-                    } else {
-                        model.insertRecord(index, pr);
-                    }
+                    PropertyRecord nrec = (PropertyRecord) rec.copy();
+                    model.insertRecord(index, nrec);
 
                 }
                 index++;

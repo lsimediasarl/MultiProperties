@@ -1,3 +1,6 @@
+1.0.0.1 [2017-04-06]
+ Fixed the copy/paste/clone referencing the same object
+
 1.0.0.0 [2017-03-14]
  Bumped to initial release
 

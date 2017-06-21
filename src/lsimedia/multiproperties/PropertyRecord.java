@@ -212,8 +212,9 @@ public class PropertyRecord extends Record {
         values.remove(index);
     }
 
+    @Override
     public Object copy() {
-        PropertyRecord c = new PropertyRecord(name+"_copy");
+        PropertyRecord c = new PropertyRecord(name);
         
         c.setDefaultValue(defaultValue);
         c.setDisabled(disabled);

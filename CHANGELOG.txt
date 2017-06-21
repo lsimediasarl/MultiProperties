@@ -1,3 +1,7 @@
+1.0.0.2 [2017-06-21]
+ Change the default tab layout
+ Removed the "_copy" when a properties was cloned
+
 1.0.0.1 [2017-04-06]
  Fixed the copy/paste/clone referencing the same object
 

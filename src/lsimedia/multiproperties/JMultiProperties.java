@@ -1000,6 +1000,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         PN_Rows = new javax.swing.JPanel();
         PN_Keys = new javax.swing.JPanel();
         TAB_Main = new javax.swing.JTabbedPane();
+        PN_File = new javax.swing.JPanel();
         PN_Overview = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         TF_Name = new javax.swing.JTextField();
@@ -1149,13 +1150,21 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         TAB_Main.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
+        PN_File.setLayout(new java.awt.BorderLayout());
+
+        PN_Overview.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Overview", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 11))); // NOI18N
+
         jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Name");
+        jLabel1.setPreferredSize(new java.awt.Dimension(100, 26));
 
         TF_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Description");
+        jLabel2.setPreferredSize(new java.awt.Dimension(100, 26));
 
         TA_Description.setColumns(20);
         TA_Description.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
@@ -1163,9 +1172,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jScrollPane3.setViewportView(TA_Description);
 
         CMB_Handlers.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        CMB_Handlers.setPreferredSize(new java.awt.Dimension(33, 26));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Handler");
+        jLabel4.setPreferredSize(new java.awt.Dimension(100, 26));
 
         LB_Version.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
 
@@ -1180,12 +1192,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(TF_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(539, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(PN_OverviewLayout.createSequentialGroup()
                         .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(LB_Version, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(PN_OverviewLayout.createSequentialGroup()
@@ -1200,22 +1212,24 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             .addGroup(PN_OverviewLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TF_Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PN_OverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CMB_Handlers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 332, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(LB_Version, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        TAB_Main.addTab("Overview", PN_Overview);
+        PN_File.add(PN_Overview, java.awt.BorderLayout.NORTH);
+
+        PN_Columns.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Colums", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 11))); // NOI18N
 
         LI_Columns.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         LI_Columns.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -1267,7 +1281,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                         .addComponent(LB_ColumnDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(BT_ConfigureHandler)
                                 .addGap(0, 0, Short.MAX_VALUE)))))
@@ -1285,7 +1299,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(LB_ColumnDescription)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BT_ConfigureHandler)
                 .addContainerGap())
@@ -1330,7 +1344,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             .addGroup(PN_ColumnsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PN_ColumnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PN_ColumnConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(PN_ColumnsLayout.createSequentialGroup()
                         .addComponent(BT_Add)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1341,13 +1355,15 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                         .addComponent(BT_ColumnDown)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(PN_ColumnsLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BT_Import)))
                 .addContainerGap())
         );
 
-        TAB_Main.addTab("Columns", PN_Columns);
+        PN_File.add(PN_Columns, java.awt.BorderLayout.CENTER);
+
+        TAB_Main.addTab("File", PN_File);
 
         PN_Table.setLayout(new java.awt.BorderLayout());
 
@@ -1465,8 +1481,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             ActionEvent e = new ActionEvent(TB_Table, ActionEvent.ACTION_PERFORMED, BT_Delete.getActionCommand());
             actionPerformed(e);
 
-        } else if (evt.getKeyCode() == KeyEvent.VK_COPY) {
-
         }
     }//GEN-LAST:event_TB_TableKeyPressed
 
@@ -1508,6 +1522,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     private javax.swing.JPanel PN_Actions;
     private javax.swing.JPanel PN_ColumnConfig;
     private javax.swing.JPanel PN_Columns;
+    private javax.swing.JPanel PN_File;
     private javax.swing.JPanel PN_Keys;
     private javax.swing.JPanel PN_Overview;
     private javax.swing.JPanel PN_Rows;

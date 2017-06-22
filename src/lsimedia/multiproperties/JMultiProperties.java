@@ -279,7 +279,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         TAB_Main.setEnabledAt(0, false);
         TAB_Main.setEnabledAt(1, false);
-        TAB_Main.setSelectedIndex(2);
+        TAB_Main.setSelectedIndex(1);
 
         BT_NewComment.setVisible(false);
         BT_NewEmpty.setVisible(false);

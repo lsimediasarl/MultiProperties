@@ -6,6 +6,8 @@ The original eclipse plugin can be found here [Multiproperties eclipse plugin](h
 The files written by the eclipse plugin (*.multiproperties) can be edited under
 netbeans using this plugin.
 
+![screenshot](https://user-images.githubusercontent.com/18146968/29413804-f7b72c64-835d-11e7-946e-fd98a173fde1.png)
+
 ## Release
 This plugin is written from scratch, no code sharing with the original plugin.
 

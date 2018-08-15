@@ -1,3 +1,6 @@
+1.0.0.3 [2018-08-15]
+ Repackaged for netbeans 9
+
 1.0.0.2 [2017-06-21]
  Change the default tab layout
  Removed the "_copy" when a properties was cloned

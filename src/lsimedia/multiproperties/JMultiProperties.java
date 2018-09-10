@@ -1669,7 +1669,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             Column c = (Column) model.getColumn(i);
             if (i == 0) {
                 //--- Hide key column (do not remove it from column model)
-                // TB_Table.getColumnModel().getColumn(i).setMaxWidth(0);
+                TB_Table.getColumnModel().getColumn(i).setMaxWidth(0);
                 TB_Table.getColumnModel().getColumn(i).setMinWidth(0);
                 TB_Table.getColumnModel().getColumn(i).setPreferredWidth(0);
                 TB_Table.getColumnModel().getColumn(i).setWidth(0);

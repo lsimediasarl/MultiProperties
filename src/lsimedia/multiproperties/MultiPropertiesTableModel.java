@@ -13,7 +13,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 /**
- * The table contains the list of 
+ * The first column are the keys
+ * 
  * @author sbodmer
  */
 public class MultiPropertiesTableModel implements TableModel {
@@ -250,7 +251,7 @@ public class MultiPropertiesTableModel implements TableModel {
             cr.setValue(aValue.toString());
             
         } else if (rec instanceof PropertyRecord) {
-            //--- If rowIndex is 0, the change the key
+            //--- If rowIndex is 0, then change the key
             PropertyRecord pr = (PropertyRecord) rec;
             if (columnIndex == 0) {
                 pr.setName(aValue.toString());

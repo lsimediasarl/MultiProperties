@@ -6,9 +6,10 @@
     <description>Builds, tests, and runs the project lsimedia.netbeans.multiproperties.</description>
     <import file="nbproject/build-impl.xml"/>
     
-    <target name="netbeans-extra">
-        <echo message="Extras"/>
-        <antcall target="create-standalone"/>
+    <target name="1. ==> Create signed nbm" depends="nbm" description="create signed nbm">
+        <echo message="Creating signed nbm module"/>
+        
+        <signjar tsaurl="http://timestamp.comodoca.com/rfc3161" jar="${build.dir}/lsimedia-netbeans-multiproperties.nbm" alias="${nbm_alias}" storepass="${storepass}" keystore="${keystore}" keypass="${storepass}" verbose="false"/>
     </target>
     
     <target name="create-standalone" depends="init" description="Create stand alone executable">

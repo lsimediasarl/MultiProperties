@@ -1180,6 +1180,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         jLabel4.setPreferredSize(new java.awt.Dimension(100, 26));
 
         LB_Version.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        LB_Version.setText("1.2");
 
         javax.swing.GroupLayout PN_OverviewLayout = new javax.swing.GroupLayout(PN_Overview);
         PN_Overview.setLayout(PN_OverviewLayout);
@@ -1571,8 +1572,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 Node n = nl.item(i);
                 if (n.getNodeName().equals("Version")) {
                     Element e = (Element) n;
-                    LB_Version.setText(e.getFirstChild().getNodeValue());
-
+                    if (e.getFirstChild() != null) LB_Version.setText(e.getFirstChild().getNodeValue());
+                    
                 } else if (n.getNodeName().equals("Name")) {
                     Element e = (Element) n;
                     if (e.getFirstChild() != null) TF_Name.setText(e.getFirstChild().getNodeValue());

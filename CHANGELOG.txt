@@ -1,3 +1,8 @@
+1.0.0.5 [2018-08-15]
+ Fixed nullpointer when Version node is empty
+ New signature certificate
+ Repackaged for netbeans 11
+
 1.0.0.3 [2018-08-15]
  Repackaged for netbeans 9
 

@@ -21,7 +21,10 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -66,7 +69,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public final class JMultiProperties extends JPanel implements ActionListener, MouseListener, ListSelectionListener, ClipboardOwner {
+public final class JMultiProperties extends JPanel implements ActionListener, MouseListener, ListSelectionListener, ClipboardOwner, KeyListener, ItemListener {
 
     public static final Color COLOR_KEY = new Color(230, 230, 230);
     public static final String ACTION_COMMAND_MODIFIED = "dataModified";
@@ -81,7 +84,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
     File file = null;
     boolean lockdown = false;
 
-    DefaultListModel columns = new DefaultListModel();
+    DefaultListModel<Column> columns = new DefaultListModel<>();
     MultiPropertiesTableModel model = new MultiPropertiesTableModel();
 
     DocumentBuilder builder = null;
@@ -132,7 +135,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         CMB_Handlers.addItem(new EmptyPropertiesHandler());
         CMB_Handlers.addItem(new JavaPropertiesHandler());
         CMB_Handlers.addItem(new AndroidValuesHandler());
-
+        CMB_Handlers.addItemListener(this);
+        
+        TF_Name.addKeyListener(this);
+        TA_Description.addKeyListener(this);
+        
         TB_Table.setModel(model);
         TB_Table.getTableHeader().setFont(new Font("Arial", 0, 11));
         TB_Table.addMouseListener(this);
@@ -514,8 +521,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         } else if (e.getActionCommand().equals("columnUp")) {
             int index = LI_Columns.getSelectedIndex();
             if (index > 0) {
-                Column from = (Column) columns.get(index);
-                Column to = (Column) columns.get(index - 1);
+                Column from = columns.get(index);
+                Column to = columns.get(index - 1);
                 columns.setElementAt(from, index - 1);
                 columns.setElementAt(to, index);
 
@@ -825,7 +832,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             model.sort();
             fillRowHeader();
             PN_Keys.revalidate();
-
+            fireModifiedEvent();
         }
     }
 
@@ -841,7 +848,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                 //--- Popup the modification frame
                 Record rec = model.getRecord(TB_Table.getSelectedRow());
                 ArrayList<Column> cols = new ArrayList<>();
-                for (int i = 0;i < columns.size();i++) cols.add((Column) columns.get(i));
+                for (int i = 0;i < columns.size();i++) cols.add(columns.get(i));
                 JWriteDialog dlg = new JWriteDialog(null, true, rec, model, sc, lockdown);
                 dlg.pack();
                 dlg.setSize(writeDialogSize);
@@ -970,6 +977,32 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
     }
 
+    //**************************************************************************
+    //*** KeyListener
+    //**************************************************************************
+    @Override
+    public void keyTyped(KeyEvent e) {
+        fireModifiedEvent();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        //---
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        //---
+    }
+    
+    //**************************************************************************
+    //*** ItemListener
+    //**************************************************************************
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        fireModifiedEvent();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1667,7 +1700,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         //--- Set column size
         //--- First one is the key wich is hidden
         for (int i = 0;i < model.getColumnCount();i++) {
-            Column c = (Column) model.getColumn(i);
+            Column c = model.getColumn(i);
             if (i == 0) {
                 //--- Hide key column (do not remove it from column model)
                 TB_Table.getColumnModel().getColumn(i).setMaxWidth(0);
@@ -1747,6 +1780,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         if (listener != null) listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ACTION_COMMAND_MODIFIED));
 
     }
+  
 
     private class CopyAction extends AbstractAction {
 

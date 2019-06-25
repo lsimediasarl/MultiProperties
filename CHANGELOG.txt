@@ -1,4 +1,7 @@
-1.0.0.5 [2018-08-15]
+1.0.0.6 [2019-06-25]
+  Fixed the overview panel not storing modification state
+
+1.0.0.5 [2019-06-15]
  Fixed nullpointer when Version node is empty
  New signature certificate
  Repackaged for netbeans 11

@@ -57,7 +57,7 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
     /**
      * Logs related
      */
-    DefaultListModel logs = new DefaultListModel<String>();
+    DefaultListModel<String> logs = new DefaultListModel<>();
     SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
     Logit logit = null;
     

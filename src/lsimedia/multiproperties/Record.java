@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
  *
  * @author sbodmer
  */
-public abstract class Record implements Comparable {
+public abstract class Record implements Comparable<Record> {
     
     public Record() {
         //---
@@ -73,7 +73,7 @@ public abstract class Record implements Comparable {
     public abstract String getSortString();
     
     @Override
-    public int compareTo(Object t) {
-        return getSortString().compareTo(((Record) t).getSortString());
+    public int compareTo(Record t) {
+        return getSortString().compareTo(t.getSortString());
     }
 }

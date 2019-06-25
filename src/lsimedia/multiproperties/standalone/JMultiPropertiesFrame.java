@@ -72,7 +72,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     /**
      * Logs services
      */
-    DefaultListModel logs = new DefaultListModel<String>();
+    DefaultListModel<String> logs = new DefaultListModel<>();
     SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
     Logit logit = null;
 

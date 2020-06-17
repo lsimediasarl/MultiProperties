@@ -537,8 +537,8 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         } else if (e.getActionCommand().equals("columnDown")) {
             int index = LI_Columns.getSelectedIndex();
             if (index < columns.getSize() - 1) {
-                Column from = (Column) columns.get(index);
-                Column to = (Column) columns.get(index + 1);
+                Column from = columns.get(index);
+                Column to = columns.get(index + 1);
                 columns.setElementAt(from, index + 1);
                 columns.setElementAt(to, index);
 
@@ -660,8 +660,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
                 //--- Open it
                 int sc = TB_Table.getSelectedColumn();
-                ArrayList<Column> cols = new ArrayList<>();
-                for (int i = 0;i < columns.size();i++) cols.add((Column) columns.get(i));
                 JWriteDialog dlg = new JWriteDialog(null, true, rec, model, sc, lockdown);
                 dlg.pack();
                 dlg.setSize(writeDialogSize);

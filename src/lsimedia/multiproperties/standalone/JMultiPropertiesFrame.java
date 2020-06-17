@@ -172,12 +172,12 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         }
 
         //---
-        CMB_Sessions.setModel((ComboBoxModel) sessions);
+        CMB_Sessions.setModel(sessions);
         CMB_Sessions.setSelectedItem(session);
         CMB_Sessions.addItemListener(this);
 
         //--- Set default session
-        LI_Files.setModel((ListModel) session.getModel());
+        LI_Files.setModel(session.getModel());
         LI_Files.setCellRenderer(new JMultiPropertiesCellRenderer());
         LI_Files.addMouseListener(this);
         LI_Files.addListSelectionListener(this);
@@ -513,7 +513,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             session = (MultiPropertiesSession) e.getItem();
-            LI_Files.setModel((ListModel) session.getModel());
+            LI_Files.setModel(session.getModel());
 
         } else if (e.getStateChange() == ItemEvent.DESELECTED) {
             MultiPropertiesSession se = (MultiPropertiesSession) e.getItem();
@@ -810,11 +810,11 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
     private javax.swing.JButton BT_NewSession;
     private javax.swing.JButton BT_SaveAll;
     private javax.swing.JButton BT_SaveProcessAll;
-    private javax.swing.JComboBox<String> CMB_Sessions;
+    private javax.swing.JComboBox<MultiPropertiesSession> CMB_Sessions;
     private javax.swing.JLabel LB_File;
     private javax.swing.JLabel LB_Icon;
     private javax.swing.JLabel LB_Status;
-    private javax.swing.JList<String> LI_Files;
+    private javax.swing.JList<MultiProperties> LI_Files;
     private javax.swing.JList<String> LI_Logs;
     private javax.swing.JMenuItem MN_About;
     private javax.swing.JMenuItem MN_Load;
@@ -929,7 +929,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
      */
     private MultiPropertiesSession loadSession(final String identifier) {
         MultiPropertiesSession session = new MultiPropertiesSession(identifier, identifier);
-        DefaultListModel model = session.getModel();
+        DefaultListModel<MultiProperties> model = session.getModel();
         try {
             //--- Load stored default session file for default session
             File d = new File(System.getProperty("user.home"), ".multiproperties");

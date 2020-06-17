@@ -196,7 +196,7 @@
                     <Property name="fixedCellHeight" type="int" value="42"/>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;MultiProperties&gt;"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
@@ -257,7 +257,7 @@
                         </Property>
                       </Properties>
                       <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;MultiPropertiesSession&gt;"/>
                       </AuxValues>
                     </Component>
                     <Component class="javax.swing.JButton" name="BT_EditSession">

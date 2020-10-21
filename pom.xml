@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ch.lsimedia</groupId>
+    <groupId>ch.lsi-media</groupId>
     <artifactId>multiproperties</artifactId>
     <version>1.0.1.0</version>
     <packaging>nbm</packaging>
     <name>MultiProperties</name>
     <url>https://github.com/lsimediasarl/MultiProperties</url>
-    <description>project-description</description>
+    <description>Netbeans plugin for Multiproperties files (.multiproperties)</description>
     <developers>
         <developer>
             <id>sbodmer</id>

@@ -33,6 +33,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
@@ -553,7 +554,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         SP_Main = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        LI_Files = new javax.swing.JList<>();
+        LI_Files = new JList<MultiProperties>();
         jPanel4 = new javax.swing.JPanel();
         jToolBar3 = new javax.swing.JToolBar();
         BT_NewSession = new javax.swing.JButton();

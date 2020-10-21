@@ -16,7 +16,7 @@ import lsimedia.multiproperties.JMultiProperties;
  *
  * @author sbodmer
  */
-public class JMultiPropertiesCellRenderer extends javax.swing.JPanel implements ListCellRenderer {
+public class JMultiPropertiesCellRenderer extends javax.swing.JPanel implements ListCellRenderer<MultiProperties> {
     static final Color COLOR_ODD = new Color(241,245,250);
     
     static final Font MONO_PLAIN = new java.awt.Font("Monospaced", Font.PLAIN, 14);
@@ -54,17 +54,16 @@ public class JMultiPropertiesCellRenderer extends javax.swing.JPanel implements 
     }// </editor-fold>//GEN-END:initComponents
 
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        MultiProperties cont = (MultiProperties) value;
+    public Component getListCellRendererComponent(JList list, MultiProperties value, int index, boolean isSelected, boolean cellHasFocus) {
         
-        JMultiProperties jm = cont.getVisual();
+        JMultiProperties jm = value.getVisual();
         boolean modified = false;
         if ((jm != null) && jm.isModified()) modified = true;
         // LB_Location.setFont(modified?MONO_BOLD:MONO_PLAIN);
         LB_Name.setFont(modified?MONO_BOLD:MONO_PLAIN);
         
-        LB_Location.setText(cont.getFile().getParent());
-        LB_Name.setText(cont.getFile().getName());
+        LB_Location.setText(value.getFile().getParent());
+        LB_Name.setText(value.getFile().getName());
         
         setBackground(isSelected?list.getSelectionBackground():(index%2==0?list.getBackground():COLOR_ODD));
         

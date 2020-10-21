@@ -196,6 +196,7 @@
                     <Property name="fixedCellHeight" type="int" value="42"/>
                   </Properties>
                   <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JList&lt;MultiProperties&gt;()"/>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;MultiProperties&gt;"/>
                   </AuxValues>
                 </Component>

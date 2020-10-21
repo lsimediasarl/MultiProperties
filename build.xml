@@ -2,20 +2,52 @@
 <!-- You may freely edit this file. See harness/README in the NetBeans platform -->
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
-<project name="lsimedia.netbeans.multiproperties" default="netbeans" basedir=".">
-    <description>Builds, tests, and runs the project lsimedia.netbeans.multiproperties.</description>
-    <import file="nbproject/build-impl.xml"/>
+<project name="lsimedia.netbeans.multiproperties" default="netbeans" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	 <description>Builds, tests, and runs the project lsimedia.netbeans.multiproperties.</description>
+	 <import file="nbproject/build-impl.xml"/>
     
-    <target name="1. ==> Create signed nbm" depends="nbm" description="create signed nbm">
-        <echo message="Creating signed nbm module"/>
+	 <path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.3.jar" />
+	 <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+ 
+	 <!-- define Maven coordinates -->
+	 <property name="build" value="build" />
+	 <property name="groupId" value="ch.lsimedia" />
+	 <property name="artifactId" value="multiproperties" />
+	 <!-- don't forget change the versions of pom.xml and manifest.mf -->
+	 <property name="version" value="1.0.1.0" />
+	 <!-- defined maven snapshots and staging repository id and url -->
+	 <property name="ossrh-snapshots-repository-url"
+				  value="https://oss.sonatype.org/content/repositories/snapshots/" />
+	 <property name="ossrh-staging-repository-url"
+				  value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
+	 <!-- there server id in the Maven settings.xml -->
+	 <property name="ossrh-server-id" value="ossrh" />
+	 <property name="code-name-base" value="lsimedia" />
+	 <property name="nbm-path" value="${build}/${artifactId}-${version}" />
+ 
+	 <!-- Need close and release on https://oss.sonatype.org after the nbm is uploaded -->
+	 <target name="deploy" depends="clean,nbm" description="deploy release version to Maven repository">
+		  <move file="${build}/${code-name-base}.nbm" toFile="${nbm-path}.nbm"/>
+		  <artifact:mvn>
+				<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+				<arg value="-Durl=${ossrh-staging-repository-url}" />
+				<arg value="-DrepositoryId=${ossrh-server-id}" />
+				<arg value="-DpomFile=pom.xml" />
+				<arg value="-Dfile=${nbm-path}.nbm" />
+				<arg value="-Pgpg" />
+		  </artifact:mvn>
+	 </target>
+
+	 <target name="1. ==> Create signed nbm" depends="nbm" description="create signed nbm">
+		  <echo message="Creating signed nbm module"/>
         
-        <signjar tsaurl="http://timestamp.comodoca.com/rfc3161" jar="${build.dir}/lsimedia-netbeans-multiproperties.nbm" alias="${nbm_alias}" storepass="${storepass}" keystore="${keystore}" keypass="${storepass}" verbose="false"/>
-    </target>
+		  <signjar tsaurl="http://timestamp.comodoca.com/rfc3161" jar="${build.dir}/lsimedia-netbeans-multiproperties.nbm" alias="${nbm_alias}" storepass="${storepass}" keystore="${keystore}" keypass="${storepass}" verbose="false"/>
+	 </target>
     
-    <target name="2. ==> Create-standalone" depends="init" description="Create stand alone executable">
-        <echo message="Creating stand alone jar"/>
-        <jar destfile="${build.dir}/MultiProperties.jar" manifest="Manifests/MultiProperties.mf">
-            <fileset dir="${build.dir}/classes" includes="lsimedia/multiproperties/**"/>    
-        </jar>
-    </target>
+	 <target name="2. ==> Create-standalone" depends="init" description="Create stand alone executable">
+		  <echo message="Creating stand alone jar"/>
+		  <jar destfile="${build.dir}/MultiProperties.jar" manifest="Manifests/MultiProperties.mf">
+				<fileset dir="${build.dir}/classes" includes="lsimedia/multiproperties/**"/>    
+		  </jar>
+	 </target>
 </project>

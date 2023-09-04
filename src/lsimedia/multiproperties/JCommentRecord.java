@@ -62,8 +62,6 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
 
         setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-
         TF_Value.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -80,7 +78,7 @@ public class JCommentRecord extends javax.swing.JPanel implements RecordGUI {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(TF_Value, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(244, Short.MAX_VALUE))
+                .addContainerGap(238, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Texte", jPanel1);

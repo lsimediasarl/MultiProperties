@@ -259,14 +259,12 @@ public final class MultiPropertiesVisualElement extends JPanel implements MultiV
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         BTG_Views.add(BT_Data);
-        BT_Data.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Data.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(BT_Data, org.openide.util.NbBundle.getMessage(MultiPropertiesVisualElement.class, "MultiPropertiesVisualElement.BT_Data.text")); // NOI18N
         BT_Data.setActionCommand(org.openide.util.NbBundle.getMessage(MultiPropertiesVisualElement.class, "MultiPropertiesVisualElement.BT_Data.actionCommand")); // NOI18N
         jPanel2.add(BT_Data);
 
         BTG_Views.add(BT_Logs);
-        BT_Logs.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(BT_Logs, org.openide.util.NbBundle.getMessage(MultiPropertiesVisualElement.class, "MultiPropertiesVisualElement.BT_Logs.text")); // NOI18N
         BT_Logs.setActionCommand(org.openide.util.NbBundle.getMessage(MultiPropertiesVisualElement.class, "MultiPropertiesVisualElement.BT_Logs.actionCommand")); // NOI18N
         jPanel2.add(BT_Logs);

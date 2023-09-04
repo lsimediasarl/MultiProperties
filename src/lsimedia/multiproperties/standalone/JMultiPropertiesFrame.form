@@ -11,25 +11,14 @@
       </Properties>
     </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Arial" size="11" style="0"/>
-        </Property>
-      </Properties>
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
             <Property name="text" type="java.lang.String" value="File"/>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Arial" size="11" style="0"/>
-            </Property>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="MN_New">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="New"/>
                 <Property name="actionCommand" type="java.lang.String" value="new"/>
               </Properties>
@@ -38,18 +27,12 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="MN_Load">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Load"/>
                 <Property name="actionCommand" type="java.lang.String" value="load"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="MN_SaveAll">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Save all"/>
                 <Property name="actionCommand" type="java.lang.String" value="saveAll"/>
                 <Property name="enabled" type="boolean" value="false"/>
@@ -57,9 +40,6 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="MN_SaveProcessAll">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Save and process all"/>
                 <Property name="actionCommand" type="java.lang.String" value="saveProcessAll"/>
                 <Property name="enabled" type="boolean" value="false"/>
@@ -69,9 +49,6 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="MN_Quit">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Quit"/>
                 <Property name="actionCommand" type="java.lang.String" value="quit"/>
               </Properties>
@@ -81,16 +58,10 @@
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Help"/>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Arial" size="11" style="0"/>
-            </Property>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="MN_About">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="About"/>
                 <Property name="actionCommand" type="java.lang.String" value="about"/>
               </Properties>
@@ -309,11 +280,6 @@
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
           <SubComponents>
             <Container class="javax.swing.JTabbedPane" name="TAB_Main">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
-              </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
                   <BorderConstraints direction="Center"/>
@@ -450,9 +416,6 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="BT_Load">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"/>
                 </Property>
@@ -464,9 +427,6 @@
             </Component>
             <Component class="javax.swing.JButton" name="BT_SaveAll">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/Save.png"/>
                 </Property>
@@ -479,9 +439,6 @@
             </Component>
             <Component class="javax.swing.JButton" name="BT_SaveProcessAll">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/Process.png"/>
                 </Property>
@@ -494,9 +451,6 @@
             </Component>
             <Component class="javax.swing.JButton" name="BT_Close">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="11" style="0"/>
-                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/lsimedia/multiproperties/Resources/Icons/16x16/Close.png"/>
                 </Property>

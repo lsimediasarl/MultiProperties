@@ -83,12 +83,10 @@ public class JWriteDialog extends javax.swing.JDialog implements ActionListener 
 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        BT_Cancel.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Cancel.setText("Cancel");
         BT_Cancel.setActionCommand("cancel");
         jPanel1.add(BT_Cancel);
 
-        BT_Ok.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Ok.setText("Ok");
         BT_Ok.setActionCommand("ok");
         jPanel1.add(BT_Ok);

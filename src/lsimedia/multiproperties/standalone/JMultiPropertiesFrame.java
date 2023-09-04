@@ -667,8 +667,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        TAB_Main.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-
         jPanel8.setLayout(new java.awt.BorderLayout());
 
         PN_Content.setLayout(new java.awt.CardLayout());
@@ -708,7 +706,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         TB_Main.setFloatable(false);
 
-        BT_Load.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Load.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_Load.setText("Load");
         BT_Load.setActionCommand("load");
@@ -716,7 +713,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_Load.setFocusable(false);
         TB_Main.add(BT_Load);
 
-        BT_SaveAll.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_SaveAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Save.png"))); // NOI18N
         BT_SaveAll.setText("Save all");
         BT_SaveAll.setActionCommand("saveAll");
@@ -725,7 +721,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_SaveAll.setFocusable(false);
         TB_Main.add(BT_SaveAll);
 
-        BT_SaveProcessAll.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_SaveProcessAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Process.png"))); // NOI18N
         BT_SaveProcessAll.setText("Save and process all");
         BT_SaveProcessAll.setActionCommand("saveProcessAll");
@@ -734,7 +729,6 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         BT_SaveProcessAll.setFocusable(false);
         TB_Main.add(BT_SaveProcessAll);
 
-        BT_Close.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Close.png"))); // NOI18N
         BT_Close.setText("Close");
         BT_Close.setActionCommand("close");
@@ -747,36 +741,28 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
 
         getContentPane().add(jPanel7, java.awt.BorderLayout.NORTH);
 
-        jMenuBar1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-
         jMenu1.setText("File");
-        jMenu1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
-        MN_New.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_New.setText("New");
         MN_New.setActionCommand("new");
         jMenu1.add(MN_New);
         jMenu1.add(jSeparator5);
 
-        MN_Load.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_Load.setText("Load");
         MN_Load.setActionCommand("load");
         jMenu1.add(MN_Load);
 
-        MN_SaveAll.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_SaveAll.setText("Save all");
         MN_SaveAll.setActionCommand("saveAll");
         MN_SaveAll.setEnabled(false);
         jMenu1.add(MN_SaveAll);
 
-        MN_SaveProcessAll.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_SaveProcessAll.setText("Save and process all");
         MN_SaveProcessAll.setActionCommand("saveProcessAll");
         MN_SaveProcessAll.setEnabled(false);
         jMenu1.add(MN_SaveProcessAll);
         jMenu1.add(jSeparator1);
 
-        MN_Quit.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_Quit.setText("Quit");
         MN_Quit.setActionCommand("quit");
         jMenu1.add(MN_Quit);
@@ -784,9 +770,7 @@ public class JMultiPropertiesFrame extends javax.swing.JFrame implements ActionL
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Help");
-        jMenu2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
-        MN_About.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_About.setText("About");
         MN_About.setActionCommand("about");
         jMenu2.add(MN_About);

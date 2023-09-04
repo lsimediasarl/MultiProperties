@@ -1160,13 +1160,13 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         PU_Actions.add(MN_Paste);
         PU_Actions.add(jSeparator6);
 
-        MN_MoveUp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_UP, java.awt.event.InputEvent.ALT_MASK));
+        MN_MoveUp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_UP, java.awt.event.InputEvent.ALT_DOWN_MASK));
         MN_MoveUp.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_MoveUp.setText("Move up");
         MN_MoveUp.setActionCommand("up");
         PU_Actions.add(MN_MoveUp);
 
-        MN_MoveDown.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_UP, java.awt.event.InputEvent.ALT_MASK));
+        MN_MoveDown.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_UP, java.awt.event.InputEvent.ALT_DOWN_MASK));
         MN_MoveDown.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         MN_MoveDown.setText("Move down");
         MN_MoveDown.setActionCommand("down");
@@ -1179,7 +1179,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         setLayout(new java.awt.BorderLayout());
 
-        TAB_Main.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        TAB_Main.setFocusable(false);
 
         PN_File.setLayout(new java.awt.BorderLayout());
 
@@ -1442,35 +1442,30 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         PN_Actions.add(BT_SaveProcess);
         PN_Actions.add(jSeparator1);
 
-        BT_NewProperty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_NewProperty.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewProperty.setText("New property");
         BT_NewProperty.setActionCommand("newProperty");
         BT_NewProperty.setFocusable(false);
         PN_Actions.add(BT_NewProperty);
 
-        BT_NewComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_NewComment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewComment.setText("New comment");
         BT_NewComment.setActionCommand("newComment");
         BT_NewComment.setFocusable(false);
         PN_Actions.add(BT_NewComment);
 
-        BT_NewEmpty.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_NewEmpty.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewEmpty.setText("New empty line");
         BT_NewEmpty.setActionCommand("newEmpty");
         BT_NewEmpty.setFocusable(false);
         PN_Actions.add(BT_NewEmpty);
 
-        BT_Merge.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Merge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/merge.png"))); // NOI18N
         BT_Merge.setText("Merge");
         BT_Merge.setActionCommand("merge");
         BT_Merge.setFocusable(false);
         PN_Actions.add(BT_Merge);
 
-        BT_Sort.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Sort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/sort.png"))); // NOI18N
         BT_Sort.setText("Sort keys");
         BT_Sort.setActionCommand("sort");

@@ -245,12 +245,10 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
 
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        BT_Cancel.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Cancel.setText("Cancel");
         BT_Cancel.setActionCommand("cancel");
         jPanel2.add(BT_Cancel);
 
-        BT_Ok.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Ok.setText("Ok");
         BT_Ok.setActionCommand("ok");
         jPanel2.add(BT_Ok);
@@ -309,7 +307,7 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

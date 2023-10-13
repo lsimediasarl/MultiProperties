@@ -39,7 +39,6 @@ public class JRecordCellRenderer extends javax.swing.JPanel implements TableCell
 
         setLayout(new java.awt.BorderLayout());
 
-        LB_Content.setBackground(new java.awt.Color(230, 230, 230));
         LB_Content.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         LB_Content.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         add(LB_Content, java.awt.BorderLayout.CENTER);

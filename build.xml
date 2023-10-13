@@ -38,12 +38,13 @@
 		  </artifact:mvn>
 	 </target>
 
+    <!-- Not more possible, because the certificate is in the dongle
 	 <target name="1. ==> Create signed nbm" depends="nbm" description="create signed nbm">
 		  <echo message="Creating signed nbm module"/>
         
 		  <signjar tsaurl="http://timestamp.comodoca.com/rfc3161" jar="${build.dir}/lsimedia-netbeans-multiproperties.nbm" alias="${nbm_alias}" storepass="${storepass}" keystore="${keystore}" keypass="${storepass}" verbose="false"/>
 	 </target>
-    
+    -->
 	 <target name="2. ==> Create-standalone" depends="init" description="Create stand alone executable">
 		  <echo message="Creating stand alone jar"/>
 		  <jar destfile="${build.dir}/MultiProperties.jar" manifest="Manifests/MultiProperties.mf">

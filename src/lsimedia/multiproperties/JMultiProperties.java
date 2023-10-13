@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
 
 public final class JMultiProperties extends JPanel implements ActionListener, MouseListener, ListSelectionListener, ClipboardOwner, KeyListener, ItemListener {
 
-    public static final Color COLOR_KEY = new Color(230, 230, 230);
+    // public static final Color COLOR_KEY = new Color(230, 230, 230);
     public static final String ACTION_COMMAND_MODIFIED = "dataModified";
 
     /**
@@ -141,7 +141,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         TA_Description.addKeyListener(this);
         
         TB_Table.setModel(model);
-        TB_Table.getTableHeader().setFont(new Font("Arial", 0, 11));
+        // TB_Table.getTableHeader().setFont(new Font("Arial", 0, 11));
         TB_Table.addMouseListener(this);
         TB_Table.getSelectionModel().addListSelectionListener(this);
         TB_Table.setDefaultRenderer(Record.class, new JRecordCellRenderer());
@@ -904,7 +904,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             //--- Clear old selection
             for (int i = 0;i < selectedIndexes.length;i++) {
                 ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setForeground(TB_Table.getForeground());
-                ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setBackground(COLOR_KEY);
+                ((JTextField) PN_Keys.getComponent(selectedIndexes[i])).setBackground(TB_Table.getBackground());
             }
             selectedIndexes = TB_Table.getSelectedRows();
             for (int i = 0;i < selectedIndexes.length;i++) {
@@ -1070,11 +1070,11 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     // c.setForeground(UIManager.getColor("Table.selectionForeground"));
                 } else {
                     if (rowIndex%2 == 0) {
-                        c.setBackground(new Color(241,245,250));
+                        c.setBackground(getBackground().brighter());
 
                     } else {
                         // c.setBackground(getBackground());
-                        c.setBackground(Color.WHITE);
+                        c.setBackground(getBackground());
 
                     }
                 }
@@ -1267,11 +1267,9 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         LI_Columns.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(LI_Columns);
 
-        BT_Add.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Add.setText("Add");
         BT_Add.setActionCommand("add");
 
-        BT_Remove.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Remove.setText("Remove");
         BT_Remove.setActionCommand("remove");
 
@@ -1313,7 +1311,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                         .addComponent(LB_ColumnDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(BT_ConfigureHandler)
                                 .addGap(0, 0, Short.MAX_VALUE)))))
@@ -1339,15 +1337,12 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         PN_ColumnConfig.add(jPanel1, "column");
 
-        BT_ColumnUp.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_ColumnUp.setText("Up");
         BT_ColumnUp.setActionCommand("columnUp");
 
-        BT_ColumnDown.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_ColumnDown.setText("Down");
         BT_ColumnDown.setActionCommand("columnDown");
 
-        BT_Import.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Import.setText("Import");
         BT_Import.setActionCommand("import");
 
@@ -1442,38 +1437,32 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         PN_Actions.add(BT_SaveProcess);
         PN_Actions.add(jSeparator1);
 
-        BT_NewProperty.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewProperty.setText("New property");
         BT_NewProperty.setActionCommand("newProperty");
         BT_NewProperty.setFocusable(false);
         PN_Actions.add(BT_NewProperty);
 
-        BT_NewComment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewComment.setText("New comment");
         BT_NewComment.setActionCommand("newComment");
         BT_NewComment.setFocusable(false);
         PN_Actions.add(BT_NewComment);
 
-        BT_NewEmpty.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Add.png"))); // NOI18N
         BT_NewEmpty.setText("New empty line");
         BT_NewEmpty.setActionCommand("newEmpty");
         BT_NewEmpty.setFocusable(false);
         PN_Actions.add(BT_NewEmpty);
 
-        BT_Merge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/merge.png"))); // NOI18N
         BT_Merge.setText("Merge");
         BT_Merge.setActionCommand("merge");
         BT_Merge.setFocusable(false);
         PN_Actions.add(BT_Merge);
 
-        BT_Sort.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/sort.png"))); // NOI18N
         BT_Sort.setText("Sort keys");
         BT_Sort.setActionCommand("sort");
         BT_Sort.setFocusable(false);
         PN_Actions.add(BT_Sort);
         PN_Actions.add(jSeparator2);
 
-        BT_Delete.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_Delete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lsimedia/multiproperties/Resources/Icons/16x16/Delete.png"))); // NOI18N
         BT_Delete.setText("Delete");
         BT_Delete.setActionCommand("delete");
@@ -1719,7 +1708,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
             JTextField tf = new JTextField(rec.getKey());
             tf.setFont(new Font("Monospaced", Font.BOLD, 11));
             tf.setForeground(TB_Table.getForeground());
-            tf.setBackground(COLOR_KEY);
+            tf.setBackground(TB_Table.getBackground());
             if (rec instanceof CommentRecord) {
                 CommentRecord cr = (CommentRecord) rec;
                 tf.setText(cr.getValue());

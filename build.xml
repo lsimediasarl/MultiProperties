@@ -38,7 +38,8 @@
 		  </artifact:mvn>
 	 </target>
 
-    <!-- Not more possible, because the certificate is in the dongle
+    <!-- Sign it with certum -->
+	 <!--
 	 <target name="1. ==> Create signed nbm" depends="nbm" description="create signed nbm">
 		  <echo message="Creating signed nbm module"/>
         

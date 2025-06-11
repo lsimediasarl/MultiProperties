@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: lsimedia.netbeans.multiproperties
 OpenIDE-Module-Localizing-Bundle: lsimedia/netbeans/multiproperties/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.1.0.0
+OpenIDE-Module-Specification-Version: 1.2.0.0
 

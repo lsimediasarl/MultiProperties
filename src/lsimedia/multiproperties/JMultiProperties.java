@@ -1185,27 +1185,20 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         PN_Overview.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Overview", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 11))); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Name");
         jLabel1.setPreferredSize(new java.awt.Dimension(100, 26));
 
-        TF_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Description");
         jLabel2.setPreferredSize(new java.awt.Dimension(100, 26));
 
         TA_Description.setColumns(20);
-        TA_Description.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TA_Description.setRows(5);
         jScrollPane3.setViewportView(TA_Description);
 
-        CMB_Handlers.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CMB_Handlers.setPreferredSize(new java.awt.Dimension(33, 26));
 
-        jLabel4.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Handler");
         jLabel4.setPreferredSize(new java.awt.Dimension(100, 26));
@@ -1263,7 +1256,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         PN_Columns.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Colums", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 11))); // NOI18N
 
-        LI_Columns.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         LI_Columns.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(LI_Columns);
 
@@ -1329,7 +1321,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(LB_ColumnDescription)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BT_ConfigureHandler)
                 .addContainerGap())
@@ -1394,7 +1386,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         PN_Table.setLayout(new java.awt.BorderLayout());
 
-        TB_Table.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         TB_Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

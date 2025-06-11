@@ -26,6 +26,7 @@
 	 <property name="nbm-path" value="${build}/${artifactId}-${version}" />
  
 	 <!-- Need close and release on https://oss.sonatype.org after the nbm is uploaded -->
+	 <!--
 	 <target name="deploy" depends="clean,nbm" description="deploy release version to Maven repository">
 		  <move file="${build}/${code-name-base}.nbm" toFile="${nbm-path}.nbm"/>
 		  <artifact:mvn>
@@ -37,7 +38,7 @@
 				<arg value="-Pgpg" />
 		  </artifact:mvn>
 	 </target>
-
+	 -->
     <!-- Sign it with certum -->
 	 <!--
 	 <target name="1. ==> Create signed nbm" depends="nbm" description="create signed nbm">

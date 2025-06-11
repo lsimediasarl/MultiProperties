@@ -142,24 +142,18 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Key");
 
-        TF_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-
-        CB_Disabled.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_Disabled.setText("Disabled");
 
         PN_Columns.setLayout(new javax.swing.BoxLayout(PN_Columns, javax.swing.BoxLayout.Y_AXIS));
         SP_Columns.setViewportView(PN_Columns);
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Default value");
 
         TA_Default.setColumns(20);
-        TA_Default.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TA_Default.setRows(5);
         jScrollPane3.setViewportView(TA_Default);
 
@@ -197,7 +191,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                     .addComponent(jLabel2)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(SP_Columns, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+                .addComponent(SP_Columns, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

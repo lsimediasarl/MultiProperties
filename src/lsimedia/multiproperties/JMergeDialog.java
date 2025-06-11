@@ -255,7 +255,6 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
 
-        TB_Columns.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TB_Columns.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -285,7 +284,6 @@ public class JMergeDialog extends javax.swing.JDialog implements ActionListener 
         jLabel1.setText("<html>New columns will be added at the end (new columns are in <b>bold</b>).<br><br>\n The current same keys values and default value will be overwritten by the merged ones or added<br><br>\n New values will be added to the current file.<br><br>\nOnly values and disabled state will be merged (not description, handler, etc.).<br><br>\n It's possible to choose which column to merge into by changing the \"Merge into\" columns values.<br> </html>");
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        CB_Add.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_Add.setSelected(true);
         CB_Add.setText("Do not overwrite but add the key");
 

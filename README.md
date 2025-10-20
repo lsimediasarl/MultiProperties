@@ -13,8 +13,6 @@ This plugin is written from scratch, no code sharing with the original plugin.
 
 Not every feature of the original plugin is implemented.
 
-The plugin is available in the netbeans plugin portal [MultiProperties netbeans plugin](http://plugins.netbeans.org/plugin/63739/?show=true)
-
 ## Features
 Some features not found in the original are implemented
 
@@ -40,9 +38,6 @@ an application and save the multiproperties files.
 
 The standalone version implements the concept of "Session", which is a group of opened
 files, so it's easy to switch from a group of file to another group of files.
-
-A Java Web Start for the standalone version can be found at
-[tools.knop-tech.com](http://tools.knop-tech.com)
 
 ## Todos
 

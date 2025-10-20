@@ -1394,7 +1394,6 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
 
         PN_Table.setLayout(new java.awt.BorderLayout());
 
-        TB_Table.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         TB_Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

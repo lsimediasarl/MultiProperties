@@ -208,56 +208,37 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
 
         setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-
-        CB_EnableOutput.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_EnableOutput.setText("Enable output writing");
         CB_EnableOutput.setActionCommand("enable");
 
         TF_Location.setEditable(false);
-        TF_Location.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TF_Location.setToolTipText("<html>Relative path to the multiproperties file or absolute path<br>\nTo save at the same level than the source file, use <pre>./</pre>\nFor relative start the location string with <pre>../</pre>\n</html>");
 
-        BT_FC.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_FC.setText("...");
         BT_FC.setActionCommand("fc");
         BT_FC.setEnabled(false);
-        BT_FC.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        BT_FC.setMaximumSize(new java.awt.Dimension(16, 16));
-        BT_FC.setMinimumSize(new java.awt.Dimension(16, 16));
-        BT_FC.setPreferredSize(new java.awt.Dimension(16, 16));
+        BT_FC.setPreferredSize(new java.awt.Dimension(25, 25));
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel1.setText("Location");
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel2.setText("File name");
 
         TF_Filename.setEditable(false);
-        TF_Filename.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
 
-        CB_InsertDescriptionComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_InsertDescriptionComment.setText("Insert description of multiproperties in the begining as comment");
 
-        CB_InsertColumnComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_InsertColumnComment.setText("Insert description of column in the beginning as comment");
 
-        CB_WriteDisableComment.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_WriteDisableComment.setText("Write disabled properties as comment");
 
-        CB_DisableDefault.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_DisableDefault.setText("Disable default value");
 
         TF_Source.setEditable(false);
-        TF_Source.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel3.setText("Source");
 
         TF_Destination.setEditable(false);
-        TF_Destination.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel4.setText("Destination");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -267,10 +248,10 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(CB_InsertDescriptionComment, javax.swing.GroupLayout.DEFAULT_SIZE, 686, Short.MAX_VALUE)
-                    .addComponent(CB_InsertColumnComment, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
-                    .addComponent(CB_WriteDisableComment, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
-                    .addComponent(CB_DisableDefault, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+                    .addComponent(CB_InsertDescriptionComment, javax.swing.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
+                    .addComponent(CB_InsertColumnComment, javax.swing.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
+                    .addComponent(CB_WriteDisableComment, javax.swing.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
+                    .addComponent(CB_DisableDefault, javax.swing.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(CB_EnableOutput)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -322,7 +303,7 @@ public class JJavaPropertiesHandler extends javax.swing.JPanel implements Handle
                 .addComponent(CB_WriteDisableComment)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CB_DisableDefault)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Output properties", jPanel1);

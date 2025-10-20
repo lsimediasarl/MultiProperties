@@ -142,19 +142,16 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Key");
 
         TF_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
 
-        CB_Disabled.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_Disabled.setText("Disabled");
 
         PN_Columns.setLayout(new javax.swing.BoxLayout(PN_Columns, javax.swing.BoxLayout.Y_AXIS));
         SP_Columns.setViewportView(PN_Columns);
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Default value");
 
@@ -197,13 +194,12 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                     .addComponent(jLabel2)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(SP_Columns, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+                .addComponent(SP_Columns, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("General", PN_General);
 
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel3.setText("Property description");
 
         TA_Description.setColumns(20);
@@ -228,7 +224,7 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

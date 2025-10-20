@@ -56,7 +56,6 @@ public class JEmptyPropertiesHandler extends javax.swing.JPanel implements Handl
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel5.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("No configuration");
         add(jLabel5, java.awt.BorderLayout.CENTER);

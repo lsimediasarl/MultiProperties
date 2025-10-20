@@ -100,7 +100,6 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         setMaximumSize(new java.awt.Dimension(32767, 100));
         setPreferredSize(new java.awt.Dimension(680, 100));
 
-        CB_Column.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_Column.setText("...");
         CB_Column.setActionCommand("enable");
         CB_Column.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -114,7 +113,6 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         TA_Value.setRows(5);
         jScrollPane1.setViewportView(TA_Value);
 
-        CB_Final.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         CB_Final.setText("Final (cannot be modified)");
         CB_Final.setActionCommand("final");
         CB_Final.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -143,7 +141,7 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
                         .addComponent(CB_Column, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(CB_Final)
-                        .addGap(0, 41, Short.MAX_VALUE)))
+                        .addGap(0, 37, Short.MAX_VALUE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

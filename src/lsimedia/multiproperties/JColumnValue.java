@@ -109,7 +109,6 @@ public class JColumnValue extends javax.swing.JPanel implements ActionListener {
         CB_Column.setPreferredSize(new java.awt.Dimension(200, 22));
 
         TA_Value.setColumns(20);
-        TA_Value.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TA_Value.setRows(5);
         jScrollPane1.setViewportView(TA_Value);
 

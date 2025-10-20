@@ -145,8 +145,6 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Key");
 
-        TF_Name.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-
         CB_Disabled.setText("Disabled");
 
         PN_Columns.setLayout(new javax.swing.BoxLayout(PN_Columns, javax.swing.BoxLayout.Y_AXIS));
@@ -156,7 +154,6 @@ public class JPropertyRecord extends javax.swing.JPanel implements RecordGUI, Ac
         jLabel2.setText("Default value");
 
         TA_Default.setColumns(20);
-        TA_Default.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TA_Default.setRows(5);
         jScrollPane3.setViewportView(TA_Default);
 

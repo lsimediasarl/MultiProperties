@@ -1268,23 +1268,17 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
         PN_ColumnConfig.setLayout(new java.awt.CardLayout());
         PN_ColumnConfig.add(LB_Empty, "empty");
 
-        LB_ColumnName.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         LB_ColumnName.setText("Name");
 
-        TF_ColumnName.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-
-        LB_ColumnDescription.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         LB_ColumnDescription.setText("Description");
 
         jScrollPane4.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
 
         TA_ColumnDescription.setColumns(20);
-        TA_ColumnDescription.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         TA_ColumnDescription.setRows(5);
         TA_ColumnDescription.setToolTipText("<html>The eclipse plugin does not support saving in the same folder has the multiproperties.<br>\n</html>");
         jScrollPane4.setViewportView(TA_ColumnDescription);
 
-        BT_ConfigureHandler.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         BT_ConfigureHandler.setText("Configure handler");
         BT_ConfigureHandler.setActionCommand("handler");
 
@@ -1321,7 +1315,7 @@ public final class JMultiProperties extends JPanel implements ActionListener, Mo
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(LB_ColumnDescription)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BT_ConfigureHandler)
                 .addContainerGap())
